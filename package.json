@@ -1,0 +1,39 @@
+{
+  "name": "github-trending-backup",
+  "packageManager": "pnpm@10.6.3",
+  "scripts": {
+    "dev": "esno index.ts",
+    "build": "tsup index.ts --minify",
+    "lint": "eslint .",
+    "prepare": "simple-git-hooks",
+    "test-action": "act -j scrape"
+  },
+  "dependencies": {
+    "axios": "^1.8.3",
+    "cheerio": "^1.0.0",
+    "simple-git": "^3.27.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.10.1",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
+    "esno": "^4.8.0",
+    "nano-staged": "^0.8.0",
+    "simple-git-hooks": "^2.11.1",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm nano-staged"
+  },
+  "nano-staged": {
+    "*.{js,ts,mjs}": "eslint --fix"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
