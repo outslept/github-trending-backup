@@ -55,7 +55,6 @@ const targets = [
   'React',
   'Angular',
   'Svelte',
-  'Jupyter-Notebook',
   'Markdown',
   'TeX',
   'SQL',
