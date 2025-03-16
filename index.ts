@@ -83,20 +83,20 @@ const axiosInstance = axios.create({
 
 async function main(): Promise<void> {
   tempDate = new Date().toISOString().slice(0, 10)
-  let message = ''
+  let _message = ''
 
   if (new Date().getDate() === 10) {
     try {
       const [ok, err] = await collectDocs()
       if (ok) {
-        message += 'Collect the *.md files: OK!\n'
+        _message += 'Collect the *.md files: OK!\n'
       }
       else if (err) {
-        message += `collectDocs() is failed. ${err.message}\n`
+        _message += `collectDocs() is failed. ${err.message}\n`
       }
     }
     catch (err: any) {
-      message += `collectDocs() is failed. ${err.message}\n`
+      _message += `collectDocs() is failed. ${err.message}\n`
     }
   }
 
@@ -110,7 +110,7 @@ async function main(): Promise<void> {
   content = `### ${tempDate}\n${results.join('')}`
 
   writeMarkDown(tempDate, content)
-  message += `${tempDate}.md is completed.\n`
+  _message += `${tempDate}.md is completed.\n`
 
   readme = '# GitHub Trending Scraper\n\nWe scrape the GitHub trending page of these languages: '
   readme += targets.join(', ')
@@ -141,11 +141,11 @@ async function scrapeLanguageWithRetry(language: string, maxRetries = 2): Promis
     }
     catch (err) {
       if (attempt < maxRetries) {
-        console.log(`Retrying ${language} (${attempt + 1}/${maxRetries})`)
+        console.log(`Retrying ${language} (${attempt + 1}/${maxRetries}): ${err.message}`)
         await new Promise(r => setTimeout(r, 2000))
       }
       else {
-        console.log(`Failed to scrape ${language} after ${maxRetries + 1} attempts`)
+        console.log(`Failed to scrape ${language} after ${maxRetries + 1} attempts: ${err.message}`)
         return `\n#### ${language}\nFailed to scrape this language after multiple attempts.\n`
       }
     }
