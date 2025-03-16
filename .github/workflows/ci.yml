@@ -12,7 +12,7 @@ on:
 jobs:
   check_commit_message:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[no ci]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip actions]')"
+    if: "!contains(github.event.head_commit.message, '[no ci]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip actions]') && !contains(github.event.head_commit.message, 'Update trending repositories')"
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
@@ -40,7 +40,7 @@ jobs:
 
   scrape:
     needs: check_commit_message
-    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && needs.check_commit_message.outputs.should_run == 'true'
+    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.check_commit_message.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
