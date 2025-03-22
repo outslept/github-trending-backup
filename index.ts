@@ -21,44 +21,22 @@ const targets = [
   'Ruby',
   'Swift',
   'Kotlin',
-  'Dart',
   'Scala',
   'Haskell',
   'Elixir',
-  'Clojure',
-  'F#',
   'Lua',
-  'Julia',
-  'R',
-  'Groovy',
-  'Perl',
   'Objective-C',
   'Assembly',
   'Shell',
   'C',
-  'Fortran',
-  'COBOL',
-  'Erlang',
   'Nim',
-  'Crystal',
   'OCaml',
   'Zig',
-  'D',
-  'V',
-  'Elm',
-  'PureScript',
-  'Reason',
-  'Solidity',
   'HTML',
   'CSS',
   'Vue',
-  'React',
-  'Angular',
   'Svelte',
-  'Markdown',
-  'TeX',
   'SQL',
-  'Makefile',
   'PowerShell',
   'Bash',
   'YAML',
@@ -100,7 +78,6 @@ async function main(): Promise<void> {
   }
 
   let content = ''
-  let readme = ''
 
   const results = await Promise.all(
     targets.map(target => scrapeLanguageWithRetry(target)),
@@ -110,20 +87,11 @@ async function main(): Promise<void> {
 
   writeMarkDown(tempDate, content)
   _message += `${tempDate}.md is completed.\n`
-
-  readme = '# GitHub Trending Scraper\n\nWe scrape the GitHub trending page of these languages: '
-  readme += targets.join(', ')
-  readme += '.\n\n'
-  readme += `[${tempDate}.md](https://github.com/yangwenmai/github-trending-backup/blob/master/${tempDate}.md)\n\n`
-  readme += `Last Updated: ${new Date().toISOString().replace('T', ' ').slice(0, 19)}`
-  writeMarkDown('README', readme)
-  console.log('README.md is updated.')
+  console.log(_message)
 
   try {
-    await git.pull('origin', 'master')
     await git.add('.')
     await git.commit(new Date().toISOString().replace('T', ' ').slice(0, 19))
-    await git.push('origin', 'master')
     console.log('Git operations completed successfully')
   }
   catch (err) {
@@ -131,17 +99,24 @@ async function main(): Promise<void> {
   }
 }
 
-async function scrapeLanguageWithRetry(language: string, maxRetries = 2): Promise<string> {
+async function scrapeLanguageWithRetry(language: string, maxRetries = 3): Promise<string> {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
+      if (attempt > 0) {
+        const delay = 2000 * 1.5 ** attempt + Math.floor(Math.random() * 1000)
+        await new Promise(r => setTimeout(r, delay))
+      }
+
       const result = await scrapeLanguage(language)
       console.log(`${language} is completed.`)
+
+      await new Promise(r => setTimeout(r, 500 + Math.floor(Math.random() * 500)))
+
       return result
     }
     catch (err) {
       if (attempt < maxRetries) {
         console.log(`Retrying ${language} (${attempt + 1}/${maxRetries}): ${err.message}`)
-        await new Promise(r => setTimeout(r, 2000))
       }
       else {
         console.log(`Failed to scrape ${language} after ${maxRetries + 1} attempts: ${err.message}`)
@@ -205,43 +180,65 @@ function writeMarkDown(fileName: string, content: string): void {
 async function scrapeLanguage(language: string): Promise<string> {
   let result = `\n#### ${language}\n`
 
-  const response = await axiosInstance.get(`https://github.com/trending?l=${language}`)
-  const $ = cheerio.load(response.data)
+  let urlParam: string
 
-  let repoCount = 0
-  $('.Box-row').each((i, elem) => {
-    try {
-      const description = $(elem).find('p.col-9').text().trim()
-      const repoURL = $(elem).find('h2 a').attr('href') || ''
-      const title = repoURL.substring(1)
-      const url = `https://github.com${repoURL}`
-
-      let stars = '0'
-      let forks = '0'
-
-      $(elem).find('a.Link--muted.d-inline-block.mr-3').each((i, contentSelection) => {
-        const iconLabel = $(contentSelection).find('svg').attr('aria-label')
-        if (iconLabel === 'star') {
-          stars = $(contentSelection).text().trim()
-        }
-        else if (iconLabel === 'fork') {
-          forks = $(contentSelection).text().trim()
-        }
-      })
-
-      result += `${i + 1}. [${title.replace(/\s/g, '')} (${stars.trim()}s/${forks.trim()}f)](${url}) : ${description.trim()}\n`
-      repoCount++
-    }
-    catch (err) {
-      console.error(`Error processing repo ${i} for ${language}:`, err)
-    }
-  })
-
-  if (repoCount === 0) {
-    result += `No trending repositories found for ${language} today.\n`
+  switch (language) {
+    case 'C#':
+      urlParam = 'c%23'
+      break
+    case 'C++':
+      urlParam = 'c%2B%2B'
+      break
+    case 'F#':
+      urlParam = 'f%23'
+      break
+    default:
+      urlParam = language.toLowerCase()
   }
 
-  return result
+  try {
+    const response = await axiosInstance.get(`https://github.com/trending/${urlParam}`)
+    const $ = cheerio.load(response.data)
+
+    let repoCount = 0
+    $('.Box-row').each((i, elem) => {
+      try {
+        const description = $(elem).find('p.col-9').text().trim()
+        const repoURL = $(elem).find('h2 a').attr('href') || ''
+        const title = repoURL.substring(1)
+        const url = `https://github.com${repoURL}`
+
+        let stars = '0'
+        let forks = '0'
+
+        $(elem).find('a.Link--muted.d-inline-block.mr-3').each((i, contentSelection) => {
+          const iconLabel = $(contentSelection).find('svg').attr('aria-label')
+          if (iconLabel === 'star') {
+            stars = $(contentSelection).text().trim()
+          }
+          else if (iconLabel === 'fork') {
+            forks = $(contentSelection).text().trim()
+          }
+        })
+
+        result += `${i + 1}. [${title.replace(/\s/g, '')} (${stars.trim()}s/${forks.trim()}f)](${url}) : ${description.trim()}\n`
+        repoCount++
+      }
+      catch (err) {
+        console.error(`Error processing repo ${i} for ${language}:`, err)
+      }
+    })
+
+    if (repoCount === 0) {
+      result += `No trending repositories found for ${language} today.\n`
+    }
+
+    return result
+  }
+  catch (err) {
+    console.error(`Error scraping ${language}:`, err.message)
+    return `\n#### ${language}\nError: Could not retrieve data for this language. ${err.message}\n`
+  }
 }
 
 main().catch((err) => {
