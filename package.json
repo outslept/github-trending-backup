@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.6.3",
   "scripts": {
     "dev": "esno index.ts",
-    "build": "tsup index.ts --minify",
+    "start": "esno cli.ts",
+    "build": "tsup index.ts cli.ts git-ops.ts --minify",
     "lint": "eslint .",
     "prepare": "simple-git-hooks",
     "test-action": "act -j scrape"
@@ -11,6 +12,8 @@
   "dependencies": {
     "axios": "^1.8.3",
     "cheerio": "^1.0.0",
+    "ofetch": "^1.4.1",
+    "pathe": "^2.0.3",
     "simple-git": "^3.27.0"
   },
   "devDependencies": {

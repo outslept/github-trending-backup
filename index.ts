@@ -1,64 +1,53 @@
-import type { SimpleGit } from 'simple-git'
 import * as fs from 'node:fs'
-import * as path from 'node:path'
+import { join } from 'pathe'
 import process from 'node:process'
-import axios from 'axios'
+import { ofetch } from 'ofetch'
 import * as cheerio from 'cheerio'
-import simpleGit from 'simple-git'
 
 let tempDate: string
 
 const targets = [
-  'JavaScript',
-  'Python',
-  'Java',
-  'TypeScript',
-  'C++',
-  'C#',
-  'Go',
-  'Rust',
-  'PHP',
-  'Ruby',
-  'Swift',
-  'Kotlin',
-  'Scala',
-  'Haskell',
-  'Elixir',
-  'Lua',
-  'Objective-C',
-  'Assembly',
-  'Shell',
-  'C',
-  'Nim',
-  'OCaml',
-  'Zig',
-  'HTML',
-  'CSS',
-  'Vue',
-  'Svelte',
-  'SQL',
-  'PowerShell',
   'Bash',
-  'YAML',
-  'JSON',
+  'C',
+  'C++',
+  'CSS',
+  'Elixir',
+  'Go',
+  'Haskell',
+  'HTML',
+  'Java',
+  'JavaScript',
+  'Kotlin',
+  'Lua',
+  'OCaml',
+  'Python',
+  'Rust',
+  'Svelte',
+  'TypeScript',
+  'Vue',
+  'Zig',
 ]
 
-const git: SimpleGit = simpleGit({
-  baseDir: process.cwd(),
-  binary: 'git',
-  maxConcurrentProcesses: 6,
-})
+interface Repository {
+  rank: number;
+  title: string;
+  url: string;
+  description: string;
+  stars: string;
+  forks: string;
+  todayStars: string;
+}
 
-const axiosInstance = axios.create({
+const fetchOptions = {
   timeout: 30000,
   headers: {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.5',
   },
-})
+}
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   tempDate = new Date().toISOString().slice(0, 10)
   let _message = ''
 
@@ -77,26 +66,24 @@ async function main(): Promise<void> {
     }
   }
 
-  let content = ''
+  let content = `# GitHub Trending - ${tempDate}\n\n`
+
+  content += "## Table of Contents\n\n"
+  for (const language of targets) {
+    const anchor = language.toLowerCase().replace(/[^\w]/g, '-')
+    content += `- [${language}](#${anchor})\n`
+  }
+  content += "\n"
 
   const results = await Promise.all(
     targets.map(target => scrapeLanguageWithRetry(target)),
   )
 
-  content = `### ${tempDate}\n${results.join('')}`
+  content += results.join('\n')
 
   writeMarkDown(tempDate, content)
   _message += `${tempDate}.md is completed.\n`
   console.log(_message)
-
-  try {
-    await git.add('.')
-    await git.commit(new Date().toISOString().replace('T', ' ').slice(0, 19))
-    console.log('Git operations completed successfully')
-  }
-  catch (err) {
-    console.error('Git operation error:', err)
-  }
 }
 
 async function scrapeLanguageWithRetry(language: string, maxRetries = 3): Promise<string> {
@@ -120,11 +107,11 @@ async function scrapeLanguageWithRetry(language: string, maxRetries = 3): Promis
       }
       else {
         console.log(`Failed to scrape ${language} after ${maxRetries + 1} attempts: ${err.message}`)
-        return `\n#### ${language}\nFailed to scrape this language after multiple attempts.\n`
+        return `## ${language}\n\nFailed to scrape this language after multiple attempts.\n`
       }
     }
   }
-  return `\n#### ${language}\nFailed to scrape this language.\n`
+  return `## ${language}\n\nFailed to scrape this language.\n`
 }
 
 async function collectDocs(): Promise<[boolean, Error | null]> {
@@ -147,7 +134,7 @@ async function collectDocs(): Promise<[boolean, Error | null]> {
     fs.mkdirSync(docName, { recursive: true })
 
     for (const v of mdNewFiles) {
-      fs.renameSync(v, path.join(docName, v))
+      fs.renameSync(v, join(docName, v))
     }
 
     return [true, null]
@@ -164,7 +151,7 @@ async function listDir(dirPth: string, suffix: string): Promise<string[]> {
   suffix = suffix.toUpperCase()
 
   for (const fi of dir) {
-    const stat = fs.statSync(path.join(dirPth, fi))
+    const stat = fs.statSync(join(dirPth, fi))
     if (!stat.isDirectory() && fi.toUpperCase().endsWith(suffix)) {
       files.push(fi)
     }
@@ -178,7 +165,7 @@ function writeMarkDown(fileName: string, content: string): void {
 }
 
 async function scrapeLanguage(language: string): Promise<string> {
-  let result = `\n#### ${language}\n`
+  let result = `## ${language}\n\n`
 
   let urlParam: string
 
@@ -197,10 +184,16 @@ async function scrapeLanguage(language: string): Promise<string> {
   }
 
   try {
-    const response = await axiosInstance.get(`https://github.com/trending/${urlParam}`)
-    const $ = cheerio.load(response.data)
+    const response = await ofetch(`https://github.com/trending/${urlParam}`, {
+      ...fetchOptions,
+      responseType: 'text'
+    })
+
+    const $ = cheerio.load(response)
 
     let repoCount = 0
+    const repos: Repository[] = []
+
     $('.Box-row').each((i, elem) => {
       try {
         const description = $(elem).find('p.col-9').text().trim()
@@ -210,6 +203,7 @@ async function scrapeLanguage(language: string): Promise<string> {
 
         let stars = '0'
         let forks = '0'
+        let todayStars = ''
 
         $(elem).find('a.Link--muted.d-inline-block.mr-3').each((i, contentSelection) => {
           const iconLabel = $(contentSelection).find('svg').attr('aria-label')
@@ -221,7 +215,21 @@ async function scrapeLanguage(language: string): Promise<string> {
           }
         })
 
-        result += `${i + 1}. [${title.replace(/\s/g, '')} (${stars.trim()}s/${forks.trim()}f)](${url}) : ${description.trim()}\n`
+        const todayStarsText = $(elem).find('span.d-inline-block.float-sm-right').text().trim()
+        if (todayStarsText) {
+          todayStars = todayStarsText.replace(/\s+/g, ' ')
+        }
+
+        repos.push({
+          rank: i + 1,
+          title: title.replace(/\s/g, ''),
+          url,
+          description: description.trim() || 'No description provided',
+          stars: stars.trim() || '0',
+          forks: forks.trim() || 'No forks',
+          todayStars: todayStars || 'N/A'
+        })
+
         repoCount++
       }
       catch (err) {
@@ -231,17 +239,30 @@ async function scrapeLanguage(language: string): Promise<string> {
 
     if (repoCount === 0) {
       result += `No trending repositories found for ${language} today.\n`
+    } else {
+      result += `| # | Repository | Description | Stars | Forks | Today |\n`
+      result += `| --- | --- | --- | --- | --- | --- |\n`
+
+      for (const repo of repos) {
+        const shortDescription = repo.description.length > 100
+          ? repo.description.substring(0, 97) + '...'
+          : repo.description
+
+        result += `| ${repo.rank} | [${repo.title}](${repo.url}) | ${shortDescription} | ${repo.stars} | ${repo.forks} | ${repo.todayStars} |\n`
+      }
     }
 
     return result
   }
   catch (err) {
     console.error(`Error scraping ${language}:`, err.message)
-    return `\n#### ${language}\nError: Could not retrieve data for this language. ${err.message}\n`
+    return `## ${language}\n\nError: Could not retrieve data for this language. ${err.message}\n`
   }
 }
 
-main().catch((err) => {
-  console.error('Error in script execution:', err)
-  process.exit(1)
-})
+if (require.main === module) {
+  main().catch((err) => {
+    console.error('Error in script execution:', err)
+    process.exit(1)
+  })
+}

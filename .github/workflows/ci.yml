@@ -60,13 +60,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: Run scraper
-        run: pnpm dev
-      - name: Commit and push changes
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            git add .
-            git commit -m "Update trending repositories [skip ci]" || echo "No changes to commit"
-            git push
-          else
-            echo "No changes to commit"
-          fi
+        run: pnpm start
