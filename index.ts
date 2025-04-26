@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
-import { join } from 'pathe'
 import process from 'node:process'
-import { ofetch } from 'ofetch'
 import * as cheerio from 'cheerio'
+import { ofetch } from 'ofetch'
+import { join } from 'pathe'
 
 let tempDate: string
 
@@ -29,13 +29,13 @@ const targets = [
 ]
 
 interface Repository {
-  rank: number;
-  title: string;
-  url: string;
-  description: string;
-  stars: string;
-  forks: string;
-  todayStars: string;
+  rank: number
+  title: string
+  url: string
+  description: string
+  stars: string
+  forks: string
+  todayStars: string
 }
 
 const fetchOptions = {
@@ -68,12 +68,12 @@ export async function main(): Promise<void> {
 
   let content = `# GitHub Trending - ${tempDate}\n\n`
 
-  content += "## Table of Contents\n\n"
+  content += '## Table of Contents\n\n'
   for (const language of targets) {
-    const anchor = language.toLowerCase().replace(/[^\w]/g, '-')
+    const anchor = language.toLowerCase().replace(/\W/g, '-')
     content += `- [${language}](#${anchor})\n`
   }
-  content += "\n"
+  content += '\n'
 
   const results = await Promise.all(
     targets.map(target => scrapeLanguageWithRetry(target)),
@@ -186,7 +186,7 @@ async function scrapeLanguage(language: string): Promise<string> {
   try {
     const response = await ofetch(`https://github.com/trending/${urlParam}`, {
       ...fetchOptions,
-      responseType: 'text'
+      responseType: 'text',
     })
 
     const $ = cheerio.load(response)
@@ -227,7 +227,7 @@ async function scrapeLanguage(language: string): Promise<string> {
           description: description.trim() || 'No description provided',
           stars: stars.trim() || '0',
           forks: forks.trim() || 'No forks',
-          todayStars: todayStars || 'N/A'
+          todayStars: todayStars || 'N/A',
         })
 
         repoCount++
@@ -239,13 +239,14 @@ async function scrapeLanguage(language: string): Promise<string> {
 
     if (repoCount === 0) {
       result += `No trending repositories found for ${language} today.\n`
-    } else {
+    }
+    else {
       result += `| # | Repository | Description | Stars | Forks | Today |\n`
       result += `| --- | --- | --- | --- | --- | --- |\n`
 
       for (const repo of repos) {
         const shortDescription = repo.description.length > 100
-          ? repo.description.substring(0, 97) + '...'
+          ? `${repo.description.substring(0, 97)}...`
           : repo.description
 
         result += `| ${repo.rank} | [${repo.title}](${repo.url}) | ${shortDescription} | ${repo.stars} | ${repo.forks} | ${repo.todayStars} |\n`

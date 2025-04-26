@@ -1,6 +1,6 @@
 import type { SimpleGit } from 'simple-git'
-import simpleGit from 'simple-git'
 import process from 'node:process'
+import simpleGit from 'simple-git'
 
 export async function performGitOperations(message?: string): Promise<void> {
   const git: SimpleGit = simpleGit({
@@ -16,7 +16,8 @@ export async function performGitOperations(message?: string): Promise<void> {
     await git.commit(commitMessage)
 
     console.log('Git operations completed successfully')
-  } catch (err) {
+  }
+  catch (err) {
     console.error('Git operation error:', err)
     throw err
   }
@@ -32,12 +33,14 @@ export async function pushToRemote(remote: string = 'origin', branch?: string): 
   try {
     if (branch) {
       await git.push(remote, branch)
-    } else {
+    }
+    else {
       await git.push(remote)
     }
 
     console.log(`Successfully pushed to ${remote}`)
-  } catch (err) {
+  }
+  catch (err) {
     console.error('Git push error:', err)
     throw err
   }
@@ -53,7 +56,8 @@ export async function hasChanges(): Promise<boolean> {
   try {
     const status = await git.status()
     return status.files.length > 0
-  } catch (err) {
+  }
+  catch (err) {
     console.error('Git status error:', err)
     return false
   }

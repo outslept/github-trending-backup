@@ -1,5 +1,6 @@
+import { hasChanges, performGitOperations, pushToRemote } from './git-ops'
 import { main as scrape } from './index'
-import { performGitOperations, pushToRemote, hasChanges } from './git-ops'
+import process from 'node:process'
 
 async function run() {
   try {
@@ -17,10 +18,12 @@ async function run() {
         console.log('Pushing changes...')
         await pushToRemote()
       }
-    } else {
+    }
+    else {
       console.log('No changes detected')
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error:', error)
     process.exit(1)
   }
