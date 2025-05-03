@@ -2,31 +2,33 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [master]
   pull_request:
-    branches: [main, master]
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    branches: [master]
 
 jobs:
   check_commit_message:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[no ci]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip actions]') && !contains(github.event.head_commit.message, 'Update trending repositories')"
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     outputs:
-      should_run: ${{ steps.check.outputs.should_run }}
+      should_run_ci: ${{ steps.check.outputs.should_run_ci }}
     steps:
       - id: check
-        run: echo "should_run=true" >> $GITHUB_OUTPUT
+        run: |
+          commit_message="${{ github.event.head_commit.message }}"
+          skip_pattern='(\[no ci\]|\[skip ci\]|\[ci skip\]|\[skip actions\]|Update trending repositories)'
+          if [[ ! "$commit_message" =~ $skip_pattern ]]; then
+            echo "should_run_ci=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run_ci=false" >> $GITHUB_OUTPUT
+          fi
 
   build:
-    needs: check_commit_message
-    if: needs.check_commit_message.outputs.should_run == 'true'
+    needs: [check_commit_message]
+    if: needs.check_commit_message.outputs.should_run_ci == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: pnpm/action-setup@v3
         with:
           version: 10.6.3
@@ -34,30 +36,6 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm build
-
-  scrape:
-    needs: check_commit_message
-    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.check_commit_message.outputs.should_run == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10.6.3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm install
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      - name: Run scraper
-        run: pnpm start
