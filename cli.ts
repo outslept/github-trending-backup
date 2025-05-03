@@ -10,21 +10,17 @@ async function run() {
 
     const changes = await hasChanges()
     if (changes) {
-      console.log('Changes detected, committing...')
-
+      console.log('Changes detected, performing git operations...')
       await performGitOperations('Update trending repositories [skip ci]')
-
-      if (!process.env.CI) {
-        console.log('Pushing changes...')
-        await pushToRemote()
-      }
+      await pushToRemote('origin', 'master')
+      console.log('Commit and push operations completed.')
     }
     else {
-      console.log('No changes detected')
+      console.log('No changes detected or unable to determine changes.')
     }
   }
   catch (error) {
-    console.error('Error:', error)
+    console.error('Error during script execution:', error)
     process.exit(1)
   }
 }

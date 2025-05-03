@@ -25,14 +25,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Run scraper and commit changes
-        run: |
-          pnpm start
-          if git diff --quiet --exit-code; then
-            echo "No changes detected."
-          else
-            echo "Changes detected. Committing and pushing..."
-            git add .
-            git commit -m "Update trending repositories" -m "[skip ci]"
-            git push origin master
-          fi
+          git remote -v
+      - name: Run scraper
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: pnpm start
