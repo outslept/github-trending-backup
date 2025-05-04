@@ -10,7 +10,6 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "axios": "^1.8.3",
     "cheerio": "^1.0.0",
     "ofetch": "^1.4.1",
     "pathe": "^2.0.3",
