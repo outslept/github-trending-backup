@@ -7,8 +7,7 @@
     "build": "tsdown index.ts cli.ts git-ops.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "simple-git-hooks",
-    "test-action": "act -j scrape"
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "axios": "^1.8.3",
@@ -19,14 +18,12 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.10.1",
-    "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@types/node": "^22.13.10",
     "eslint": "^9.22.0",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.11.1",
     "tsdown": "0.11.0-beta.2",
-    "tsup": "^8.4.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2"
   },
@@ -35,10 +32,5 @@
   },
   "nano-staged": {
     "*.{js,ts,mjs}": "eslint --fix"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   }
 }
