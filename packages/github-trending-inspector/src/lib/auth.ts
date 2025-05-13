@@ -16,5 +16,5 @@ export const auth = betterAuth({
     }
   },
   plugins: [nextCookies()],
-  baseUrl: env.NEXT_PUBLIC_APP_URL
+  baseURL: env.NEXT_PUBLIC_APP_URL
 })
