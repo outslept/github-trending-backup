@@ -42,15 +42,34 @@ export async function GET(
 
     try {
       await access(filePath)
-    } catch {
+    } catch (error) {
+      console.error(`File access error for ${filePath}:`, error)
       return NextResponse.json({
         error: 'No data found for this date',
-        details: `File not found: ${date}.md`
+        details: `File not found: ${date}.md`,
+        path: filePath
       }, { status: 404 })
     }
 
-    const content = await readFile(filePath, 'utf-8')
+    let content: string
+    try {
+      content = await readFile(filePath, 'utf-8')
+    } catch (error) {
+      console.error(`File read error for ${filePath}:`, error)
+      return NextResponse.json({
+        error: 'Failed to read file',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        path: filePath
+      }, { status: 500 })
+    }
+
     const repos = parseMarkdownContent(content)
+    if (!repos.length) {
+      return NextResponse.json({
+        error: 'No repositories found',
+        details: 'The file was empty or had invalid format'
+      }, { status: 404 })
+    }
 
     const session = await auth.api.getSession({
       headers: request.headers
@@ -74,10 +93,24 @@ export async function GET(
           })
 
           if (!starredResponse.ok) {
+            console.error('GitHub API error:', {
+              status: starredResponse.status,
+              statusText: starredResponse.statusText
+            })
+            const errorText = await starredResponse.text()
+            console.error('GitHub API error response:', errorText)
             throw new Error(`GitHub API error: ${starredResponse.statusText}`)
           }
 
-          const starredRepos: GithubRepo[] = await starredResponse.json()
+          const responseText = await starredResponse.text()
+          let starredRepos: GithubRepo[]
+          try {
+            starredRepos = JSON.parse(responseText)
+          } catch (error) {
+            console.error('Failed to parse GitHub response:', responseText)
+            throw new Error('Invalid GitHub API response')
+          }
+
           repos.forEach(repo => {
             repo.isStarred = starredRepos.some(
               starred => starred.full_name === repo.title
@@ -85,12 +118,19 @@ export async function GET(
           })
         } catch (error) {
           console.error('Error fetching starred repos:', error)
+          repos.forEach(repo => {
+            repo.isStarred = false
+          })
         }
       }
     }
 
-    return NextResponse.json(repos)
+    const response = NextResponse.json(repos)
+    response.headers.set('Cache-Control', 'no-store')
+    return response
+
   } catch (error) {
+    console.error('Unhandled error in trending API:', error)
     return NextResponse.json({
       error: 'Failed to fetch trending data',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -128,6 +168,7 @@ function parseMarkdownContent(content: string): Repository[] {
           })
         }
       } catch (error) {
+        console.error('Error parsing line:', { line, error })
         continue
       }
     }
@@ -144,7 +185,7 @@ function parseRepoInfo(repoInfo: string): [string, string] {
       return [title.trim(), url.trim()]
     }
   } catch (error) {
-    console.error('Error parsing repo info:', repoInfo, error)
+    console.error('Error parsing repo info:', { repoInfo, error })
   }
   return ['', '']
 }

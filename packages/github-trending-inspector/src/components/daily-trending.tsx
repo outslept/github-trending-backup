@@ -29,16 +29,28 @@ export function DailyTrending({ date }: Readonly<{ date: string }>) {
         setLoading(true)
         setError(null)
 
+        console.log('Fetching data for date:', date)
         const response = await fetch(`/api/trending/${date}`)
-        const data = await response.json()
+        console.log('Response status:', response.status)
 
-        console.log('Received data:', data)
+        const contentType = response.headers.get('content-type')
+        console.log('Content-Type:', contentType)
+
+        if (!contentType?.includes('application/json')) {
+          const text = await response.text()
+          console.error('Received non-JSON response:', text)
+          throw new Error('Server returned non-JSON response')
+        }
+
+        const data = await response.json()
+        console.log('Parsed data:', data)
 
         if ('error' in data) {
           throw new Error(data.error)
         }
 
         if (!Array.isArray(data)) {
+          console.error('Invalid data structure:', data)
           throw new Error('Invalid data format received from server')
         }
 
