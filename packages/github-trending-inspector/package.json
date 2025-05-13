@@ -1,0 +1,25 @@
+{
+  "name": "github-trending-inspector",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "react": "catalog:frontend",
+    "react-dom": "catalog:frontend",
+    "next": "catalog:frontend"
+  },
+  "devDependencies": {
+    "github-trending-tools": "workspace:*",
+    "typescript": "catalog:build",
+    "@types/node": "catalog:types",
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
+    "@tailwindcss/postcss": "catalog:build",
+    "tailwindcss": "catalog:build"
+  }
+}

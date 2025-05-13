@@ -1,0 +1,28 @@
+{
+  "name": "github-trending-tools",
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.10.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsx watch cli.ts",
+    "start": "tsx cli.ts",
+    "scrape": "tsx cli.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "tsdown": "catalog:build",
+    "tsx": "catalog:script"
+  },
+  "dependencies": {
+    "cheerio": "catalog:script",
+    "consola": "catalog:script",
+    "ofetch": "catalog:script",
+    "pathe": "catalog:script",
+    "simple-git": "catalog:script"
+  }
+}

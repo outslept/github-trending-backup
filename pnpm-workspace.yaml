@@ -1,0 +1,31 @@
+packages:
+  - packages/*
+catalogs:
+  frontend:
+    "react": ^19.0.0
+    "react-dom": ^19.0.0
+    "next": ^15.3.2
+  types:
+    "@types/react": ^19
+    "@types/react-dom": ^19
+    "@types/node": ^22.15.17
+  build:
+    tailwindcss: ^4
+    '@tailwindcss/postcss': ^4
+    typescript: ^5.8.2
+    tsdown: ^0.11.7
+  workflow:
+    nano-staged: ^0.8.0
+    simple-git-hooks: ^2.11.1
+  lint:
+    eslint: ^9.22.0
+    '@antfu/eslint-config': ^4.13.0
+    '@commitlint/config-conventional': ^19.8.0
+    publint: ^0.3.12
+  script:
+    cheerio: ^1.0.0
+    consola: ^3.4.2
+    ofetch: ^1.4.1
+    pathe: ^2.0.3
+    simple-git: ^3.27.0
+    tsx: ^4.19.4
