@@ -45,18 +45,18 @@ export async function GET(
     if (session?.user) {
       console.log('User is authenticated, fetching starred repos')
 
-      const account = await db.query.accounts.findFirst({
-        where: (accounts, { eq, and }) => and(
-          eq(accounts.userId, session.user.id),
-          eq(accounts.provider, 'github')
+      const account = await db.query.account.findFirst({
+        where: (account, { eq, and }) => and(
+          eq(account.userId, session.user.id),
+          eq(account.providerId, 'github')
         )
       })
 
-      if (account?.access_token) {
+      if (account?.accessToken) {
         try {
           const starredResponse = await fetch('https://api.github.com/user/starred?per_page=100', {
             headers: {
-              Authorization: `Bearer ${account.access_token}`,
+              Authorization: `Bearer ${account.accessToken}`,
               Accept: 'application/vnd.github.v3+json'
             }
           })
@@ -77,7 +77,7 @@ export async function GET(
           console.error('Error fetching starred repos:', error)
         }
       } else {
-        console.log('No GitHub access token found for user')
+        console.log('No GitHub token found for user')
       }
     }
 

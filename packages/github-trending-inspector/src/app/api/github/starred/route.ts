@@ -11,20 +11,20 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const account = await db.query.accounts.findFirst({
-    where: (accounts, { eq, and }) => and(
-      eq(accounts.userId, session.user.id),
-      eq(accounts.provider, 'github')
+  const account = await db.query.account.findFirst({
+    where: (account, { eq, and }) => and(
+      eq(account.userId, session.user.id),
+      eq(account.providerId, 'github')
     )
   })
 
-  if (!account?.access_token) {
+  if (!account?.accessToken) {
     return NextResponse.json({ error: 'No GitHub token found' }, { status: 401 })
   }
 
   const response = await fetch('https://api.github.com/user/starred', {
     headers: {
-      Authorization: `Bearer ${account.access_token}`,
+      Authorization: `Bearer ${account.accessToken}`,
       Accept: 'application/vnd.github.v3+json'
     }
   })
