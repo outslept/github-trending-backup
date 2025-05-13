@@ -2,10 +2,10 @@
   "name": "github-trending-backup",
   "packageManager": "pnpm@10.6.3",
   "scripts": {
-    "dev": "tsx index.ts",
-    "start": "tsx cli.ts",
-    "build": "tsdown index.ts cli.ts git-ops.ts",
-    "lint": "eslint .",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "lint:fix": "eslint . --fix",
     "prepare": "simple-git-hooks"
   },
@@ -13,7 +13,10 @@
     "cheerio": "^1.0.0",
     "ofetch": "^1.4.1",
     "pathe": "^2.0.3",
-    "simple-git": "^3.27.0"
+    "simple-git": "^3.27.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.3.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.10.1",
@@ -24,7 +27,13 @@
     "simple-git-hooks": "^2.11.1",
     "tsdown": "0.11.0-beta.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint-config-next": "15.3.2",
+    "@eslint/eslintrc": "^3"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm nano-staged"

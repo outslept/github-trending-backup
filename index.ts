@@ -1,8 +1,8 @@
-import * as fs from 'node:fs'
 import process from 'node:process'
-import * as cheerio from 'cheerio'
 import { ofetch } from 'ofetch'
 import { join } from 'pathe'
+import { mkdirSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs'
+import { load } from 'cheerio'
 
 let tempDate: string
 
@@ -131,10 +131,10 @@ async function collectDocs(): Promise<[boolean, Error | null]> {
       }
     }
 
-    fs.mkdirSync(docName, { recursive: true })
+    mkdirSync(docName, { recursive: true })
 
     for (const v of mdNewFiles) {
-      fs.renameSync(v, join(docName, v))
+      renameSync(v, join(docName, v))
     }
 
     return [true, null]
@@ -146,12 +146,12 @@ async function collectDocs(): Promise<[boolean, Error | null]> {
 
 async function listDir(dirPth: string, suffix: string): Promise<string[]> {
   const files: string[] = []
-  const dir = fs.readdirSync(dirPth)
+  const dir = readdirSync(dirPth)
 
   suffix = suffix.toUpperCase()
 
   for (const fi of dir) {
-    const stat = fs.statSync(join(dirPth, fi))
+    const stat = statSync(join(dirPth, fi))
     if (!stat.isDirectory() && fi.toUpperCase().endsWith(suffix)) {
       files.push(fi)
     }
@@ -161,7 +161,7 @@ async function listDir(dirPth: string, suffix: string): Promise<string[]> {
 }
 
 function writeMarkDown(fileName: string, content: string): void {
-  fs.writeFileSync(`${fileName}.md`, content)
+  writeFileSync(`${fileName}.md`, content)
 }
 
 async function scrapeLanguage(language: string): Promise<string> {
@@ -189,7 +189,7 @@ async function scrapeLanguage(language: string): Promise<string> {
       responseType: 'text',
     })
 
-    const $ = cheerio.load(response)
+    const $ = load(response)
 
     let repoCount = 0
     const repos: Repository[] = []
