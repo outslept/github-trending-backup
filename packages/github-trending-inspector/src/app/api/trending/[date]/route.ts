@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile } from 'fs/promises'
+import { readFile, access } from 'fs/promises'
 import { join } from 'path'
 import { auth } from '$/lib/auth'
 import { db } from '$/db'
@@ -29,22 +29,34 @@ export async function GET(
 ) {
   try {
     const { date } = await context.params
-    const filePath = join(process.cwd(), '..', '..', `${date}.md`)
 
-    console.log('Reading file:', filePath)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return NextResponse.json({
+        error: 'Invalid date format',
+        details: 'Date should be in YYYY-MM-DD format'
+      }, { status: 400 })
+    }
+
+    const [year, month] = date.split('-')
+    const filePath = join(process.cwd(), '..', '..', 'data', year, month, `${date}.md`)
+
+    try {
+      await access(filePath)
+    } catch {
+      return NextResponse.json({
+        error: 'No data found for this date',
+        details: `File not found: ${date}.md`
+      }, { status: 404 })
+    }
 
     const content = await readFile(filePath, 'utf-8')
     const repos = parseMarkdownContent(content)
-
-    console.log(`Found ${repos.length} repositories`)
 
     const session = await auth.api.getSession({
       headers: request.headers
     })
 
     if (session?.user) {
-      console.log('User is authenticated, fetching starred repos')
-
       const account = await db.query.account.findFirst({
         where: (account, { eq, and }) => and(
           eq(account.userId, session.user.id),
@@ -66,8 +78,6 @@ export async function GET(
           }
 
           const starredRepos: GithubRepo[] = await starredResponse.json()
-          console.log(`Found ${starredRepos.length} starred repositories`)
-
           repos.forEach(repo => {
             repo.isStarred = starredRepos.some(
               starred => starred.full_name === repo.title
@@ -76,23 +86,11 @@ export async function GET(
         } catch (error) {
           console.error('Error fetching starred repos:', error)
         }
-      } else {
-        console.log('No GitHub token found for user')
       }
     }
 
     return NextResponse.json(repos)
   } catch (error) {
-    console.error('Error in trending API:', error)
-
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      const { date } = await context.params
-      return NextResponse.json({
-        error: 'No data found for this date',
-        details: `File not found: ${date}.md`
-      }, { status: 404 })
-    }
-
     return NextResponse.json({
       error: 'Failed to fetch trending data',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -103,7 +101,6 @@ export async function GET(
 function parseMarkdownContent(content: string): Repository[] {
   const repos: Repository[] = []
   const lines = content.split('\n')
-
   let currentLanguage = ''
 
   for (const line of lines) {
@@ -115,7 +112,6 @@ function parseMarkdownContent(content: string): Repository[] {
     if (line.startsWith('|') && !line.startsWith('| #') && !line.startsWith('| ---')) {
       try {
         const [_, rank, repoInfo, description, stars, forks, today] = line.split('|').map(s => s.trim())
-
         const [title, url] = parseRepoInfo(repoInfo)
 
         if (title && url) {
@@ -132,7 +128,6 @@ function parseMarkdownContent(content: string): Repository[] {
           })
         }
       } catch (error) {
-        console.error('Error parsing line:', line, error)
         continue
       }
     }
