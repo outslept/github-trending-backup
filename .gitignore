@@ -15,7 +15,7 @@ dist
 /coverage
 
 # next.js
-/.next/
+.next/
 /out/
 
 # production
@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Environment
+.env
+.env.*
+!.env.example
