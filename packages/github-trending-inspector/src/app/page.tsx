@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { DailyTrending } from '$/components/daily-trending/index'
 import { DatePicker } from '$/components/date-picker'
@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split('T')[0]
+    new Date().toISOString().split('T')[0],
   )
 
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       <div className="mb-6 flex justify-between">
         <DatePicker
           value={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
+          onChange={date => setSelectedDate(date)}
         />
         <NextUpdateTimer />
       </div>

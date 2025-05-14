@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { readFile, access } from 'fs/promises'
-import { join } from 'path'
-import { auth } from '$/lib/auth'
+import type { NextRequest } from 'next/server'
+import { access, readFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import process from 'node:process'
 import { db } from '$/db'
+import { auth } from '$/lib/auth'
+import { NextResponse } from 'next/server'
 
 interface Repository {
   rank: number
@@ -25,7 +27,7 @@ interface GithubRepo {
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ date: string }> }
+  context: { params: Promise<{ date: string }> },
 ) {
   try {
     const { date } = await context.params
@@ -33,7 +35,7 @@ export async function GET(
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return NextResponse.json({
         error: 'Invalid date format',
-        details: 'Date should be in YYYY-MM-DD format'
+        details: 'Date should be in YYYY-MM-DD format',
       }, { status: 400 })
     }
 
@@ -42,24 +44,26 @@ export async function GET(
 
     try {
       await access(filePath)
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`File access error for ${filePath}:`, error)
       return NextResponse.json({
         error: 'No data found for this date',
         details: `File not found: ${date}.md`,
-        path: filePath
+        path: filePath,
       }, { status: 404 })
     }
 
     let content: string
     try {
       content = await readFile(filePath, 'utf-8')
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`File read error for ${filePath}:`, error)
       return NextResponse.json({
         error: 'Failed to read file',
         details: error instanceof Error ? error.message : 'Unknown error',
-        path: filePath
+        path: filePath,
       }, { status: 500 })
     }
 
@@ -67,20 +71,20 @@ export async function GET(
     if (!repos.length) {
       return NextResponse.json({
         error: 'No repositories found',
-        details: 'The file was empty or had invalid format'
+        details: 'The file was empty or had invalid format',
       }, { status: 404 })
     }
 
     const session = await auth.api.getSession({
-      headers: request.headers
+      headers: request.headers,
     })
 
     if (session?.user) {
       const account = await db.query.account.findFirst({
         where: (account, { eq, and }) => and(
           eq(account.userId, session.user.id),
-          eq(account.providerId, 'github')
-        )
+          eq(account.providerId, 'github'),
+        ),
       })
 
       if (account?.accessToken) {
@@ -88,14 +92,14 @@ export async function GET(
           const starredResponse = await fetch('https://api.github.com/user/starred?per_page=100', {
             headers: {
               Authorization: `Bearer ${account.accessToken}`,
-              Accept: 'application/vnd.github.v3+json'
-            }
+              Accept: 'application/vnd.github.v3+json',
+            },
           })
 
           if (!starredResponse.ok) {
             console.error('GitHub API error:', {
               status: starredResponse.status,
-              statusText: starredResponse.statusText
+              statusText: starredResponse.statusText,
             })
             const errorText = await starredResponse.text()
             console.error('GitHub API error response:', errorText)
@@ -106,19 +110,21 @@ export async function GET(
           let starredRepos: GithubRepo[]
           try {
             starredRepos = JSON.parse(responseText)
-          } catch (error) {
+          }
+          catch {
             console.error('Failed to parse GitHub response:', responseText)
             throw new Error('Invalid GitHub API response')
           }
 
-          repos.forEach(repo => {
+          repos.forEach((repo) => {
             repo.isStarred = starredRepos.some(
-              starred => starred.full_name === repo.title
+              starred => starred.full_name === repo.title,
             )
           })
-        } catch (error) {
+        }
+        catch (error) {
           console.error('Error fetching starred repos:', error)
-          repos.forEach(repo => {
+          repos.forEach((repo) => {
             repo.isStarred = false
           })
         }
@@ -128,12 +134,12 @@ export async function GET(
     const response = NextResponse.json(repos)
     response.headers.set('Cache-Control', 'no-store')
     return response
-
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Unhandled error in trending API:', error)
     return NextResponse.json({
       error: 'Failed to fetch trending data',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
     }, { status: 500 })
   }
 }
@@ -157,17 +163,18 @@ function parseMarkdownContent(content: string): Repository[] {
         if (title && url) {
           repos.push({
             language: currentLanguage,
-            rank: parseInt(rank) || 0,
+            rank: Number.parseInt(rank) || 0,
             title,
             url,
             description: description || 'No description provided',
             stars: stars || '0',
             forks: forks || '0',
             todayStars: today || 'N/A',
-            isStarred: false
+            isStarred: false,
           })
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Error parsing line:', { line, error })
         continue
       }
@@ -184,7 +191,8 @@ function parseRepoInfo(repoInfo: string): [string, string] {
       const [_, title, url] = match
       return [title.trim(), url.trim()]
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error parsing repo info:', { repoInfo, error })
   }
   return ['', '']

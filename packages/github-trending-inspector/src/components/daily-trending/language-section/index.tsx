@@ -1,18 +1,11 @@
-"use client"
+'use client'
 
-import { useState } from 'react'
-import { motion } from 'motion/react'
-import {
+import type {
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-  flexRender
-} from "@tanstack/react-table"
+} from '@tanstack/react-table'
+import type { LanguageGroup, Repository } from '../types'
 import { Card, CardContent, CardHeader } from '$/components/ui/card'
 import {
   Table,
@@ -22,11 +15,20 @@ import {
   TableHeader,
   TableRow,
 } from '$/components/ui/table'
-import { Repository, LanguageGroup } from '../types'
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { motion } from 'motion/react'
+import { useState } from 'react'
 import { createColumns } from '../columns'
+import { languageIcons } from '../constants'
 import { Header } from './header'
 import { Pagination } from './pagination'
-import { languageIcons } from '../constants'
 
 interface LanguageSectionProps {
   group: LanguageGroup
@@ -43,9 +45,10 @@ export function LanguageSection({ group, session }: Readonly<LanguageSectionProp
     const response = await fetch('/api/github/star', {
       method: repo.isStarred ? 'DELETE' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ repoName: repo.title })
+      body: JSON.stringify({ repoName: repo.title }),
     })
-    if (!response.ok) throw new Error('Failed to toggle star')
+    if (!response.ok)
+      throw new Error('Failed to toggle star')
   }, session)
 
   const table = useReactTable({
@@ -83,54 +86,56 @@ export function LanguageSection({ group, session }: Readonly<LanguageSectionProp
         <div className="rounded-md border">
           <Table>
             <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
+              {table.getHeaderGroups().map(headerGroup => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map(header => (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   ))}
                 </TableRow>
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <motion.tr
-                    key={row.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.2,
-                      ease: [0.4, 0, 0.2, 1]
-                    }}
-                    className="group/row"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+              {table.getRowModel().rows?.length
+                ? (
+                    table.getRowModel().rows.map(row => (
+                      <motion.tr
+                        key={row.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.2,
+                          ease: [0.4, 0, 0.2, 1],
+                        }}
+                        className="group/row"
+                      >
+                        {row.getVisibleCells().map(cell => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        ))}
+                      </motion.tr>
+                    ))
+                  )
+                : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
                       </TableCell>
-                    ))}
-                  </motion.tr>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
+                    </TableRow>
+                  )}
             </TableBody>
           </Table>
         </div>

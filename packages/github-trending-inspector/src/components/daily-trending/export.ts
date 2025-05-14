@@ -1,4 +1,4 @@
-import { Repository } from './types'
+import type { Repository } from './types'
 
 export function exportToJson(data: Repository[], filename: string) {
   const jsonString = JSON.stringify(data, null, 2)
@@ -19,9 +19,9 @@ export function exportToCsv(data: Repository[], filename: string) {
     headers.join(','),
     ...data.map(repo =>
       headers.map(header =>
-        JSON.stringify((repo as any)[header] || '')
-      ).join(',')
-    )
+        JSON.stringify((repo as any)[header] || ''),
+      ).join(','),
+    ),
   ]
   const csvString = csvRows.join('\n')
   const blob = new Blob([csvString], { type: 'text/csv' })

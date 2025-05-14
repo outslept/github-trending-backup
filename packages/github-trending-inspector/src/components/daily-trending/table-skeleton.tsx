@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { Skeleton } from "$/components/ui/skeleton"
-import { TableBody, TableCell, TableHead, TableHeader, TableRow, Table } from "$/components/ui/table"
+import { Skeleton } from '$/components/ui/skeleton'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '$/components/ui/table'
 
 export function TableSkeleton() {
   return (

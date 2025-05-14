@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core"
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { user } from './auth'
 
 export const stars = sqliteTable('stars', {
@@ -7,5 +7,5 @@ export const stars = sqliteTable('stars', {
   repoName: text('repo_name').notNull(),
   starredAt: integer('starred_at', { mode: 'timestamp' }).notNull(),
   language: text('language'),
-  description: text('description')
+  description: text('description'),
 })

@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { ChevronDown } from "lucide-react"
-import { motion, AnimatePresence } from "motion/react"
-import { cn } from "$/lib/utils"
+import { cn } from '$/lib/utils'
+import { ChevronDown } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 
 interface ColumnHeaderProps {
   title: string
@@ -17,21 +17,21 @@ export function ColumnHeader({
   type,
   isSortable,
   sortDirection,
-  onClick
+  onClick,
 }: Readonly<ColumnHeaderProps>) {
   return (
     <div className="h-10 text-left align-middle font-medium">
       <motion.button
         type="button"
         className={cn(
-          "flex items-center justify-between gap-1 w-full px-2 py-1 rounded-md -mx-2",
-          "transition-all duration-200 ease-out",
+          'flex items-center justify-between gap-1 w-full px-2 py-1 rounded-md -mx-2',
+          'transition-all duration-200 ease-out',
           isSortable && [
-            "cursor-pointer",
-            "hover:bg-muted/50",
-            "focus-visible:outline-none focus-visible:ring-1",
-            "focus-visible:ring-ring focus-visible:ring-offset-1"
-          ]
+            'cursor-pointer',
+            'hover:bg-muted/50',
+            'focus-visible:outline-none focus-visible:ring-1',
+            'focus-visible:ring-ring focus-visible:ring-offset-1',
+          ],
         )}
         onClick={onClick}
         disabled={!isSortable}
@@ -41,12 +41,12 @@ export function ColumnHeader({
         <div className="flex items-center">
           <motion.span
             className={cn(
-              "text-xs font-medium lowercase",
-              "transition-colors duration-200",
-              isSortable && "group-hover:text-foreground"
+              'text-xs font-medium lowercase',
+              'transition-colors duration-200',
+              isSortable && 'group-hover:text-foreground',
             )}
             animate={{
-              color: sortDirection ? "var(--primary)" : "inherit"
+              color: sortDirection ? 'var(--primary)' : 'inherit',
             }}
           >
             {title}
@@ -54,10 +54,10 @@ export function ColumnHeader({
           {type && (
             <motion.span
               className={cn(
-                "ml-2 font-mono text-[10px]",
-                "text-muted-foreground/50 lowercase",
-                "transition-colors duration-200",
-                isSortable && "group-hover:text-muted-foreground/70"
+                'ml-2 font-mono text-[10px]',
+                'text-muted-foreground/50 lowercase',
+                'transition-colors duration-200',
+                isSortable && 'group-hover:text-muted-foreground/70',
               )}
             >
               {type.toLowerCase()}
@@ -67,21 +67,21 @@ export function ColumnHeader({
         {isSortable && (
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={sortDirection ? sortDirection : 'none'}
+              key={sortDirection || 'none'}
               initial={{ rotate: sortDirection === 'asc' ? -180 : 0 }}
               animate={{ rotate: sortDirection === 'asc' ? 180 : 0 }}
               exit={{ rotate: sortDirection === 'asc' ? -180 : 0 }}
               transition={{
-                type: "spring",
+                type: 'spring',
                 stiffness: 200,
-                damping: 20
+                damping: 20,
               }}
             >
               <ChevronDown
                 className={cn(
-                  "h-3 w-3",
-                  "text-muted-foreground/70",
-                  "transition-colors duration-200"
+                  'h-3 w-3',
+                  'text-muted-foreground/70',
+                  'transition-colors duration-200',
                 )}
               />
             </motion.div>

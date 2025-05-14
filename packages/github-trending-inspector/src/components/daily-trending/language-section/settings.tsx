@@ -1,6 +1,7 @@
-"use client"
+'use client'
 
-import { Settings, FileJson, FileText, Hash, Star, TrendingUp } from "lucide-react"
+import type { Table } from '@tanstack/react-table'
+import type { Repository } from '../types'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -9,12 +10,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "$/components/ui/dropdown-menu"
-import { Table } from "@tanstack/react-table"
-import { Repository } from "../types"
-import { exportToCsv, exportToJson } from "../export"
-import { motion } from "motion/react"
-import { cn } from "$/lib/utils"
+} from '$/components/ui/dropdown-menu'
+import { cn } from '$/lib/utils'
+import { FileJson, FileText, Hash, Settings, Star, TrendingUp } from 'lucide-react'
+import { motion } from 'motion/react'
+import { exportToCsv, exportToJson } from '../export'
 
 interface SettingsProps {
   table: Table<Repository>
@@ -26,20 +26,22 @@ interface SettingsProps {
 
 export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
   const hideableColumns = [
-    { id: "rank", label: "Rank", icon: Hash },
-    { id: "description", label: "Description", icon: FileText },
-    { id: "stars", label: "Stars", icon: Star },
-    { id: "todayStars", label: "Today Stars", icon: TrendingUp },
+    { id: 'rank', label: 'Rank', icon: Hash },
+    { id: 'description', label: 'Description', icon: FileText },
+    { id: 'stars', label: 'Stars', icon: Star },
+    { id: 'todayStars', label: 'Today Stars', icon: TrendingUp },
   ]
 
   const handleExport = async (type: 'json' | 'csv') => {
     try {
       if (type === 'json') {
         exportToJson(group.repos, `${group.language}-repos.json`)
-      } else {
+      }
+      else {
         exportToCsv(group.repos, `${group.language}-repos.csv`)
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.error(`Failed to export as ${type}:`, error)
     }
   }
@@ -51,9 +53,9 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           className={cn(
-            "p-1.5 rounded-full",
-            "hover:bg-muted/50",
-            "transition-colors duration-200"
+            'p-1.5 rounded-full',
+            'hover:bg-muted/50',
+            'transition-colors duration-200',
           )}
         >
           <Settings className="h-4 w-4 text-muted-foreground/70" />
@@ -62,10 +64,10 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
       <DropdownMenuContent
         align="end"
         className={cn(
-          "w-[200px]",
-          "animate-in fade-in-0 zoom-in-95",
-          "data-[side=bottom]:slide-in-from-top-2",
-          "data-[side=top]:slide-in-from-bottom-2"
+          'w-[200px]',
+          'animate-in fade-in-0 zoom-in-95',
+          'data-[side=bottom]:slide-in-from-top-2',
+          'data-[side=top]:slide-in-from-bottom-2',
         )}
       >
         <DropdownMenuLabel className="text-xs font-medium">
@@ -77,10 +79,11 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
           className="group cursor-pointer"
         >
           <FileJson className={cn(
-            "mr-2 h-4 w-4",
-            "transition-colors duration-200",
-            "group-hover:text-primary"
-          )} />
+            'mr-2 h-4 w-4',
+            'transition-colors duration-200',
+            'group-hover:text-primary',
+          )}
+          />
           <span className="group-hover:text-primary transition-colors">
             Export to JSON
           </span>
@@ -90,10 +93,11 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
           className="group cursor-pointer"
         >
           <FileText className={cn(
-            "mr-2 h-4 w-4",
-            "transition-colors duration-200",
-            "group-hover:text-primary"
-          )} />
+            'mr-2 h-4 w-4',
+            'transition-colors duration-200',
+            'group-hover:text-primary',
+          )}
+          />
           <span className="group-hover:text-primary transition-colors">
             Export to CSV
           </span>
@@ -104,7 +108,8 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
         </DropdownMenuLabel>
         {hideableColumns.map((column) => {
           const tableColumn = table.getColumn(column.id)
-          if (!tableColumn) return null
+          if (!tableColumn)
+            return null
 
           const Icon = column.icon
           const isVisible = tableColumn.getIsVisible()
@@ -113,20 +118,22 @@ export function SettingsDropdown({ table, group }: Readonly<SettingsProps>) {
             <DropdownMenuCheckboxItem
               key={column.id}
               checked={isVisible}
-              onCheckedChange={(value) => tableColumn.toggleVisibility(!!value)}
+              onCheckedChange={value => tableColumn.toggleVisibility(!!value)}
               className="group cursor-pointer"
             >
               <Icon className={cn(
-                "mr-2 h-4 w-4",
-                "transition-colors duration-200",
-                isVisible ? "text-foreground" : "text-muted-foreground/50",
-                "group-hover:text-primary"
-              )} />
+                'mr-2 h-4 w-4',
+                'transition-colors duration-200',
+                isVisible ? 'text-foreground' : 'text-muted-foreground/50',
+                'group-hover:text-primary',
+              )}
+              />
               <span className={cn(
-                "transition-colors duration-200",
-                isVisible ? "text-foreground" : "text-muted-foreground/50",
-                "group-hover:text-primary"
-              )}>
+                'transition-colors duration-200',
+                isVisible ? 'text-foreground' : 'text-muted-foreground/50',
+                'group-hover:text-primary',
+              )}
+              >
                 {column.label}
               </span>
             </DropdownMenuCheckboxItem>

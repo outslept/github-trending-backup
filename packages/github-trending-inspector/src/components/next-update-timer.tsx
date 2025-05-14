@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'motion/react'
 import { Clock } from 'lucide-react'
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 function NextUpdateTimer() {
   const [currentTime, setCurrentTime] = useState<string>('')
@@ -21,7 +21,7 @@ function NextUpdateTimer() {
       setCurrentTime(now.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: false,
       }))
       setTimeLeft(`${hours}h ${minutes}m until next update`)
     }
@@ -47,4 +47,4 @@ function NextUpdateTimer() {
   )
 }
 
-export { NextUpdateTimer };
+export { NextUpdateTimer }

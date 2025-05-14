@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { Card, CardContent } from "$/components/ui/card"
-import { Skeleton } from "$/components/ui/skeleton"
-import { TableSkeleton } from "./table-skeleton"
+import { Card, CardContent } from '$/components/ui/card'
+import { Skeleton } from '$/components/ui/skeleton'
+import { TableSkeleton } from './table-skeleton'
 
 export function SectionSkeleton() {
   return (

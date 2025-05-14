@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from 'react'
-import { motion } from 'motion/react'
+import type { LanguageGroup, Repository } from './types'
 import { useSession } from '$/lib/auth-client'
-import { Repository, LanguageGroup } from './types'
-import { LanguageSection } from './language-section'
-import { Card, CardContent } from '../ui/card'
 import { AlertCircle, Database } from 'lucide-react'
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
+import { Card, CardContent } from '../ui/card'
+import { LanguageSection } from './language-section'
 import { SectionSkeleton } from './section-skeleton'
 
 export function DailyTrending({ date }: { date: string }) {
@@ -30,7 +30,8 @@ export function DailyTrending({ date }: { date: string }) {
 
         const response = await fetch(`/api/trending/${date}`)
 
-        if (!mounted) return
+        if (!mounted)
+          return
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`)
@@ -38,13 +39,15 @@ export function DailyTrending({ date }: { date: string }) {
 
         const data: Repository[] = await response.json()
 
-        if (!mounted) return
+        if (!mounted)
+          return
 
         const groupedRepos = data.reduce((acc, repo) => {
           const existingGroup = acc.find(g => g.language === repo.language)
           if (existingGroup) {
             existingGroup.repos.push(repo)
-          } else {
+          }
+          else {
             acc.push({ language: repo.language, repos: [repo] })
           }
           return acc
@@ -53,12 +56,14 @@ export function DailyTrending({ date }: { date: string }) {
         groupedRepos.sort((a, b) => a.language.localeCompare(b.language))
 
         setRepoGroups(groupedRepos)
-      } catch (error) {
+      }
+      catch (error) {
         if (mounted) {
           setError(error instanceof Error ? error.message : 'Failed to fetch data')
           setRepoGroups([])
         }
-      } finally {
+      }
+      finally {
         if (mounted) {
           setLoading(false)
         }
@@ -93,7 +98,7 @@ export function DailyTrending({ date }: { date: string }) {
             transition={{
               delay: index * 0.1,
               duration: 0.4,
-              ease: [0.4, 0, 0.2, 1]
+              ease: [0.4, 0, 0.2, 1],
             }}
           >
             <SectionSkeleton />
@@ -115,7 +120,7 @@ export function DailyTrending({ date }: { date: string }) {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 20 }}
+              transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 20 }}
             >
               <AlertCircle className="h-6 w-6 text-destructive" />
             </motion.div>
@@ -148,7 +153,7 @@ export function DailyTrending({ date }: { date: string }) {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: "spring", stiffness: 200, damping: 20 }}
+              transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 20 }}
             >
               <Database className="h-6 w-6 text-muted-foreground/70" />
             </motion.div>
@@ -181,7 +186,7 @@ export function DailyTrending({ date }: { date: string }) {
           transition={{
             delay: index * 0.1,
             duration: 0.4,
-            ease: [0.4, 0, 0.2, 1]
+            ease: [0.4, 0, 0.2, 1],
           }}
         >
           <LanguageSection

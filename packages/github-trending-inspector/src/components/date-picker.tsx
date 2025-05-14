@@ -1,18 +1,30 @@
-"use client"
+'use client'
 
-import { CalendarIcon } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover'
 import { Button } from '$/components/ui/button'
 import { Calendar } from '$/components/ui/calendar'
-import { motion, AnimatePresence } from 'motion/react'
+import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 
 const MONTHS = [
-  'January', 'February', "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ]
 
 function getOrdinalSuffix(day: number): string {
-  if (day > 3 && day < 21) return 'th'
+  if (day > 3 && day < 21)
+    return 'th'
   switch (day % 10) {
     case 1: return 'st'
     case 2: return 'nd'
@@ -22,9 +34,9 @@ function getOrdinalSuffix(day: number): string {
 }
 
 function formatDate(date: Date): string {
-  const month = MONTHS[date.getMonth()];
-  const day = date.getDate();
-  const year = date.getFullYear();
+  const month = MONTHS[date.getMonth()]
+  const day = date.getDate()
+  const year = date.getFullYear()
   return `${month} ${day}${getOrdinalSuffix(day)}, ${year}`
 }
 

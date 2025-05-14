@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { Badge } from "$/components/ui/badge"
-import { Hash } from "lucide-react"
-import { Searchbar } from "./search"
-import { SettingsDropdown } from "./settings"
-import { Table } from "@tanstack/react-table"
-import { Repository } from "../types"
-import { cn } from "$/lib/utils"
+import type { Table } from '@tanstack/react-table'
+import type { Repository } from '../types'
+import { Badge } from '$/components/ui/badge'
+import { cn } from '$/lib/utils'
+import { Hash } from 'lucide-react'
+import { Searchbar } from './search'
+import { SettingsDropdown } from './settings'
 
 interface HeaderProps {
   group: {
@@ -24,7 +24,7 @@ export function Header({
   showSearch,
   setShowSearch,
   table,
-  languageIcon
+  languageIcon,
 }: Readonly<HeaderProps>) {
   const languageAnchor = group.language.toLowerCase().replace(/\s+/g, '-')
 
@@ -41,10 +41,10 @@ export function Header({
           variant="outline"
           onClick={handleAnchorClick}
           className={cn(
-            "flex items-center gap-2 font-medium cursor-pointer",
-            "transition-all duration-200 ease-out",
-            "hover:bg-muted/50 hover:border-border/80",
-            "group-hover/badge:shadow-sm"
+            'flex items-center gap-2 font-medium cursor-pointer',
+            'transition-all duration-200 ease-out',
+            'hover:bg-muted/50 hover:border-border/80',
+            'group-hover/badge:shadow-sm',
           )}
         >
           <div className="relative w-4 h-4 overflow-hidden">
@@ -52,45 +52,47 @@ export function Header({
               src={languageIcon}
               alt={group.language}
               className={cn(
-                "absolute inset-0 h-4 w-4",
-                "opacity-80 grayscale",
-                "transition-all duration-300",
-                "group-hover/badge:opacity-100 group-hover/badge:grayscale-0"
+                'absolute inset-0 h-4 w-4',
+                'opacity-80 grayscale',
+                'transition-all duration-300',
+                'group-hover/badge:opacity-100 group-hover/badge:grayscale-0',
               )}
               loading="lazy"
             />
           </div>
           <span className="hidden sm:inline">{group.language}</span>
           <span className={cn(
-            "font-mono text-xs",
-            "text-muted-foreground/80",
-            "transition-all duration-200",
-            "group-hover/badge:text-muted-foreground",
-            "sm:ml-1"
-          )}>
+            'font-mono text-xs',
+            'text-muted-foreground/80',
+            'transition-all duration-200',
+            'group-hover/badge:text-muted-foreground',
+            'sm:ml-1',
+          )}
+          >
             {group.repos.length}
           </span>
         </Badge>
         <div
           onClick={handleAnchorClick}
           className={cn(
-            "p-1 rounded-md cursor-pointer",
-            "opacity-0 scale-95",
-            "transition-all duration-200 ease-out",
-            "group-hover/badge:opacity-100 group-hover/badge:scale-100",
-            "hover:bg-muted/50",
-            "focus-visible:opacity-100 focus-visible:scale-100",
-            "focus-visible:outline-none focus-visible:ring-1",
-            "focus-visible:ring-ring focus-visible:ring-offset-2",
-            "hidden sm:block"
+            'p-1 rounded-md cursor-pointer',
+            'opacity-0 scale-95',
+            'transition-all duration-200 ease-out',
+            'group-hover/badge:opacity-100 group-hover/badge:scale-100',
+            'hover:bg-muted/50',
+            'focus-visible:opacity-100 focus-visible:scale-100',
+            'focus-visible:outline-none focus-visible:ring-1',
+            'focus-visible:ring-ring focus-visible:ring-offset-2',
+            'hidden sm:block',
           )}
         >
           <Hash className={cn(
-            "h-4 w-4",
-            "text-muted-foreground/50",
-            "transition-colors duration-200",
-            "hover:text-muted-foreground"
-          )} />
+            'h-4 w-4',
+            'text-muted-foreground/50',
+            'transition-colors duration-200',
+            'hover:text-muted-foreground',
+          )}
+          />
         </div>
       </div>
       <div className="flex items-center gap-2">
