@@ -1,31 +1,67 @@
+"use client"
+
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { Button } from './ui/button'
-import { Calendar } from './ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover'
+import { Button } from '$/components/ui/button'
+import { Calendar } from '$/components/ui/calendar'
+import { motion, AnimatePresence } from 'motion/react'
+import { useState } from 'react'
 
 interface DatePickerProps {
   value: string
   onChange: (date: string) => void
 }
 
-export function DatePicker({ value, onChange }: Readonly<DatePickerProps>) {
+export function DatePicker({ value, onChange }: DatePickerProps) {
+  const [open, setOpen] = useState(false)
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-[240px] justify-start">
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {format(new Date(value), 'PPP')}
+        <Button
+          id="date-picker"
+          variant="outline"
+          className="w-[240px] justify-start group"
+        >
+          <motion.div
+            className="mr-2"
+            whileTap={{ scale: 0.95 }}
+          >
+            <CalendarIcon className="h-4 w-4 transition-colors group-hover:text-primary" />
+          </motion.div>
+          <span className="transition-colors group-hover:text-primary">
+            {format(new Date(value), 'PPP')}
+          </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={new Date(value)}
-          onSelect={(date) => onChange(date?.toISOString().split('T')[0] || '')}
-          initialFocus
-        />
-      </PopoverContent>
+      <AnimatePresence>
+        {open && (
+          <PopoverContent
+            align="start"
+            asChild
+            forceMount
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="w-auto p-0"
+            >
+              <Calendar
+                mode="single"
+                selected={new Date(value)}
+                onSelect={(date) => {
+                  onChange(date?.toISOString().split('T')[0] || '')
+                  setOpen(false)
+                }}
+                initialFocus
+              />
+            </motion.div>
+          </PopoverContent>
+        )}
+      </AnimatePresence>
     </Popover>
   )
 }
