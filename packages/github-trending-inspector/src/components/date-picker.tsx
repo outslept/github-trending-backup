@@ -1,12 +1,32 @@
 "use client"
 
 import { CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
 import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover'
 import { Button } from '$/components/ui/button'
 import { Calendar } from '$/components/ui/calendar'
 import { motion, AnimatePresence } from 'motion/react'
 import { useState } from 'react'
+
+const MONTHS = [
+  'January', 'February', "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+]
+
+function getOrdinalSuffix(day: number): string {
+  if (day > 3 && day < 21) return 'th'
+  switch (day % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
+}
+
+function formatDate(date: Date): string {
+  const month = MONTHS[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  return `${month} ${day}${getOrdinalSuffix(day)}, ${year}`
+}
 
 interface DatePickerProps {
   value: string
@@ -31,7 +51,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
             <CalendarIcon className="h-4 w-4 transition-colors group-hover:text-primary" />
           </motion.div>
           <span className="transition-colors group-hover:text-primary">
-            {format(new Date(value), 'PPP')}
+            {formatDate(new Date(value))}
           </span>
         </Button>
       </PopoverTrigger>
