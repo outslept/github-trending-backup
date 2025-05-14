@@ -345,16 +345,16 @@ export const GitHubLanguages = {
   'ZenScript': 'zenscript',
   'Zephir': 'zephir',
   'Zig': 'zig',
-  'Zimpl': 'zimpl'
-} as const;
+  'Zimpl': 'zimpl',
+} as const
 
-export type GitHubLanguage = keyof typeof GitHubLanguages;
-export type GitHubLanguageValue = (typeof GitHubLanguages)[GitHubLanguage];
+export type GitHubLanguage = keyof typeof GitHubLanguages
+export type GitHubLanguageValue = (typeof GitHubLanguages)[GitHubLanguage]
 
 export function getLanguageUrlParam(language: GitHubLanguage): string {
-  return GitHubLanguages[language] || encodeURIComponent(language.toLowerCase());
+  return GitHubLanguages[language] || encodeURIComponent(language.toLowerCase())
 }
 
 export function isValidGitHubLanguage(language: string): language is GitHubLanguage {
-  return language in GitHubLanguages;
+  return language in GitHubLanguages
 }

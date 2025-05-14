@@ -1,4 +1,4 @@
-import type { GitHubLanguage } from "./languages"
+import type { GitHubLanguage } from './languages'
 
 export interface Repository {
   rank: number

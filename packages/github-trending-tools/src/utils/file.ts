@@ -1,5 +1,5 @@
+import { existsSync, mkdirSync, readdirSync, renameSync, writeFileSync } from 'node:fs'
 import { join } from 'pathe'
-import { mkdirSync, existsSync, readdirSync, renameSync, writeFileSync } from 'node:fs'
 import { logger } from './logger'
 
 export function ensureDirectoryExists(dir: string): void {
@@ -25,7 +25,7 @@ export async function archiveFiles(baseDir: string): Promise<void> {
 
   const files = readdirSync(baseDir)
     .filter(file => file.endsWith('.md'))
-    .filter(file => {
+    .filter((file) => {
       const fileDate = file.split('.')[0]
       const [fileYear, fileMonth] = fileDate.split('-').map(Number)
       return fileYear === currentYear && fileMonth === currentMonth - 1
@@ -34,7 +34,7 @@ export async function archiveFiles(baseDir: string): Promise<void> {
   const archiveDir = join(
     baseDir,
     String(currentYear),
-    String(currentMonth - 1).padStart(2, '0')
+    String(currentMonth - 1).padStart(2, '0'),
   )
   ensureDirectoryExists(archiveDir)
 

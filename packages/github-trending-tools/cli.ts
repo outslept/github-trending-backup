@@ -1,6 +1,6 @@
 import process from 'node:process'
-import { hasChanges, performGitOperations, pushToRemote } from './src/utils/git'
 import { main as scrape } from '.'
+import { hasChanges, performGitOperations, pushToRemote } from './src/utils/git'
 import { logger } from './src/utils/logger'
 
 async function run() {

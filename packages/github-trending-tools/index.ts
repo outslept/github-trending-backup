@@ -1,18 +1,18 @@
-import { join } from 'pathe'
-import { defaultConfig } from './src/utils/config'
-import type { ScraperConfig } from './src/types'
-import { logger } from './src/utils/logger'
-import { ensureDirectoryExists, getMonthlyFolder, archiveFiles, writeMarkDown } from './src/utils/file'
-import { scrapeLanguageWithRetry } from './src/scraper'
 import type { GitHubLanguage } from './src/languages'
+import type { ScraperConfig } from './src/types'
+import { join } from 'pathe'
+import { scrapeLanguageWithRetry } from './src/scraper'
+import { defaultConfig } from './src/utils/config'
+import { archiveFiles, ensureDirectoryExists, getMonthlyFolder, writeMarkDown } from './src/utils/file'
+import { logger } from './src/utils/logger'
 
 function generateTableOfContents(languages: GitHubLanguage[]): string {
   let toc = '## Table of Contents\n\n'
-  languages.forEach(lang => {
+  languages.forEach((lang) => {
     const anchor = lang.toLowerCase().replace(/\W/g, '-')
     toc += `- [${lang}](#${anchor})\n`
   })
-  return toc + '\n'
+  return `${toc}\n`
 }
 
 function getOutputPath(config: ScraperConfig, date: string): string {
@@ -42,8 +42,8 @@ export async function main(config: ScraperConfig = defaultConfig): Promise<void>
   logger.info('Scraping repositories for all languages...')
   const results = await Promise.all(
     config.languages.map(lang =>
-      scrapeLanguageWithRetry(lang, config.retryConfig.maxRetries)
-    )
+      scrapeLanguageWithRetry(lang, config.retryConfig.maxRetries),
+    ),
   )
 
   content += results.join('\n')
