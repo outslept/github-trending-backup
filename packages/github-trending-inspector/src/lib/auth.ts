@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { db } from '$/db'
 import { env } from '$/keys'
 import { betterAuth } from 'better-auth'

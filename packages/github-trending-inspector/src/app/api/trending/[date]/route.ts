@@ -1,7 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { access, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import process from 'node:process'
 import { db } from '$/db'
 import { auth } from '$/lib/auth'
 import { NextResponse } from 'next/server'
