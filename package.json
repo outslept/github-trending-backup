@@ -4,12 +4,15 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "knip": "knip"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@commitlint/config-conventional": "catalog:lint",
+    "@types/node": "^22.15.17",
     "eslint": "catalog:lint",
+    "knip": "^5.55.1",
     "nano-staged": "catalog:workflow",
     "publint": "catalog:lint",
     "simple-git-hooks": "catalog:workflow",
