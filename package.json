@@ -9,10 +9,9 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
-    "@commitlint/config-conventional": "catalog:lint",
-    "@types/node": "^22.15.17",
+    "@types/node": "catalog:types",
     "eslint": "catalog:lint",
-    "knip": "^5.55.1",
+    "knip": "catalog:lint",
     "nano-staged": "catalog:workflow",
     "publint": "catalog:lint",
     "simple-git-hooks": "catalog:workflow",

@@ -1,1 +1,41 @@
-{  "$schema": "https://unpkg.com/knip@5/schema.json" }
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "workspaces": {
+    "packages/github-trending-tools": {
+      "entry": [
+        "cli.ts",
+        "index.ts"
+      ],
+      "project": [
+        "**/*.ts"
+      ]
+    },
+    "packages/github-trending-inspector": {
+      "entry": [
+        "src/app/**/*.ts",
+        "src/app/**/*.tsx",
+        "src/components/**/*.tsx",
+        "src/db/**/*.ts",
+        "src/hooks/**/*.ts",
+        "src/lib/**/*.ts",
+        "next.config.ts",
+        "drizzle.config.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+      ]
+    }
+  },
+  "ignore": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/vitest.config.*",
+    "**/postcss.config.*",
+    "**/tailwind.config.*",
+    "**/tsdown.config.*"
+  ]
+}

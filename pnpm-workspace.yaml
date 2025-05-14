@@ -22,6 +22,7 @@ catalogs:
     '@antfu/eslint-config': ^4.13.0
     '@commitlint/config-conventional': ^19.8.0
     publint: ^0.3.12
+    knip: ^5.55.1
   script:
     cheerio: ^1.0.0
     consola: ^3.4.2
