@@ -1,6 +1,7 @@
 {
   "name": "github-trending-backup",
   "packageManager": "pnpm@10.6.3",
+  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
