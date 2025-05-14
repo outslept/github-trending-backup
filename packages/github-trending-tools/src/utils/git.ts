@@ -3,7 +3,7 @@ import process from 'node:process'
 import simpleGit from 'simple-git'
 import { logger } from './logger'
 
-export async function performGitOperations(message?: string): Promise<void> {
+export async function performGitOperations(_message?: string): Promise<void> {
   const git: SimpleGit = simpleGit({
     baseDir: process.cwd(),
     binary: 'git',

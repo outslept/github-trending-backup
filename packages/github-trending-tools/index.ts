@@ -1,5 +1,6 @@
 import type { GitHubLanguage } from './src/languages'
 import type { ScraperConfig } from './src/types'
+import process from 'node:process'
 import { join } from 'pathe'
 import { scrapeLanguageWithRetry } from './src/scraper'
 import { defaultConfig } from './src/utils/config'
