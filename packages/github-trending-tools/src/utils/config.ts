@@ -1,3 +1,4 @@
+import { join } from 'pathe'
 import type { GitHubLanguage } from '../languages'
 import type { ScraperConfig } from '../types'
 
@@ -23,7 +24,7 @@ export const defaultConfig: ScraperConfig = {
     'Vue',
     'Zig',
   ] as GitHubLanguage[],
-  outputDir: 'data',
+  outputDir: join(process.cwd(), '..', '..', 'data'),
   archiveConfig: {
     enabled: true,
     monthlyFolders: true,

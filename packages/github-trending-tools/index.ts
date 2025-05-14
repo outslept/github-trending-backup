@@ -1,6 +1,5 @@
 import type { GitHubLanguage } from './src/languages'
 import type { ScraperConfig } from './src/types'
-import process from 'node:process'
 import { join } from 'pathe'
 import { scrapeLanguageWithRetry } from './src/scraper'
 import { defaultConfig } from './src/utils/config'
@@ -56,9 +55,4 @@ export async function main(config: ScraperConfig = defaultConfig): Promise<void>
   logger.success('Scraping completed successfully')
 }
 
-if (require.main === module) {
-  main().catch((err) => {
-    logger.error('Fatal error during script execution:', err)
-    process.exit(1)
-  })
-}
+main()
