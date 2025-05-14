@@ -17,13 +17,6 @@ interface Repository {
   isStarred?: boolean
 }
 
-interface GithubRepo {
-  full_name: string
-  description: string
-  stargazers_count: number
-  language: string
-}
-
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ date: string }> },
@@ -74,6 +67,7 @@ export async function GET(
       }, { status: 404 })
     }
 
+    /* Temporarily commented out
     const session = await auth.api.getSession({
       headers: request.headers,
     })
@@ -129,6 +123,12 @@ export async function GET(
         }
       }
     }
+    */
+
+    // Set isStarred to false for all repos by default
+    repos.forEach(repo => {
+      repo.isStarred = false
+    })
 
     const response = NextResponse.json(repos)
     response.headers.set('Cache-Control', 'no-store')
