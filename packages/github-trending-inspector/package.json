@@ -58,6 +58,7 @@
     "motion": "^12.11.3",
     "next": "catalog:frontend",
     "next-themes": "^0.4.6",
+    "radix-ui": "^1.4.1",
     "react": "catalog:frontend",
     "react-day-picker": "8.10.1",
     "react-dom": "catalog:frontend",
