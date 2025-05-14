@@ -1,3 +1,5 @@
+import type { GitHubLanguage } from "./languages"
+
 export interface Repository {
   rank: number
   title: string
@@ -9,7 +11,7 @@ export interface Repository {
 }
 
 export interface ScraperConfig {
-  languages: string[]
+  languages: GitHubLanguage[]
   outputDir: string
   archiveConfig: {
     enabled: boolean

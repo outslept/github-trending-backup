@@ -12,7 +12,7 @@ export async function performGitOperations(message?: string): Promise<void> {
 
   try {
     await git.add('.')
-    const commitMessage = message || new Date().toISOString().replace('T', ' ').slice(0, 19)
+    // const commitMessage = message || new Date().toISOString().replace('T', ' ').slice(0, 19)
     // await git.commit(commitMessage)
     logger.success('Git commit completed')
   }

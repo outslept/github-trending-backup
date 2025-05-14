@@ -4,8 +4,9 @@ import type { ScraperConfig } from './src/types'
 import { logger } from './src/utils/logger'
 import { ensureDirectoryExists, getMonthlyFolder, archiveFiles, writeMarkDown } from './src/utils/file'
 import { scrapeLanguageWithRetry } from './src/scraper'
+import type { GitHubLanguage } from './src/languages'
 
-function generateTableOfContents(languages: string[]): string {
+function generateTableOfContents(languages: GitHubLanguage[]): string {
   let toc = '## Table of Contents\n\n'
   languages.forEach(lang => {
     const anchor = lang.toLowerCase().replace(/\W/g, '-')
