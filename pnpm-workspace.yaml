@@ -1,37 +1,29 @@
 packages:
   - packages/*
 catalogs:
-  frontend:
-    "@tanstack/react-table": ^8.21.3
-    "lucide-react": ^0.510.0
-    "motion": ^12.11.3
-    "next-themes": ^0.4.6
-    "next": ^15.3.2
-    "radix-ui": ^1.4.1
-    "react-day-picker": ^8.10.1
-    "react-dom": ^19.0.0
-    "react-resizable-panels": ^3.0.2
-    "react": ^19.0.0
-    "recharts": ^2.15.3
-    "sonner": ^2.0.3
-  types:
-    "@types/react": ^19
-    "@types/react-dom": ^19
-    "@types/node": ^22.15.17
   build:
-    tailwindcss: ^4
     '@tailwindcss/postcss': ^4
-    typescript: ^5.8.2
+    tailwindcss: ^4
     tsdown: ^0.11.7
-  workflow:
-    nano-staged: ^0.8.0
-    simple-git-hooks: ^2.11.1
+    typescript: ^5.8.2
+  frontend:
+    '@tanstack/react-table': ^8.21.3
+    lucide-react: ^0.510.0
+    motion: ^12.11.3
+    next: ^15.3.2
+    next-themes: ^0.4.6
+    radix-ui: ^1.4.1
+    react: ^19.0.0
+    react-day-picker: ^8.10.1
+    react-dom: ^19.0.0
+    react-resizable-panels: ^3.0.2
+    sonner: ^2.0.3
   lint:
-    eslint: ^9.22.0
     '@antfu/eslint-config': ^4.13.0
     '@commitlint/config-conventional': ^19.8.0
-    publint: ^0.3.12
+    eslint: ^9.22.0
     knip: ^5.55.1
+    publint: ^0.3.12
   script:
     cheerio: ^1.0.0
     consola: ^3.4.2
@@ -39,3 +31,10 @@ catalogs:
     pathe: ^2.0.3
     simple-git: ^3.27.0
     tsx: ^4.19.4
+  types:
+    '@types/node': ^22.15.17
+    '@types/react': ^19
+    '@types/react-dom': ^19
+  workflow:
+    nano-staged: ^0.8.0
+    simple-git-hooks: ^2.11.1

@@ -34,7 +34,6 @@
     "react-dom": "catalog:frontend",
     "react-hook-form": "^7.56.3",
     "react-resizable-panels": "catalog:frontend",
-    "recharts": "catalog:frontend",
     "sonner": "catalog:frontend",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.4"
