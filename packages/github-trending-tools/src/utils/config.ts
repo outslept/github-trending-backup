@@ -1,6 +1,7 @@
-import { join } from 'pathe'
 import type { GitHubLanguage } from '../languages'
 import type { ScraperConfig } from '../types'
+import process from 'node:process'
+import { join } from 'pathe'
 
 export const defaultConfig: ScraperConfig = {
   languages: [
@@ -28,11 +29,6 @@ export const defaultConfig: ScraperConfig = {
   archiveConfig: {
     enabled: true,
     monthlyFolders: true,
-  },
-  retryConfig: {
-    maxRetries: 3,
-    baseDelay: 2000,
-    maxDelay: 10000,
   },
 }
 

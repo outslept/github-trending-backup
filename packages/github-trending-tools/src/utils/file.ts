@@ -1,52 +1,39 @@
-import { existsSync, mkdirSync, readdirSync, renameSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, renameSync } from 'node:fs'
 import { join } from 'pathe'
 import { logger } from './logger'
 
-export function ensureDirectoryExists(dir: string): void {
+export function ensureDir(dir: string): void {
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true })
-    logger.success(`Created directory: ${dir}`)
+    logger.success(`Created: ${dir}`)
   }
 }
 
-export function getMonthlyFolder(baseDir: string): string {
+export function getMonthlyDir(baseDir: string): string {
   const date = new Date()
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const monthlyDir = join(baseDir, String(year), month)
-  ensureDirectoryExists(monthlyDir)
-  return monthlyDir
+  const dir = join(baseDir, String(date.getFullYear()), String(date.getMonth() + 1).padStart(2, '0'))
+  ensureDir(dir)
+  return dir
 }
 
-export async function archiveFiles(baseDir: string): Promise<void> {
+export function archiveFiles(baseDir: string): void {
   const date = new Date()
-  const currentYear = date.getFullYear()
-  const currentMonth = date.getMonth() + 1
-
   const files = readdirSync(baseDir)
-    .filter(file => file.endsWith('.md'))
-    .filter((file) => {
-      const fileDate = file.split('.')[0]
-      const [fileYear, fileMonth] = fileDate.split('-').map(Number)
-      return fileYear === currentYear && fileMonth === currentMonth - 1
+    .filter(f => f.endsWith('.md'))
+    .filter((f) => {
+      const [y, m] = f.split('.')[0].split('-').map(Number)
+      return y === date.getFullYear() && m === date.getMonth()
     })
 
   const archiveDir = join(
     baseDir,
-    String(currentYear),
-    String(currentMonth - 1).padStart(2, '0'),
+    String(date.getFullYear()),
+    String(date.getMonth()).padStart(2, '0'),
   )
-  ensureDirectoryExists(archiveDir)
+  ensureDir(archiveDir)
 
-  for (const file of files) {
-    const sourcePath = join(baseDir, file)
-    const targetPath = join(archiveDir, file)
-    renameSync(sourcePath, targetPath)
-    logger.info(`Archived file: ${file} to ${archiveDir}`)
-  }
-}
-
-export function writeMarkDown(outputPath: string, content: string): void {
-  writeFileSync(outputPath, content)
-  logger.success(`Generated markdown file: ${outputPath}`)
+  files.forEach((f) => {
+    renameSync(join(baseDir, f), join(archiveDir, f))
+    logger.info(`Archived: ${f}`)
+  })
 }

@@ -1,58 +1,38 @@
 import type { GitHubLanguage } from './src/languages'
 import type { ScraperConfig } from './src/types'
+import { writeFileSync } from 'node:fs'
 import { join } from 'pathe'
-import { scrapeLanguageWithRetry } from './src/scraper'
+import { scrapeLanguage } from './src/scraper'
 import { defaultConfig } from './src/utils/config'
-import { archiveFiles, ensureDirectoryExists, getMonthlyFolder, writeMarkDown } from './src/utils/file'
+import { archiveFiles, ensureDir, getMonthlyDir } from './src/utils/file'
 import { logger } from './src/utils/logger'
 
-function generateTableOfContents(languages: GitHubLanguage[]): string {
-  let toc = '## Table of Contents\n\n'
-  languages.forEach((lang) => {
-    const anchor = lang.toLowerCase().replace(/\W/g, '-')
-    toc += `- [${lang}](#${anchor})\n`
-  })
-  return `${toc}\n`
-}
-
-function getOutputPath(config: ScraperConfig, date: string): string {
-  return config.archiveConfig.monthlyFolders
-    ? join(getMonthlyFolder(config.outputDir), `${date}.md`)
-    : join(config.outputDir, `${date}.md`)
+function getToc(languages: GitHubLanguage[]): string {
+  return `## Table of Contents\n\n${
+    languages.map(l => `- [${l}](#${l.toLowerCase().replace(/\W/g, '-')})\n`).join('')
+  }\n`
 }
 
 export async function main(config: ScraperConfig = defaultConfig): Promise<void> {
   const date = new Date().toISOString().slice(0, 10)
 
-  logger.start('Starting GitHub trending scraper')
-
   if (new Date().getDate() === 1 && config.archiveConfig.enabled) {
     try {
-      await archiveFiles(config.outputDir)
-      logger.success('Monthly archive completed')
+      archiveFiles(config.outputDir)
     }
-    catch (err: any) {
-      logger.error('Monthly archive failed:', err.message)
+    catch (err) {
+      logger.error('Archive failed:', err)
     }
   }
 
-  let content = `# GitHub Trending - ${date}\n\n`
-  content += generateTableOfContents(config.languages)
+  const content = await Promise.all(config.languages.map(l => scrapeLanguage(l)))
+  const markdown = `# GitHub Trending - ${date}\n\n${getToc(config.languages)}${content.join('\n')}`
 
-  logger.info('Scraping repositories for all languages...')
-  const results = await Promise.all(
-    config.languages.map(lang =>
-      scrapeLanguageWithRetry(lang, config.retryConfig.maxRetries),
-    ),
-  )
+  const outPath = config.archiveConfig.monthlyFolders
+    ? join(getMonthlyDir(config.outputDir), `${date}.md`)
+    : join(config.outputDir, `${date}.md`)
 
-  content += results.join('\n')
-
-  const outputPath = getOutputPath(config, date)
-  ensureDirectoryExists(config.outputDir)
-  writeMarkDown(outputPath, content)
-
-  logger.success('Scraping completed successfully')
+  ensureDir(config.outputDir)
+  writeFileSync(outPath, markdown)
+  logger.success(`Generated: ${outPath}`)
 }
-
-main()

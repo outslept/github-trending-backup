@@ -17,9 +17,4 @@ export interface ScraperConfig {
     enabled: boolean
     monthlyFolders: boolean
   }
-  retryConfig: {
-    maxRetries: number
-    baseDelay: number
-    maxDelay: number
-  }
 }
