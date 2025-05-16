@@ -37,7 +37,7 @@ export default function AuthCard({
               provider="github"
               loading={githubLoading}
               setLoading={setGithubLoading}
-              callbackURL="/dashboard"
+              callbackURL="/"
               icon={<Github />}
             />
           </div>
@@ -75,7 +75,6 @@ function SignInButton({
   provider,
   loading,
   setLoading,
-  callbackURL,
   icon,
 }: {
   title: string
@@ -95,7 +94,7 @@ function SignInButton({
         await signIn.social(
           {
             provider,
-            callbackURL,
+            callbackURL: '/',
           },
           {
             onRequest: (ctx) => {
