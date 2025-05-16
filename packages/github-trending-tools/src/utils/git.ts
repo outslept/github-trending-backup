@@ -14,7 +14,7 @@ const git: SimpleGit = simpleGit({
 export async function commit(): Promise<void> {
   try {
     await git.add('data/*')
-    // await git.commit('Update trending repositories [skip ci]')
+    await git.commit('Update trending repositories [skip ci]')
     logger.success('Changes committed')
   }
   catch (err) {
