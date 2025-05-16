@@ -10,11 +10,10 @@ export const auth = betterAuth({
   }),
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
       scope: ['read:user', 'user:email', 'repo'],
     },
   },
   plugins: [nextCookies()],
-  baseURL: env.NEXT_PUBLIC_APP_URL,
 })

@@ -1,15 +1,20 @@
 import type { NextRequest } from 'next/server'
-import { getSessionCookie } from 'better-auth/cookies'
+import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { auth } from './lib/auth'
 
-export function middleware(request: NextRequest) {
-  const sessionCookie = getSessionCookie(request)
+const authRoutes = ['/sign-in', '/sign-up']
 
-  if (request.nextUrl.pathname.startsWith('/api/github') && !sessionCookie) {
-    if (request.headers.get('accept')?.includes('application/json')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    return NextResponse.redirect(new URL('/auth', request.url))
+export async function middleware(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  const { pathname } = request.nextUrl
+
+  // If user is authenticated but trying to access auth routes
+  if (session && authRoutes.some(route => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   return NextResponse.next()

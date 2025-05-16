@@ -1,8 +1,4 @@
 import type { NextRequest } from 'next/server'
-import { access, readFile } from 'node:fs/promises'
-import { join } from 'node:path'
-import { db } from '$/db'
-import { auth } from '$/lib/auth'
 import { NextResponse } from 'next/server'
 
 interface Repository {
@@ -32,34 +28,21 @@ export async function GET(
     }
 
     const [year, month] = date.split('-')
-    const filePath = join(process.cwd(), '..', '..', 'data', year, month, `${date}.md`)
+    const githubFilePath = `${year}/${month}/${date}.md`
+    const githubRawUrl = `https://raw.githubusercontent.com/outslept/github-trending-backup/master/data/${githubFilePath}`
 
-    try {
-      await access(filePath)
-    }
-    catch (error) {
-      console.error(`File access error for ${filePath}:`, error)
+    const response = await fetch(githubRawUrl)
+
+    if (!response.ok) {
       return NextResponse.json({
         error: 'No data found for this date',
         details: `File not found: ${date}.md`,
-        path: filePath,
       }, { status: 404 })
     }
 
-    let content: string
-    try {
-      content = await readFile(filePath, 'utf-8')
-    }
-    catch (error) {
-      console.error(`File read error for ${filePath}:`, error)
-      return NextResponse.json({
-        error: 'Failed to read file',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        path: filePath,
-      }, { status: 500 })
-    }
-
+    const content = await response.text()
     const repos = parseMarkdownContent(content)
+
     if (!repos.length) {
       return NextResponse.json({
         error: 'No repositories found',
@@ -67,72 +50,13 @@ export async function GET(
       }, { status: 404 })
     }
 
-    /* Temporarily commented out
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    })
-
-    if (session?.user) {
-      const account = await db.query.account.findFirst({
-        where: (account, { eq, and }) => and(
-          eq(account.userId, session.user.id),
-          eq(account.providerId, 'github'),
-        ),
-      })
-
-      if (account?.accessToken) {
-        try {
-          const starredResponse = await fetch('https://api.github.com/user/starred?per_page=100', {
-            headers: {
-              Authorization: `Bearer ${account.accessToken}`,
-              Accept: 'application/vnd.github.v3+json',
-            },
-          })
-
-          if (!starredResponse.ok) {
-            console.error('GitHub API error:', {
-              status: starredResponse.status,
-              statusText: starredResponse.statusText,
-            })
-            const errorText = await starredResponse.text()
-            console.error('GitHub API error response:', errorText)
-            throw new Error(`GitHub API error: ${starredResponse.statusText}`)
-          }
-
-          const responseText = await starredResponse.text()
-          let starredRepos: GithubRepo[]
-          try {
-            starredRepos = JSON.parse(responseText)
-          }
-          catch {
-            console.error('Failed to parse GitHub response:', responseText)
-            throw new Error('Invalid GitHub API response')
-          }
-
-          repos.forEach((repo) => {
-            repo.isStarred = starredRepos.some(
-              starred => starred.full_name === repo.title,
-            )
-          })
-        }
-        catch (error) {
-          console.error('Error fetching starred repos:', error)
-          repos.forEach((repo) => {
-            repo.isStarred = false
-          })
-        }
-      }
-    }
-    */
-
-    // Set isStarred to false for all repos by default
-    repos.forEach(repo => {
+    repos.forEach((repo) => {
       repo.isStarred = false
     })
 
-    const response = NextResponse.json(repos)
-    response.headers.set('Cache-Control', 'no-store')
-    return response
+    const apiResponse = NextResponse.json(repos)
+    apiResponse.headers.set('Cache-Control', 'no-store')
+    return apiResponse
   }
   catch (error) {
     console.error('Unhandled error in trending API:', error)

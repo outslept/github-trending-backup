@@ -1,11 +1,13 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { user } from './auth'
 
-export const stars = sqliteTable('stars', {
+export const stars = pgTable('stars', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   repoName: text('repo_name').notNull(),
-  starredAt: integer('starred_at', { mode: 'timestamp' }).notNull(),
+  starredAt: timestamp('starred_at').notNull(),
   language: text('language'),
   description: text('description'),
 })
