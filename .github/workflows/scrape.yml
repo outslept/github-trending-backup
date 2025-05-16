@@ -29,4 +29,4 @@ jobs:
       - name: Run scraper
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: pnpm --filter github-trending-tools start -- --commit
+        run: pnpm --filter github-trending-tools start "--commit"

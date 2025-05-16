@@ -7,7 +7,6 @@
     "build": "tsdown",
     "dev": "tsx watch cli.ts",
     "start": "tsx cli.ts",
-    "scrape": "tsx cli.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
