@@ -5,7 +5,6 @@ export interface Repository {
   description: string
   stars: string
   forks: string
-  todayStars: string
   language: string
   isStarred?: boolean
 }

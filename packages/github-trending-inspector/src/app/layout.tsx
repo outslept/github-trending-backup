@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SidebarProvider } from '$/components/ui/sidebar'
 import { DesignSystemProvider } from '$/providers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
@@ -27,7 +28,9 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
       <body>
         <DesignSystemProvider>
-          {children}
+          <SidebarProvider>
+            {children}
+          </SidebarProvider>
         </DesignSystemProvider>
       </body>
     </html>

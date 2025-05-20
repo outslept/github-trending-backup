@@ -8,7 +8,6 @@ interface Repository {
   description: string
   stars: string
   forks: string
-  todayStars: string
   language: string
   isStarred?: boolean
 }
@@ -92,7 +91,6 @@ function parseMarkdownContent(content: string): Repository[] {
             description: description || 'No description provided',
             stars: stars || '0',
             forks: forks || '0',
-            todayStars: today || 'N/A',
             isStarred: false,
           })
         }
