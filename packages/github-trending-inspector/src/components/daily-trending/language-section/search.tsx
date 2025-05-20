@@ -3,7 +3,6 @@
 import type { Table } from '@tanstack/react-table'
 import type { Repository } from '../types'
 import { Input } from '$/components/ui/input'
-import { cn } from '$/lib/utils'
 import { Search, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
@@ -49,22 +48,10 @@ export function Searchbar({ showSearch, setShowSearch, table }: Readonly<SearchP
                 ref={inputRef}
                 placeholder="Search..."
                 value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-                onChange={event =>
-                  table.getColumn('title')?.setFilterValue(event.target.value)}
-                className={cn(
-                  'h-8',
-                  'w-[120px] sm:w-[150px] lg:w-[250px]',
-                  'pl-7 pr-7',
-                  'text-sm',
-                )}
+                onChange={event => table.getColumn('title')?.setFilterValue(event.target.value)}
+                className="h-8 w-[120px] sm:w-[150px] lg:w-[250px] pl-7 pr-7 text-sm"
               />
-              <Search
-                className={cn(
-                  'absolute left-2 top-1/2 -translate-y-1/2',
-                  'h-3 w-3 text-muted-foreground/70',
-                  'pointer-events-none',
-                )}
-              />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground/70 pointer-events-none" />
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -72,12 +59,7 @@ export function Searchbar({ showSearch, setShowSearch, table }: Readonly<SearchP
                   setShowSearch(false)
                   table.getColumn('title')?.setFilterValue('')
                 }}
-                className={cn(
-                  'absolute right-2',
-                  'p-1 rounded-full',
-                  'hover:bg-muted/50',
-                  'transition-colors duration-200',
-                )}
+                className="absolute right-2 p-1 rounded-full hover:bg-muted/50 transition-colors duration-200"
               >
                 <X className="h-3 w-3 text-muted-foreground/70" />
               </motion.button>
@@ -92,12 +74,7 @@ export function Searchbar({ showSearch, setShowSearch, table }: Readonly<SearchP
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowSearch(true)}
-              className={cn(
-                'p-1.5 rounded-full',
-                'hover:bg-muted/50',
-                'transition-colors duration-200',
-                'flex-shrink-0',
-              )}
+              className="p-1.5 rounded-full hover:bg-muted/50 transition-colors duration-200 flex-shrink-0"
             >
               <Search className="h-4 w-4 text-muted-foreground/70" />
             </motion.button>
