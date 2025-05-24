@@ -3,6 +3,34 @@
   "type": "module",
   "version": "0.0.1",
   "packageManager": "pnpm@10.10.0",
+  "description": "GitHub trending repositories scraper",
+  "keywords": [
+    "github",
+    "trending",
+    "scraper",
+    "repositories"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": {
+      "import": "./dist/cli.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "github-trending": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsx watch cli.ts",
@@ -10,14 +38,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "cheerio": "catalog:script",
-    "consola": "catalog:script",
-    "ofetch": "catalog:script",
-    "pathe": "catalog:script",
-    "simple-git": "catalog:script"
+    "node-html-parser": "catalog:script"
   },
   "devDependencies": {
     "@types/node": "catalog:types",

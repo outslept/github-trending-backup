@@ -1,20 +1,33 @@
-import type { GitHubLanguage } from './languages'
+import type { GitHubLanguage } from './utils/languages'
 
 export interface Repository {
-  rank: number
-  title: string
-  url: string
-  description: string
-  stars: string
-  forks: string
-  todayStars: string
+  readonly rank: number
+  readonly title: string
+  readonly url: string
+  readonly description: string
+  readonly stars: string
+  readonly forks: string
+  readonly todayStars: string
+}
+
+export interface ScrapingResult {
+  readonly language: GitHubLanguage
+  readonly repositories: Repository[]
+  readonly success: boolean
+  readonly error?: string
 }
 
 export interface ScraperConfig {
-  languages: GitHubLanguage[]
-  outputDir: string
-  archiveConfig: {
-    enabled: boolean
-    monthlyFolders: boolean
+  readonly languages: GitHubLanguage[]
+  readonly outputDir: string
+  readonly concurrency: number
+  readonly retryConfig: {
+    readonly maxRetries: number
+    readonly baseDelay: number
+    readonly maxDelay: number
+  }
+  readonly archiveConfig: {
+    readonly enabled: boolean
+    readonly monthlyFolders: boolean
   }
 }

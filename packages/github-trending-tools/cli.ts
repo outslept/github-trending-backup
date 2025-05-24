@@ -37,10 +37,10 @@ async function run() {
     logger.start('Starting GitHub trending tools')
     await main()
 
-    if (values.commit && await hasChanges()) {
+    if (values.commit && hasChanges()) {
       logger.info('Committing changes...')
-      await commit()
-      await push()
+      commit()
+      push()
     }
   }
   catch (error) {

@@ -1,11 +1,9 @@
-import type { GitHubLanguage } from '../languages'
 import type { ScraperConfig } from '../types'
+import { join } from 'node:path'
 import process from 'node:process'
-import { join } from 'pathe'
 
 export const defaultConfig: ScraperConfig = {
   languages: [
-    'Bash',
     'C',
     'C++',
     'CSS',
@@ -20,23 +18,21 @@ export const defaultConfig: ScraperConfig = {
     'OCaml',
     'Python',
     'Rust',
+    'Shell',
     'Svelte',
     'TypeScript',
     'Vue',
     'Zig',
-  ] as GitHubLanguage[],
+  ] as const,
   outputDir: join(process.cwd(), '..', '..', 'data'),
+  concurrency: 3,
+  retryConfig: {
+    maxRetries: 3,
+    baseDelay: 2000,
+    maxDelay: 10000,
+  },
   archiveConfig: {
     enabled: true,
     monthlyFolders: true,
   },
-}
-
-export const fetchOptions = {
-  timeout: 30000,
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.5',
-  },
-}
+} as const

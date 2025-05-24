@@ -27,6 +27,7 @@ catalogs:
   script:
     cheerio: ^1.0.0
     consola: ^3.4.2
+    node-html-parser: ^7.0.1
     ofetch: ^1.4.1
     pathe: ^2.0.3
     simple-git: ^3.27.0
