@@ -41,7 +41,10 @@ function PaginationControls({ pagination }: { pagination: any }) {
   return (
     <div className="flex items-center gap-2">
       <span className="text-xs text-muted-foreground">
-        {pagination.pageIndex + 1} of {pagination.pageCount}
+        {pagination.pageIndex + 1}
+        {' '}
+        of
+        {pagination.pageCount}
       </span>
       <button
         className="h-6 w-6 border flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 transition-colors"

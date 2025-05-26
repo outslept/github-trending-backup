@@ -41,6 +41,6 @@ export async function fetchWithRetry(
     }
   }
 
-  // eslint-disable-next-line no-throw-literal - return and fix that later
+  // eslint-disable-next-line no-throw-literal
   throw lastError!
 }

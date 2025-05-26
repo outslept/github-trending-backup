@@ -1,6 +1,6 @@
 import type { Repository } from '$/lib/types'
 import type { ColumnDef } from '@tanstack/react-table'
-import { ChevronDown, ChevronUp, ExternalLink, GitFork, Star, TrendingUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 
 export function createColumns(): ColumnDef<Repository>[] {
   return [
