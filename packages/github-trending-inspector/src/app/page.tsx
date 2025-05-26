@@ -2,6 +2,43 @@ import { AppSidebar } from '$/components/app-sidebar'
 import { DailyTrending } from '$/components/daily-trending'
 import { redirect } from 'next/navigation'
 
+async function getRecentCommits(limit: number = 5) {
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/outslept/github-trending-backup/commits?per_page=${limit}`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'GitHub-Trending-Inspector',
+        },
+        next: { revalidate: 300 },
+      },
+    )
+
+    if (!response.ok)
+      return []
+
+    const commits = await response.json()
+    return commits.map((commit: any) => ({
+      sha: commit.sha,
+      commit: {
+        message: commit.commit.message,
+        author: {
+          name: commit.commit.author.name,
+          date: commit.commit.author.date,
+        },
+      },
+      author: {
+        login: commit.author?.login || commit.commit.author.name,
+        avatar_url: commit.author?.avatar_url || null,
+      },
+    }))
+  }
+  catch {
+    return []
+  }
+}
+
 export default async function Home({
   searchParams,
 }: {
@@ -24,12 +61,7 @@ export default async function Home({
     redirect(`/?date=${date}`)
   }
 
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000'
-
-  const res = await fetch(`${baseUrl}/api/commits?limit=5`, { next: { revalidate: 60 } })
-  const commits = res.ok ? (await res.json()).commits || [] : []
+  const commits = await getRecentCommits(5)
 
   return (
     <div className="flex min-h-screen">
