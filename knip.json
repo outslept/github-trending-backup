@@ -1,41 +1,26 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignoreDependencies": ["publint"],
   "workspaces": {
     "packages/github-trending-tools": {
-      "entry": [
-        "cli.ts",
-        "index.ts"
-      ],
-      "project": [
-        "**/*.ts"
-      ]
+      "entry": ["cli.ts", "index.ts"],
+      "project": ["src/**/*.ts", "*.ts"],
+      "ignore": ["tsdown.config.ts"]
     },
     "packages/github-trending-inspector": {
       "entry": [
-        "src/app/**/*.ts",
-        "src/app/**/*.tsx",
-        "src/components/**/*.tsx",
-        "src/db/**/*.ts",
-        "src/hooks/**/*.ts",
-        "src/lib/**/*.ts",
+        "src/app/layout.tsx",
+        "src/app/page.tsx",
+        "src/app/not-found.tsx",
+        "src/app/api/commits/route.ts",
+        "src/app/api/trending/route.ts",
+        "src/app/globals.css",
         "next.config.ts",
-        "drizzle.config.ts"
+        "postcss.config.mjs"
       ],
-      "project": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-      ]
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignore": ["next-env.d.ts", "components.json", "README.md"],
+      "ignoreDependencies": ["github-trending-tools", "tailwindcss", "tw-animate-css", "postcss"]
     }
-  },
-  "ignore": [
-    "**/node_modules/**",
-    "**/.next/**",
-    "**/dist/**",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/vitest.config.*",
-    "**/postcss.config.*",
-    "**/tailwind.config.*",
-    "**/tsdown.config.*"
-  ]
+  }
 }
