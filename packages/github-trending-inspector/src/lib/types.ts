@@ -1,4 +1,33 @@
+import type { SortingState, VisibilityState } from '@tanstack/react-table'
+
+export type SortDirection = 'asc' | 'desc' | false
+
+export interface Commit {
+  sha: string
+  commit: {
+    message: string
+    author: {
+      name: string
+      date: string
+    }
+  }
+  author: {
+    login: string
+    avatar_url: string
+  }
+}
+
+export type SidebarState = 'open' | 'closed' | 'expanding' | 'collapsing'
+
+export interface SidebarMachine {
+  open: { toggle: SidebarState }
+  closed: { toggle: SidebarState }
+  collapsing: { complete: SidebarState }
+  expanding: { complete: SidebarState }
+}
+
 export interface Repository {
+  name: string
   rank: number
   title: string
   url: string
@@ -6,7 +35,7 @@ export interface Repository {
   stars: string
   forks: string
   language: string
-  isStarred?: boolean
+  starsToday: string
 }
 
 export interface LanguageGroup {
@@ -14,10 +43,25 @@ export interface LanguageGroup {
   repos: Repository[]
 }
 
-export type SortDirection = 'asc' | 'desc' | false
+export interface TableState {
+  sorting: SortingState
+  columnVisibility: VisibilityState
+  globalFilter: string
+  pagination: {
+    pageIndex: number
+    pageSize: number
+  }
+}
 
-export interface ExportOptions {
-  type: 'json' | 'csv'
-  filename: string
-  data: Repository[]
+type TrendingState =
+  | 'loading'
+  | 'date-unavailable'
+  | 'error'
+  | 'empty'
+  | 'success'
+
+export interface TrendingData {
+  state: TrendingState
+  groups: LanguageGroup[]
+  error?: string
 }
