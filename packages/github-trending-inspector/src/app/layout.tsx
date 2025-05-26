@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SidebarProvider } from '$/components/ui/sidebar'
 import { DesignSystemProvider } from '$/providers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
@@ -15,22 +14,39 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'GitHub Trending Inspector',
-  description: 'Inspect GitHub trending repositories with visualization',
+  title: {
+    template: '%s | GitHub Trending Inspector',
+    default: 'GitHub Trending Inspector',
+  },
+  description: 'Explore GitHub trending repositories with historical data and insights',
+  keywords: ['github', 'trending', 'repositories', 'open source', 'development', 'programming'],
+  authors: [{ name: 'GitHub Trending Inspector' }],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  openGraph: {
+    title: 'GitHub Trending Inspector',
+    description: 'Explore GitHub trending repositories with historical data and insights',
+    type: 'website',
+    siteName: 'GitHub Trending Inspector',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GitHub Trending Inspector',
+    description: 'Explore GitHub trending repositories with historical data and insights',
+  },
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-      <body>
+      <body className="min-h-screen bg-background font-sans">
         <DesignSystemProvider>
-          <SidebarProvider>
+          <div className="flex flex-col min-h-screen">
             {children}
-          </SidebarProvider>
+          </div>
         </DesignSystemProvider>
       </body>
     </html>

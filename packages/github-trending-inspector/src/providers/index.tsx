@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { Toaster } from '$/components/ui/sonner'
+import { ErrorProvider } from '$/providers/error'
+import { QueryProvider } from '$/providers/query'
 import { ThemeProvider } from '$/providers/theme'
 
 export function DesignSystemProvider({
@@ -7,9 +8,12 @@ export function DesignSystemProvider({
   ...properties
 }: { children: ReactNode }) {
   return (
-    <ThemeProvider {...properties}>
-      {children}
-      <Toaster />
-    </ThemeProvider>
+    <ErrorProvider>
+      <QueryProvider>
+        <ThemeProvider {...properties}>
+          {children}
+        </ThemeProvider>
+      </QueryProvider>
+    </ErrorProvider>
   )
 }
