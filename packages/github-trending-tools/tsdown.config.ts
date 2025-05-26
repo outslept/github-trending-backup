@@ -1,7 +1,6 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig([
-  // CLI build
   {
     entry: ['cli.ts'],
     format: ['esm'],
@@ -18,7 +17,6 @@ export default defineConfig([
       banner: '#!/usr/bin/env node',
     },
   },
-  // Library build
   {
     entry: ['index.ts'],
     format: ['esm'],

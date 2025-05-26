@@ -14,7 +14,6 @@ export class GitHubScraper {
       const html = await fetchWithRetry(url, this.retryConfig)
       const repositories = parseRepositories(html)
 
-      // Rate limiting
       await this.delay(500 + Math.random() * 500)
 
       return {

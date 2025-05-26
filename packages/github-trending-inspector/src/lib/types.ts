@@ -1,7 +1,5 @@
 import type { SortingState, VisibilityState } from '@tanstack/react-table'
 
-export type SortDirection = 'asc' | 'desc' | false
-
 export interface Commit {
   sha: string
   commit: {
@@ -18,13 +16,6 @@ export interface Commit {
 }
 
 export type SidebarState = 'open' | 'closed' | 'expanding' | 'collapsing'
-
-export interface SidebarMachine {
-  open: { toggle: SidebarState }
-  closed: { toggle: SidebarState }
-  collapsing: { complete: SidebarState }
-  expanding: { complete: SidebarState }
-}
 
 export interface Repository {
   name: string

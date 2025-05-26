@@ -185,7 +185,7 @@ function parseMdToRepositories(mdContent: string): Repository[] | null {
         const columns = line.split('|').map(col => col.trim()).filter(col => col)
 
         if (columns.length >= 6) {
-          // Порядок колонок: #, Repository, Description, Stars, Forks, Today
+          // #, Repository, Description, Stars, Forks, Today
           const [rankStr, repoCell, description, starsCell, forksCell, todayCell] = columns
 
           // Extract repository name and URL from markdown link
