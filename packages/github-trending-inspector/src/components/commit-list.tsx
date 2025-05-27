@@ -14,7 +14,7 @@ function CommitItem({ commit }: { commit: Commit }) {
       onClick={() => window.open(`https://github.com/outslept/github-trending-backup/commit/${commit.sha}`, '_blank')}
       className="w-full flex items-start gap-2 p-2 hover:bg-muted/50 transition-colors text-left border-b last:border-b-0"
     >
-      <Avatar className="h-6 w-6 flex-shrink-0">
+      <Avatar className="size-6 flex-shrink-0">
         <AvatarImage src={commit.author?.avatar_url} alt={commit.commit.author.name} />
         <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
           {commit.commit.author.name.split(' ').map(n => n[0]).join('')}
