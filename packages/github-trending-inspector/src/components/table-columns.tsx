@@ -1,6 +1,6 @@
 import type { Repository } from '$/lib/types'
 import type { ColumnDef } from '@tanstack/react-table'
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 export function createColumns(): ColumnDef<Repository>[] {
   return [
@@ -138,10 +138,10 @@ function StaticHeader({ label, type, className }: {
 
 function SortIcon({ sorted }: { sorted: false | 'asc' | 'desc' }) {
   if (sorted === 'asc')
-    return <ChevronUp className="h-3 w-3 text-muted-foreground ml-1" />
+    return <ChevronUp className="size-3 text-muted-foreground ml-1" />
   if (sorted === 'desc')
-    return <ChevronDown className="h-3 w-3 text-muted-foreground ml-1" />
-  return <ChevronDown className="h-3 w-3 opacity-20 ml-1" />
+    return <ChevronDown className="size-3 text-muted-foreground ml-1" />
+  return <ChevronDown className="size-3 opacity-20 ml-1" />
 }
 
 function RankCell({ rank }: { rank: number }) {
@@ -163,7 +163,6 @@ function RepositoryCell({ title, url }: { title: string, url: string }) {
         className="group flex items-center gap-1 text-xs font-medium text-foreground hover:text-primary transition-colors"
       >
         <span className="truncate">{title}</span>
-        <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
       </a>
     </div>
   )
@@ -182,7 +181,7 @@ function DescriptionCell({ description }: { description: string }) {
 function StarsCell({ stars }: { stars: string }) {
   return (
     <div className="flex items-center gap-1.5 font-mono text-xs group hover:text-foreground transition-colors">
-      <div className="w-1 h-1 rounded-full bg-yellow-400 opacity-60"></div>
+      <div className="size-1 rounded-full bg-yellow-400 opacity-60" />
       <span>{stars}</span>
     </div>
   )
@@ -191,7 +190,7 @@ function StarsCell({ stars }: { stars: string }) {
 function ForksCell({ forks }: { forks: string }) {
   return (
     <div className="flex items-center gap-1.5 font-mono text-xs group hover:text-foreground transition-colors">
-      <div className="w-1 h-1 rounded-full bg-muted-foreground opacity-60"></div>
+      <div className="size-1 rounded-full bg-muted-foreground opacity-60" />
       <span>{forks}</span>
     </div>
   )
@@ -202,7 +201,7 @@ function TodayCell({ starsToday }: { starsToday: string }) {
 
   return (
     <div className="flex items-center gap-1.5 font-mono text-xs group hover:text-foreground transition-colors">
-      <div className={`w-1 h-1 rounded-full opacity-60 ${todayNum > 0 ? 'bg-green-400' : 'bg-muted-foreground'}`}></div>
+      <div className={`size-1 rounded-full opacity-60 ${todayNum > 0 ? 'bg-green-400' : 'bg-muted-foreground'}`} />
       <span className={todayNum > 0 ? 'text-green-600 dark:text-green-400' : ''}>{starsToday}</span>
     </div>
   )
