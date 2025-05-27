@@ -16,15 +16,6 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
   const tableState = useTableState()
   const { table, stats } = useTableData(group.repos, columns, tableState.state, tableState)
 
-  const paginationData = {
-    pageIndex: table.getState().pagination.pageIndex,
-    pageCount: table.getPageCount(),
-    canPreviousPage: table.getCanPreviousPage(),
-    canNextPage: table.getCanNextPage(),
-    previousPage: table.previousPage,
-    nextPage: table.nextPage,
-  }
-
   return (
     <div id={group.language.toLowerCase()} className="w-full border bg-background">
       <TableHeader
@@ -49,7 +40,14 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
 
       <TablePagination
         stats={stats}
-        pagination={paginationData}
+        pagination={{
+          pageIndex: table.getState().pagination.pageIndex,
+          pageCount: table.getPageCount(),
+          canPreviousPage: table.getCanPreviousPage(),
+          canNextPage: table.getCanNextPage(),
+          previousPage: table.previousPage,
+          nextPage: table.nextPage,
+        }}
       />
     </div>
   )
