@@ -1,5 +1,6 @@
 import type { Commit } from '$/lib/types'
 import { Avatar, AvatarFallback, AvatarImage } from '$/components/ui/avatar'
+import Link from 'next/link'
 
 interface CommitListProps {
   commits: Commit[]
@@ -9,13 +10,16 @@ function CommitItem({ commit }: { commit: Commit }) {
   const days = Math.floor((Date.now() - new Date(commit.commit.author.date).getTime()) / (1000 * 60 * 60 * 24))
   const timeAgo = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : `${days} days ago`
 
+  const avatarUrl = commit.author?.avatar_url || undefined
+
   return (
-    <button
-      onClick={() => window.open(`https://github.com/outslept/github-trending-backup/commit/${commit.sha}`, '_blank')}
-      className="w-full flex items-start gap-2 p-2 hover:bg-muted/50 transition-colors text-left border-b last:border-b-0"
+    <Link
+      href={`https://github.com/outslept/github-trending-backup/commit/${commit.sha}`}
+      target="_blank"
+      className="w-full flex items-start gap-2 p-2 hover:bg-muted/50 text-left border-b last:border-b-0"
     >
       <Avatar className="size-6 flex-shrink-0">
-        <AvatarImage src={commit.author?.avatar_url} alt={commit.commit.author.name} />
+        <AvatarImage src={avatarUrl} alt={commit.commit.author.name} />
         <AvatarFallback className="text-[10px] bg-muted text-muted-foreground">
           {commit.commit.author.name.split(' ').map(n => n[0]).join('')}
         </AvatarFallback>
@@ -31,16 +35,14 @@ function CommitItem({ commit }: { commit: Commit }) {
           {commit.commit.message}
         </p>
       </div>
-    </button>
+    </Link>
   )
 }
 
 export function CommitList({ commits }: CommitListProps) {
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b flex-shrink-0">
-        <h3 className="text-xs font-medium text-muted-foreground">Recent Activity</h3>
-      </div>
+      <h3 className="p-3 border-b flex-shrink-0 text-xs font-medium text-muted-foreground">Recent Activity</h3>
       <div className="flex-1 overflow-hidden">
         {commits.map(commit => (
           <CommitItem key={commit.sha} commit={commit} />
