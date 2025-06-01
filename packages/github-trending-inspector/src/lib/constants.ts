@@ -1,5 +1,6 @@
 export const languageIcons: { [key: string]: string } = {
   'bash': '/icons/bash.svg',
+  'shell': '/icons/bash.svg',
   'c': '/icons/c.svg',
   'c++': '/icons/cpp.svg',
   'css': '/icons/css.svg',
