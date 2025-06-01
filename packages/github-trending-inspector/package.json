@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scan": "next dev & npx react-scan@latest localhost:3000"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",

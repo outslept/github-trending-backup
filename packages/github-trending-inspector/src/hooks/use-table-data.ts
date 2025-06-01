@@ -1,8 +1,10 @@
 'use client'
 
+import type { Repository, TableState } from '$/lib/types'
+import type { ColumnDef } from '@tanstack/react-table'
 import { getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 
-export function useTableData(repos, columns, tableState, handlers) {
+export function useTableData(repos: Repository[], columns: ColumnDef<Repository>[], tableState: TableState, handlers: { state?: TableState, updateSorting: any, updateColumnVisibility: any, updateGlobalFilter: any, updatePagination: any }) {
   const table = useReactTable({
     data: repos,
     columns,

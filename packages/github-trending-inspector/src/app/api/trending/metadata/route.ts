@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
     }
 
     const availableDates = (await response.json())
-      .filter(file => file.name.endsWith('.md'))
-      .map(file => file.name.replace('.md', '').split('-')[2])
+      .filter((file: { name: string }) => file.name.endsWith('.md'))
+      .map((file: { name: string }) => file.name.replace('.md', '').split('-')[2])
       .sort()
 
     return Response.json({

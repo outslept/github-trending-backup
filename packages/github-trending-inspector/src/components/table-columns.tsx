@@ -95,7 +95,7 @@ export function createColumns(): ColumnDef<Repository>[] {
   ]
 }
 
-function SortableHeader({ column, label, type }) {
+function SortableHeader({ column, label, type }: { column: any, label: string, type: string }) {
   const sortDirection = column.getIsSorted?.() || false
 
   return (

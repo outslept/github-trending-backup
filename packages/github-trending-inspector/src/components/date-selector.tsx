@@ -4,11 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-interface DateSelectorProps {
-  selectedDate: Date
-  onDateSelect: (date: Date) => void
-}
-
 const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -34,7 +29,7 @@ async function fetchMonthData(month: string) {
   return res.json()
 }
 
-export function DateSelector({ selectedDate }: DateSelectorProps) {
+export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const router = useRouter()
 

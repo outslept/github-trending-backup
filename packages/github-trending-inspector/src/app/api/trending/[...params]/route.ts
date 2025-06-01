@@ -36,12 +36,12 @@ export async function GET(
     if (!response.ok)
       throw new Error('Month not found')
 
-    const files = (await response.json()).filter(file => file.name.endsWith('.md'))
+    const files = (await response.json()).filter((file: { name: string }) => file.name.endsWith('.md'))
 
     const page = Number.parseInt(searchParams.get('page') || '1')
     const limit = Number.parseInt(searchParams.get('limit') || '5')
 
-    const mdFiles = specificDate ? files.filter(file => file.name === `${specificDate}.md`) : files.slice((page - 1) * limit, page * limit)
+    const mdFiles = specificDate ? files.filter((file: { name: string }) => file.name === `${specificDate}.md`) : files.slice((page - 1) * limit, page * limit)
 
     if (specificDate && !mdFiles.length) {
       return Response.json({ error: 'Date not found' }, { status: 404 })

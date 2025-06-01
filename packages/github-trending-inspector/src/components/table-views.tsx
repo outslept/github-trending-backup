@@ -1,4 +1,5 @@
 import type { Repository } from '$/lib/types'
+import type { Key } from 'react'
 import { flexRender } from '@tanstack/react-table'
 import { ExternalLink, Search } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
@@ -35,7 +36,7 @@ function MobileCard({ repo }: { repo: Repository }) {
   )
 }
 
-export function MobileView({ rows }) {
+export function MobileView({ rows }: { rows: any[] }) {
   if (rows.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 text-muted-foreground p-8">
@@ -47,14 +48,14 @@ export function MobileView({ rows }) {
 
   return (
     <>
-      {rows.map(row => (
+      {rows.map((row: { id: Key | null | undefined, original: Repository }) => (
         <MobileCard key={row.id} repo={row.original} />
       ))}
     </>
   )
 }
 
-export function DesktopView({ table, columns }) {
+export function DesktopView({ table, columns }: { table: any, columns: any[] }) {
   return (
     <Table className="hidden md:table">
       <TableHeader>
@@ -72,7 +73,7 @@ export function DesktopView({ table, columns }) {
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows.length > 0
-          ? table.getRowModel().rows.map(row => (
+          ? table.getRowModel().rows.map((row: { id: Key | null | undefined, getVisibleCells: () => any[] }) => (
               <TableRow key={row.id} className="hover:bg-muted/20">
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id} className="py-2.5 whitespace-nowrap">
