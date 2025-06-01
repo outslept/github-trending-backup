@@ -1,9 +1,9 @@
 'use client'
 
 import type { LanguageGroup } from '$/lib/types'
+import { useMediaQuery } from '$/hooks/use-media-query'
 import { useTableData } from '$/hooks/use-table-data'
 import { useTableState } from '$/hooks/use-table-state'
-import { useViewport } from '$/hooks/use-viewport'
 import { createColumns } from './table-columns'
 import { TableHeader } from './table-header'
 import { TablePagination } from './table-pagination'
@@ -11,13 +11,13 @@ import { DesktopView, MobileView } from './table-views'
 import { ScrollArea, ScrollBar } from './ui/scroll-area'
 
 export function LanguageSection({ group }: { group: LanguageGroup }) {
-  const view = useViewport()
+  const isMobile = useMediaQuery('(max-width: 767px)')
   const columns = createColumns()
   const tableState = useTableState()
   const { table, stats } = useTableData(group.repos, columns, tableState.state, tableState)
 
   return (
-    <div id={group.language.toLowerCase()} className="w-full border bg-background">
+    <div id={group.language.toLowerCase()} className="border">
       <TableHeader
         language={group.language}
         repoCount={group.repos.length}
@@ -25,7 +25,7 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         onFilterChange={tableState.updateGlobalFilter}
       />
 
-      {view === 'mobile'
+      {isMobile
         ? (
             <MobileView rows={table.getRowModel().rows} />
           )
