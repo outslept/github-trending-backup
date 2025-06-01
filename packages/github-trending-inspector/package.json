@@ -10,20 +10,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.2",
-    "@tanstack/react-query": "^5.76.1",
+    "@radix-ui/react-slot": "catalog:frontend",
+    "@tanstack/react-query": "catalog:frontend",
     "@tanstack/react-table": "catalog:frontend",
-    "@tanstack/react-virtual": "^3.13.9",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
+    "@tanstack/react-virtual": "catalog:frontend",
+    "class-variance-authority": "catalog:frontend",
+    "clsx": "catalog:frontend",
     "lucide-react": "catalog:frontend",
     "next": "catalog:frontend",
     "next-themes": "catalog:frontend",
     "radix-ui": "catalog:frontend",
     "react": "catalog:frontend",
     "react-dom": "catalog:frontend",
-    "react-error-boundary": "^6.0.0",
-    "tailwind-merge": "^3.3.0"
+    "react-error-boundary": "catalog:frontend",
+    "tailwind-merge": "catalog:script"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:build",
@@ -32,7 +32,7 @@
     "@types/react-dom": "catalog:types",
     "github-trending-tools": "workspace:*",
     "tailwindcss": "catalog:build",
-    "tw-animate-css": "^1.2.9",
+    "tw-animate-css": "catalog:frontend",
     "typescript": "catalog:build"
   }
 }

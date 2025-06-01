@@ -26,12 +26,6 @@ export interface Repository {
   today: number
 }
 
-export interface TrendingResponse {
-  date: string
-  available: boolean
-  languages: Record<string, Repository[]>
-}
-
 export interface LanguageGroup {
   language: string
   repos: Repository[]
