@@ -5,12 +5,11 @@ import { ThemeProvider } from '$/providers/theme'
 
 export function DesignSystemProvider({
   children,
-  ...properties
 }: { children: ReactNode }) {
   return (
     <ErrorProvider>
       <QueryProvider>
-        <ThemeProvider {...properties}>
+        <ThemeProvider>
           {children}
         </ThemeProvider>
       </QueryProvider>
