@@ -11,22 +11,25 @@ export interface Commit {
   }
   author: {
     login: string
-    avatar_url: string
+    avatar_url: string | null
   }
 }
 
 export type SidebarState = 'open' | 'closed' | 'expanding' | 'collapsing'
 
 export interface Repository {
-  name: string
   rank: number
-  title: string
-  url: string
-  description: string
-  stars: string
-  forks: string
-  language: string
-  starsToday: string
+  repo: string
+  desc: string
+  stars: number
+  forks: number
+  today: number
+}
+
+export interface TrendingResponse {
+  date: string
+  available: boolean
+  languages: Record<string, Repository[]>
 }
 
 export interface LanguageGroup {
@@ -44,15 +47,12 @@ export interface TableState {
   }
 }
 
-type TrendingState =
-  | 'loading'
-  | 'date-unavailable'
-  | 'error'
-  | 'empty'
-  | 'success'
-
 export interface TrendingData {
-  state: TrendingState
+  state: 'loading'
+    | 'date-unavailable'
+    | 'error'
+    | 'empty'
+    | 'success'
   groups: LanguageGroup[]
   error?: string
 }
