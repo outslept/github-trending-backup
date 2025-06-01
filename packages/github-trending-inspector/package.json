@@ -6,12 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "scan": "next dev & npx react-scan@latest localhost:3000"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",
     "@tanstack/react-query": "^5.76.1",
     "@tanstack/react-table": "catalog:frontend",
+    "@tanstack/react-virtual": "^3.13.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "catalog:frontend",
