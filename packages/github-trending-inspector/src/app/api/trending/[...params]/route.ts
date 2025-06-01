@@ -16,19 +16,18 @@ interface LanguageGroup {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { params: string[] } },
+  { params }: { params: Promise<{ params: string[] }> },
 ) {
   const searchParams = new URL(request.url).searchParams
+  const paramsValue = await params
 
-  if (!params.params?.length) {
+  if (!paramsValue.params?.length) {
     return Response.json({ error: 'Month parameter is required' }, { status: 400 })
   }
 
-  const isSpecificDate = params.params.length === 3 || params.params[0].split('-').length === 3
-  const month = isSpecificDate
-    ? params.params.join('-').split('-').slice(0, 2).join('-')
-    : params.params[0]
-  const specificDate = isSpecificDate ? params.params.join('-') : null
+  const isSpecificDate = paramsValue.params.length === 3 || paramsValue.params[0].split('-').length === 3
+  const month = isSpecificDate ? paramsValue.params.join('-').split('-').slice(0, 2).join('-') : paramsValue.params[0]
+  const specificDate = isSpecificDate ? paramsValue.params.join('-') : null
 
   try {
     const [year, monthNum] = month.split('-')
@@ -42,9 +41,7 @@ export async function GET(
     const page = Number.parseInt(searchParams.get('page') || '1')
     const limit = Number.parseInt(searchParams.get('limit') || '5')
 
-    const mdFiles = specificDate
-      ? files.filter(file => file.name === `${specificDate}.md`)
-      : files.slice((page - 1) * limit, page * limit)
+    const mdFiles = specificDate ? files.filter(file => file.name === `${specificDate}.md`) : files.slice((page - 1) * limit, page * limit)
 
     if (specificDate && !mdFiles.length) {
       return Response.json({ error: 'Date not found' }, { status: 404 })
@@ -71,9 +68,12 @@ export async function GET(
     })
   }
   catch (error) {
-    return Response.json({
-      error: error instanceof Error ? error.message : 'Failed to fetch data',
-    }, { status: 500 })
+    return Response.json(
+      {
+        error: error instanceof Error ? error.message : 'Failed to fetch data',
+      },
+      { status: 500 },
+    )
   }
 }
 
