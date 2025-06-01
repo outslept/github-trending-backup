@@ -12,41 +12,24 @@ export function useTableState(initialState?: Partial<TableState>) {
     ...initialState,
   })
 
-  const updateSorting = (updaterOrValue: any) => {
-    setState(prev => ({
-      ...prev,
-      sorting: typeof updaterOrValue === 'function' ? updaterOrValue(prev.sorting) : updaterOrValue,
-    }))
-  }
-
-  const updateColumnVisibility = (updaterOrValue: any) => {
-    setState(prev => ({
-      ...prev,
-      columnVisibility: typeof updaterOrValue === 'function' ? updaterOrValue(prev.columnVisibility) : updaterOrValue,
-    }))
-  }
-
-  const updateGlobalFilter = (updaterOrValue: any) => {
-    const newValue = typeof updaterOrValue === 'function' ? updaterOrValue(state.globalFilter) : updaterOrValue
-    setState(prev => ({
-      ...prev,
-      globalFilter: newValue,
-      pagination: { ...prev.pagination, pageIndex: 0 },
-    }))
-  }
-
-  const updatePagination = (updaterOrValue: any) => {
-    setState(prev => ({
-      ...prev,
-      pagination: typeof updaterOrValue === 'function' ? updaterOrValue(prev.pagination) : updaterOrValue,
-    }))
-  }
-
   return {
     state,
-    updateSorting,
-    updateColumnVisibility,
-    updateGlobalFilter,
-    updatePagination,
+    updateSorting: updaterOrValue => setState(prev => ({
+      ...prev,
+      sorting: typeof updaterOrValue === 'function' ? updaterOrValue(prev.sorting) : updaterOrValue,
+    })),
+    updateColumnVisibility: updaterOrValue => setState(prev => ({
+      ...prev,
+      columnVisibility: typeof updaterOrValue === 'function' ? updaterOrValue(prev.columnVisibility) : updaterOrValue,
+    })),
+    updateGlobalFilter: updaterOrValue => setState(prev => ({
+      ...prev,
+      globalFilter: typeof updaterOrValue === 'function' ? updaterOrValue(prev.globalFilter) : updaterOrValue,
+      pagination: { ...prev.pagination, pageIndex: 0 },
+    })),
+    updatePagination: updaterOrValue => setState(prev => ({
+      ...prev,
+      pagination: typeof updaterOrValue === 'function' ? updaterOrValue(prev.pagination) : updaterOrValue,
+    })),
   }
 }
