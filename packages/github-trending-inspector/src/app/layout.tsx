@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | GitHub Trending Inspector',
+    template: 'GitHub Trending Inspector',
     default: 'GitHub Trending Inspector',
   },
   description: 'Explore GitHub trending repositories with historical data and insights',
   keywords: ['github', 'trending', 'repositories', 'open source', 'development', 'programming'],
-  authors: [{ name: 'GitHub Trending Inspector' }],
+  authors: [{ name: 'outslept' }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   openGraph: {
     title: 'GitHub Trending Inspector',
@@ -41,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <body className="min-h-screen bg-background font-sans">
         <DesignSystemProvider>
           <div className="flex flex-col min-h-screen">
