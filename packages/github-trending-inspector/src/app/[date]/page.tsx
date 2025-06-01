@@ -24,7 +24,7 @@ export default async function DatePage({
 
   return (
     <div className="flex min-h-screen">
-      <AppSidebar initialCommits={commits} />
+      <AppSidebar initialCommits={commits} selectedDate={new Date(date)} />
       <div className="flex flex-col flex-1 min-w-0">
         <div className="container mx-auto px-4 py-6">
           <DailyTrending date={date} />
