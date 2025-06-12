@@ -1,0 +1,69 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    ":combinePatchMinorReleases",
+    ":ignoreUnstable",
+    ":prImmediately",
+    ":updateNotScheduled",
+    "group:monorepos",
+    "group:recommended",
+    "workarounds:all"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "groupName": "React ecosystem",
+      "schedule": ["before 10am on monday"]
+    },
+    {
+      "matchPackagePatterns": ["^@tanstack/"],
+      "groupName": "TanStack packages",
+      "schedule": ["before 10am on monday"]
+    },
+    {
+      "matchPackagePatterns": ["tailwind", "^@tailwindcss/"],
+      "groupName": "Tailwind CSS",
+      "schedule": ["before 10am on monday"]
+    },
+    {
+      "matchPackagePatterns": ["eslint", "^@eslint/"],
+      "groupName": "ESLint packages",
+      "schedule": ["before 10am on monday"]
+    },
+    {
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "typescript",
+        "vite",
+        "hono"
+      ],
+      "addLabels": ["priority-high", "dependencies"]
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "addLabels": ["dependencies", "dev"]
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "addLabels": ["dependencies", "types"]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on sunday"],
+    "commitMessageAction": "Lock file maintenance",
+    "prTitle": "Lock file maintenance",
+    "addLabels": ["lockfile-maintenance"]
+  },
+  "postUpdateOptions": ["pnpmDedupe"],
+  "rangeStrategy": "bump",
+  "separateMinorPatch": true,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "timezone": "Europe/Moscow"
+}
