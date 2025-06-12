@@ -1,9 +1,9 @@
 {
   "name": "github-trending-tools",
-  "type": "module",
   "version": "0.0.1",
   "packageManager": "pnpm@10.10.0",
   "description": "GitHub trending repositories scraper",
+  "type": "module",
   "keywords": [
     "github",
     "trending",
@@ -13,12 +13,12 @@
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "scripts": {
     "build": "tsdown index.ts --format esm --clean --sourcemap",
-    "start": "tsx index.ts"
+    "start": "tsx index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "node-html-parser": "catalog:script"
@@ -27,5 +27,8 @@
     "@types/node": "catalog:types",
     "tsdown": "catalog:build",
     "tsx": "catalog:script"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
