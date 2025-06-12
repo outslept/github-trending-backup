@@ -14,17 +14,11 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./cli": {
-      "import": "./dist/cli.js"
     }
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "github-trending": "./dist/cli.js"
-  },
   "files": [
     "dist"
   ],
@@ -33,13 +27,10 @@
   },
   "scripts": {
     "build": "tsdown",
-    "dev": "tsx watch cli.ts",
-    "start": "tsx cli.ts",
+    "start": "tsx index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "node-html-parser": "catalog:script"
