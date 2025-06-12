@@ -18,10 +18,7 @@
   },
   "scripts": {
     "build": "tsdown index.ts --format esm --clean --sourcemap",
-    "start": "tsx index.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "start": "tsx index.ts"
   },
   "dependencies": {
     "node-html-parser": "catalog:script"
