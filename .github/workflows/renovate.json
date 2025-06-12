@@ -35,13 +35,7 @@
       "schedule": ["before 10am on monday"]
     },
     {
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "typescript",
-        "vite",
-        "hono"
-      ],
+      "matchPackageNames": ["react", "react-dom", "typescript", "vite", "hono"],
       "addLabels": ["priority-high", "dependencies"]
     },
     {

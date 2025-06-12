@@ -1,10 +1,5 @@
-import antfu from '@antfu/eslint-config'
+import { sxzz } from "@sxzz/eslint-config";
 
-export default antfu({
-  type: 'app',
-  ignores: ['data/**'],
-}, {
-  rules: {
-    'node/prefer-global/process': 'off',
-  },
-})
+export default sxzz({
+  ignores: ["data/**"],
+});
