@@ -6,79 +6,9 @@ settings:
 
 catalogs:
   build:
-    '@tailwindcss/vite':
-      specifier: ^4.1.8
-      version: 4.1.10
-    '@tanstack/router-devtools':
-      specifier: ^1.120.18
-      version: 1.121.5
-    '@tanstack/router-plugin':
-      specifier: ^1.120.18
-      version: 1.121.7
-    '@tanstack/router-vite-plugin':
-      specifier: ^1.120.18
-      version: 1.121.7
-    '@vitejs/plugin-react-swc':
-      specifier: ^3.9.0
-      version: 3.10.2
-    tailwindcss:
-      specifier: ^4
-      version: 4.1.10
-    tsdown:
-      specifier: ^0.11.7
-      version: 0.11.13
     typescript:
       specifier: ^5.8.2
       version: 5.8.3
-    vite:
-      specifier: ^6.3.5
-      version: 6.3.5
-  frontend:
-    '@radix-ui/react-slot':
-      specifier: ^1.2.3
-      version: 1.2.3
-    '@tanstack/react-query':
-      specifier: ^5.76.1
-      version: 5.80.7
-    '@tanstack/react-router':
-      specifier: ^1.120.18
-      version: 1.121.2
-    '@tanstack/react-table':
-      specifier: ^8.21.3
-      version: 8.21.3
-    '@tanstack/react-virtual':
-      specifier: ^3.13.9
-      version: 3.13.10
-    class-variance-authority:
-      specifier: ^0.7.1
-      version: 0.7.1
-    clsx:
-      specifier: ^2.1.1
-      version: 2.1.1
-    lucide-react:
-      specifier: ^0.510.0
-      version: 0.510.0
-    motion:
-      specifier: ^12.11.3
-      version: 12.17.3
-    next-themes:
-      specifier: ^0.4.6
-      version: 0.4.6
-    radix-ui:
-      specifier: ^1.4.1
-      version: 1.4.2
-    react:
-      specifier: ^19.0.0
-      version: 19.1.0
-    react-dom:
-      specifier: ^19.0.0
-      version: 19.1.0
-    react-error-boundary:
-      specifier: ^6.0.0
-      version: 6.0.0
-    tw-animate-css:
-      specifier: ^1.2.9
-      version: 1.3.4
   lint:
     '@sxzz/eslint-config':
       specifier: ^7.0.2
@@ -86,51 +16,20 @@ catalogs:
     eslint:
       specifier: ^9.22.0
       version: 9.28.0
-    knip:
-      specifier: ^5.55.1
-      version: 5.61.0
     publint:
       specifier: ^0.3.12
       version: 0.3.12
   script:
-    concurrently:
-      specifier: ^9.1.2
-      version: 9.1.2
     nano-staged:
       specifier: ^0.8.0
       version: 0.8.0
-    node-html-parser:
-      specifier: ^7.0.1
-      version: 7.0.1
-    quick-lru:
-      specifier: ^7.0.1
-      version: 7.0.1
     simple-git-hooks:
       specifier: ^2.11.1
       version: 2.13.0
-    tailwind-merge:
-      specifier: ^3.3.0
-      version: 3.3.1
-    tsx:
-      specifier: ^4.19.4
-      version: 4.20.2
-  server:
-    '@hono/node-server':
-      specifier: ^1.14.4
-      version: 1.14.4
-    hono:
-      specifier: ^4.7.11
-      version: 4.7.11
   types:
     '@types/node':
       specifier: ^22.15.17
       version: 22.15.31
-    '@types/react':
-      specifier: ^19
-      version: 19.1.8
-    '@types/react-dom':
-      specifier: ^19
-      version: 19.1.6
 
 importers:
 
@@ -145,9 +44,6 @@ importers:
       eslint:
         specifier: catalog:lint
         version: 9.28.0(jiti@2.4.2)
-      knip:
-        specifier: catalog:lint
-        version: 5.61.0(@types/node@22.15.31)(typescript@5.8.3)
       nano-staged:
         specifier: catalog:script
         version: 0.8.0
@@ -2675,9 +2571,6 @@ packages:
   fault@2.0.1:
     resolution: {integrity: sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==}
 
-  fd-package-json@2.0.0:
-    resolution: {integrity: sha512-jKmm9YtsNXN789RS/0mSzOC1NUq9mkVd65vbSSVsKdjGvYXBuE4oWe2QOEoFeRmJg+lPuZxpmrfFclNhoRMneQ==}
-
   fdir@6.4.6:
     resolution: {integrity: sha512-hiFoqpyZcfNm1yc4u8oWCf9A2c4D3QjCrks3zmoVKVxpQRzmPNar1hUJcBG2RQHvEVGDN+Jm81ZheVLAQMK6+w==}
     peerDependencies:
@@ -2712,11 +2605,6 @@ packages:
   format@0.2.2:
     resolution: {integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==}
     engines: {node: '>=0.4.x'}
-
-  formatly@0.2.4:
-    resolution: {integrity: sha512-lIN7GpcvX/l/i24r/L9bnJ0I8Qn01qijWpQpDDvTLL29nKqSaJJu4h20+7VJ6m2CAhQ2/En/GbxDiHCzq/0MyA==}
-    engines: {node: '>=18.3.0'}
-    hasBin: true
 
   framer-motion@12.17.3:
     resolution: {integrity: sha512-+1GMxQvZGUu20clzYdUWQY+iUWGBFc6UmpxvZBJjWu++rPdj7imXcQITzVs+QLKyjOpLoPOOar2KAOeYL88YQg==}
@@ -2894,14 +2782,6 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
-
-  knip@5.61.0:
-    resolution: {integrity: sha512-g4zwSPUoSCWXWTHshNgtsiuM90jnLpZyBZ6J7BQaydfoOjclgh4NfrD7BL+TjChgDbeYg5bEQcERKK/vdJlpmA==}
-    engines: {node: '>=18.18.0'}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>=18'
-      typescript: '>=5.0.4'
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -3147,9 +3027,6 @@ packages:
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  minimist@1.2.8:
-    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
@@ -3520,10 +3397,6 @@ packages:
     resolution: {integrity: sha512-N+goiLxlkHJlyaYEglFypzVNMaNplPAk5syu0+OPp/Bk6dwVoXF6FfOw2vO0Dp+JHsBaI+w6cm8TnFl2Hw6tDA==}
     hasBin: true
 
-  smol-toml@1.3.4:
-    resolution: {integrity: sha512-UOPtVuYkzYGee0Bd2Szz8d2G3RfMfJ2t3qVdZUAozZyAk+a0Sxa+QKix0YCwjL/A1RR0ar44nCxaoN9FxdJGwA==}
-    engines: {node: '>= 18'}
-
   solid-js@1.9.7:
     resolution: {integrity: sha512-/saTKi8iWEM233n5OSi1YHCCuh66ZIQ7aK2hsToPe4tqGm7qAejU1SwNuTPivbWAYq7SjuHVVYxxuZQNRbICiw==}
 
@@ -3567,10 +3440,6 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-
-  strip-json-comments@5.0.2:
-    resolution: {integrity: sha512-4X2FR3UwhNUE9G49aIsJW5hRRR3GXGTBTZRMfv568O60ojM8HcWjV/VxAxCDW3SUND33O6ZY66ZuRcdkj73q2g==}
-    engines: {node: '>=14.16'}
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -3787,10 +3656,6 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  walk-up-path@4.0.0:
-    resolution: {integrity: sha512-3hu+tD8YzSLGuFYtPRb48vdhKMi0KQV5sn+uWr8+7dMEq/2G/dtLrdDinkLjqq5TIbIBjYJ4Ax/n3YiaW7QM8A==}
-    engines: {node: 20 || >=22}
-
   webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
@@ -3842,12 +3707,6 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  zod-validation-error@3.5.0:
-    resolution: {integrity: sha512-IWK6O51sRkq0YsnYD2oLDuK2BNsIjYUlR0+1YSd4JyBzm6/892IWroUnLc7oW4FU+b0f6948BHi6H8MDcqpOGw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      zod: ^3.25.0
 
   zod@3.25.63:
     resolution: {integrity: sha512-3ttCkqhtpncYXfP0f6dsyabbYV/nEUW+Xlu89jiXbTBifUfjaSqXOG6JnQPLtqt87n7KAmnMqcjay6c0Wq0Vbw==}
@@ -6305,10 +6164,6 @@ snapshots:
     dependencies:
       format: 0.2.2
 
-  fd-package-json@2.0.0:
-    dependencies:
-      walk-up-path: 4.0.0
-
   fdir@6.4.6(picomatch@4.0.2):
     optionalDependencies:
       picomatch: 4.0.2
@@ -6336,10 +6191,6 @@ snapshots:
   flatted@3.3.3: {}
 
   format@0.2.2: {}
-
-  formatly@0.2.4:
-    dependencies:
-      fd-package-json: 2.0.0
 
   framer-motion@12.17.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
@@ -6460,24 +6311,6 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
-
-  knip@5.61.0(@types/node@22.15.31)(typescript@5.8.3):
-    dependencies:
-      '@nodelib/fs.walk': 1.2.8
-      '@types/node': 22.15.31
-      fast-glob: 3.3.3
-      formatly: 0.2.4
-      jiti: 2.4.2
-      js-yaml: 4.1.0
-      minimist: 1.2.8
-      oxc-resolver: 11.2.0
-      picocolors: 1.1.1
-      picomatch: 4.0.2
-      smol-toml: 1.3.4
-      strip-json-comments: 5.0.2
-      typescript: 5.8.3
-      zod: 3.25.63
-      zod-validation-error: 3.5.0(zod@3.25.63)
 
   levn@0.4.1:
     dependencies:
@@ -6891,8 +6724,6 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.2
 
-  minimist@1.2.8: {}
-
   minipass@7.1.2: {}
 
   minizlib@3.0.2:
@@ -6980,6 +6811,7 @@ snapshots:
       '@oxc-resolver/binding-wasm32-wasi': 11.2.0
       '@oxc-resolver/binding-win32-arm64-msvc': 11.2.0
       '@oxc-resolver/binding-win32-x64-msvc': 11.2.0
+    optional: true
 
   p-limit@3.1.0:
     dependencies:
@@ -7306,8 +7138,6 @@ snapshots:
 
   simple-git-hooks@2.13.0: {}
 
-  smol-toml@1.3.4: {}
-
   solid-js@1.9.7:
     dependencies:
       csstype: 3.1.3
@@ -7346,8 +7176,6 @@ snapshots:
       min-indent: 1.0.1
 
   strip-json-comments@3.1.1: {}
-
-  strip-json-comments@5.0.2: {}
 
   supports-color@7.2.0:
     dependencies:
@@ -7574,8 +7402,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  walk-up-path@4.0.0: {}
-
   webpack-virtual-modules@0.6.2: {}
 
   which@2.0.2:
@@ -7618,10 +7444,6 @@ snapshots:
       yargs-parser: 21.1.1
 
   yocto-queue@0.1.0: {}
-
-  zod-validation-error@3.5.0(zod@3.25.63):
-    dependencies:
-      zod: 3.25.63
 
   zod@3.25.63: {}
 

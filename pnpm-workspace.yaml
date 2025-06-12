@@ -33,7 +33,6 @@ catalogs:
   lint:
     "@sxzz/eslint-config": ^7.0.2
     eslint: ^9.22.0
-    knip: ^5.55.1
     publint: ^0.3.12
   script:
     concurrently: ^9.1.2

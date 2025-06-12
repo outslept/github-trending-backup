@@ -5,14 +5,12 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit",
-    "knip": "knip"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@sxzz/eslint-config": "catalog:lint",
     "@types/node": "catalog:types",
     "eslint": "catalog:lint",
-    "knip": "catalog:lint",
     "nano-staged": "catalog:script",
     "publint": "catalog:lint",
     "simple-git-hooks": "catalog:script",
