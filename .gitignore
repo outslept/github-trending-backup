@@ -3,20 +3,9 @@
 # dependencies
 node_modules
 dist
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
 # testing
 /coverage
-
-# next.js
-.next/
-/out/
 
 # production
 /build
@@ -31,22 +20,21 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+
+# typescript
+*.tsbuildinfo
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
-
-# Environment
-.env
-.env.*
-!.env.example
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
