@@ -4,12 +4,10 @@ import { PanelLeftOpen } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useMediaQuery } from "../hooks/use-media-query";
 import { useSidebarMachine } from "../hooks/use-sidebar-machine";
-import type { Commit } from "../lib/types";
 import { DateSelector } from "./date-selector";
 import { ThemeControls } from "./theme-controls";
 
 interface AppSidebarProps {
-  initialCommits: Commit[];
   selectedDate: Date;
 }
 
