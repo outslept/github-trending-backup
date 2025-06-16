@@ -5,19 +5,20 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "simple-git-hooks"
   },
   "devDependencies": {
-    "@sxzz/eslint-config": "catalog:lint",
-    "@types/node": "catalog:types",
-    "eslint": "catalog:lint",
-    "nano-staged": "catalog:script",
-    "publint": "catalog:lint",
-    "simple-git-hooks": "catalog:script",
-    "typescript": "catalog:build"
+    "@sxzz/eslint-config": "^7.0.2",
+    "@types/node": "^22.15.17",
+    "eslint": "^9.22.0",
+    "nano-staged": "^0.8.0",
+    "publint": "^0.3.12",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.8.2"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm nano-staged"
+    "pre-commit": "pnpx nano-staged"
   },
   "nano-staged": {
     "*": "eslint --fix"
