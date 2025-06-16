@@ -1,24 +1,23 @@
-'use client'
+"use client";
 
-import type { SidebarState } from '$/lib/types'
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react";
+import type { SidebarState } from "../lib/types";
 
-export function useSidebarMachine(initialState: SidebarState = 'open') {
-  const [state, setState] = useState<SidebarState>(initialState)
+export function useSidebarMachine(initialState: SidebarState = "open") {
+  const [state, setState] = useState<SidebarState>(initialState);
 
   const toggle = useCallback(() => {
-    if (state === 'open') {
-      setState('collapsing')
-      setTimeout(() => setState('closed'), 200)
+    if (state === "open") {
+      setState("collapsing");
+      setTimeout(() => setState("closed"), 200);
+    } else if (state === "closed") {
+      setState("expanding");
+      setTimeout(() => setState("open"), 200);
     }
-    else if (state === 'closed') {
-      setState('expanding')
-      setTimeout(() => setState('open'), 200)
-    }
-  }, [state])
+  }, [state]);
 
-  const isVisible = state === 'open' || state === 'collapsing'
-  const isAnimating = state === 'collapsing' || state === 'expanding'
+  const isVisible = state === "open" || state === "collapsing";
+  const isAnimating = state === "collapsing" || state === "expanding";
 
-  return { state, toggle, isVisible, isAnimating }
+  return { state, toggle, isVisible, isAnimating };
 }
