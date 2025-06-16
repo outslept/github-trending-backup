@@ -21,6 +21,6 @@
     "pre-commit": "pnpx nano-staged"
   },
   "nano-staged": {
-    "*": "eslint --fix"
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   }
 }
