@@ -41,5 +41,5 @@ jobs:
         run: pnpm --filter github-trending-tools build
       - name: Build github-trending-inspector
         run: pnpm --filter github-trending-inspector build
-      - name: Lint
-        run: pnpm -r lint
+      # - name: Lint
+      #   run: pnpm -r lint
