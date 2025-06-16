@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable prettier/prettier, unicorn/filename-case */
 
 // @ts-nocheck
 
