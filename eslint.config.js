@@ -1,5 +1,5 @@
 import { sxzz } from "@sxzz/eslint-config";
 
 export default sxzz({
-  ignores: ["data/**", "**/*.gen.ts"],
+  ignores: ["data/**", "**/*.gen.ts", "routeTree.gen.ts"],
 });
