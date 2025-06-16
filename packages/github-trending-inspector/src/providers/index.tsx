@@ -1,18 +1,14 @@
-import type { ReactNode } from 'react'
-import { ErrorProvider } from '$/providers/error'
-import { QueryProvider } from '$/providers/query'
-import { ThemeProvider } from '$/providers/theme'
+import { ErrorProvider } from "./error";
+import { QueryProvider } from "./query";
+import { ThemeProvider } from "./theme";
+import type { ReactNode } from "react";
 
-export function DesignSystemProvider({
-  children,
-}: { children: ReactNode }) {
+export function DesignSystemProvider({ children }: { children: ReactNode }) {
   return (
     <ErrorProvider>
       <QueryProvider>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </QueryProvider>
     </ErrorProvider>
-  )
+  );
 }

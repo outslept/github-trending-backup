@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import type { ReactNode } from 'react'
-import { Button } from '$/components/ui/button'
-import { AlertCircle } from 'lucide-react'
-import { ErrorBoundary } from 'react-error-boundary'
+import { AlertCircle } from "lucide-react";
+import { ErrorBoundary } from "react-error-boundary";
+import { Button } from "../components/ui/button";
+import type { ReactNode } from "react";
 
 export function ErrorProvider({ children }: { children: ReactNode }) {
   return (
@@ -24,5 +24,5 @@ export function ErrorProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </ErrorBoundary>
-  )
+  );
 }
