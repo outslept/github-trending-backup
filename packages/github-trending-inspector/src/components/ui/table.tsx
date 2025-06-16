@@ -1,72 +1,53 @@
-'use client'
+import * as React from "react";
+import { cn } from "../../lib/utils";
 
-import { cn } from '$/lib/utils'
-import * as React from 'react'
-
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div className="overflow-hidden border bg-background">
-      <table
-        className={cn('w-full text-xs', className)}
-        {...props}
-      />
+    <div className="overflow-hidden">
+      <table className={cn("w-full text-sm", className)} {...props} />
     </div>
-  )
+  );
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
-  return (
-    <thead
-      className={cn('bg-muted/40', className)}
-      {...props}
-    />
-  )
+function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+  return <thead className={cn("", className)} {...props} />;
 }
 
-function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
-  return (
-    <tbody
-      className={cn('divide-y divide-border', className)}
-      {...props}
-    />
-  )
+function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+  return <tbody className={cn("", className)} {...props} />;
 }
 
-function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
+function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
-      className={cn('hover:bg-muted/30 transition-colors duration-100', className)}
-      {...props}
-    />
-  )
-}
-
-function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
-  return (
-    <th
       className={cn(
-        'h-8 p-3 text-left font-medium text-muted-foreground text-xs tracking-wide',
+        "border-b border-border/40 transition-colors duration-200",
         className,
       )}
       {...props}
     />
-  )
+  );
 }
 
-function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
+function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
-    <td
-      className={cn('px-3 py-2 text-foreground', className)}
+    <th
+      className={cn(
+        "h-12 px-4 text-left font-medium text-muted-foreground text-sm tracking-tight",
+        className,
+      )}
       {...props}
     />
-  )
+  );
 }
 
-export {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+  return (
+    <td
+      className={cn("px-4 py-3 text-foreground text-sm", className)}
+      {...props}
+    />
+  );
 }
+
+export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow };

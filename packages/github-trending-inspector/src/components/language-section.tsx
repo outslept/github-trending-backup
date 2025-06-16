@@ -1,54 +1,48 @@
-'use client'
+/* eslint-disable unicorn/prefer-string-replace-all */
+"use client";
 
-import type { LanguageGroup } from '$/lib/types'
-import { useMediaQuery } from '$/hooks/use-media-query'
-import { useTableData } from '$/hooks/use-table-data'
-import { useTableState } from '$/hooks/use-table-state'
-import { createColumns } from './table-columns'
-import { TableHeader } from './table-header'
-import { TablePagination } from './table-pagination'
-import { DesktopView, MobileView } from './table-views'
-import { ScrollArea, ScrollBar } from './ui/scroll-area'
+import { useMediaQuery } from "../hooks/use-media-query";
+import { useTable } from "../hooks/use-table";
+import type { LanguageGroup } from "../lib/types";
+import { createColumns } from "./table-columns";
+import { TableHeader } from "./table-header";
+import { TablePagination } from "./table-pagination";
+import { DesktopView, MobileView } from "./table-views";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export function LanguageSection({ group }: { group: LanguageGroup }) {
-  const isMobile = useMediaQuery('(max-width: 767px)')
-  const columns = createColumns()
-  const tableState = useTableState()
-  const { table, stats } = useTableData(group.repos, columns, tableState.state, tableState)
+  const isMobile = useMediaQuery("(max-width: 767px)");
+  const columns = createColumns();
+
+  const { table, state, paginationStats, pagination, updateGlobalFilter } =
+    useTable(group.repos, columns);
 
   return (
-    <div id={group.language.toLowerCase()} className="border">
+    <section
+      id={group.language.toLowerCase().replace(/[^a-z0-9]/g, "")}
+      className="border border-border/60 rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow duration-300"
+    >
       <TableHeader
         language={group.language}
         repoCount={group.repos.length}
-        globalFilter={tableState.state.globalFilter}
-        onFilterChange={tableState.updateGlobalFilter}
+        globalFilter={state.globalFilter}
+        onFilterChange={updateGlobalFilter}
       />
 
-      {isMobile
-        ? (
-            <MobileView rows={table.getRowModel().rows} />
-          )
-        : (
-            <ScrollArea className="w-full whitespace-nowrap">
-              <div className="min-w-[800px]">
-                <DesktopView table={table} columns={columns} />
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          )}
+      <div className="overflow-hidden">
+        {isMobile ? (
+          <MobileView rows={table.getRowModel().rows} />
+        ) : (
+          <ScrollArea className="w-full">
+            <div className="min-w-[800px]">
+              <DesktopView table={table} columns={columns} />
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        )}
+      </div>
 
-      <TablePagination
-        stats={stats}
-        pagination={{
-          pageIndex: table.getState().pagination.pageIndex,
-          pageCount: table.getPageCount(),
-          canPreviousPage: table.getCanPreviousPage(),
-          canNextPage: table.getCanNextPage(),
-          previousPage: table.previousPage,
-          nextPage: table.nextPage,
-        }}
-      />
-    </div>
-  )
+      <TablePagination stats={paginationStats} pagination={pagination} />
+    </section>
+  );
 }
