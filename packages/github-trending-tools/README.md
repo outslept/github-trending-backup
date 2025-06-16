@@ -17,9 +17,6 @@
   <a href="https://github.com/outslept/github-trending-backup/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Released under the MIT license." />
   </a>
-  <a href="https://github.com/outslept/github-trending-backup/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/outslept/github-trending-backup/ci.yml?branch=main" alt="Build status" />
-  </a>
   <a href="https://github.com/outslept/github-trending-backup">
     <img src="https://img.shields.io/github/stars/outslept/github-trending-backup?style=social" alt="GitHub stars" />
   </a>
@@ -34,8 +31,10 @@
 ## Quick Start
 
 ```bash
+# install deps
 npm install
 
+# generate
 npm start
 ```
 
