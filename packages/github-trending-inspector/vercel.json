@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/trending/metadata",
+      "destination": "/api/trending/metadata"
+    },
+    {
+      "source": "/api/trending/(\\d{4}-\\d{2})$",
+      "destination": "/api/trending/[month]"
+    },
+    {
+      "source": "/api/trending/(\\d{4}-\\d{2}-\\d{2})$",
+      "destination": "/api/trending/[date]"
+    }
+  ]
+}
