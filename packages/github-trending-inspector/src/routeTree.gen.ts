@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/filename-case */
 // @ts-nocheck
 
 // noinspection JSUnusedGlobalSymbols
