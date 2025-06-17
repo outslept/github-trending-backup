@@ -13,14 +13,6 @@
   A lightweight TypeScript tool that scrapes GitHub trending repositories<br />
   and generates clean markdown reports for daily tracking.
 </p>
-<p align="center">
-  <a href="https://github.com/outslept/github-trending-backup/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Released under the MIT license." />
-  </a>
-  <a href="https://github.com/outslept/github-trending-backup">
-    <img src="https://img.shields.io/github/stars/outslept/github-trending-backup?style=social" alt="GitHub stars" />
-  </a>
-</p>
 
 <p align="center">
   <sub><em>This project is not affiliated with or endorsed by GitHub.</em></sub>
