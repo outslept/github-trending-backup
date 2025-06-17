@@ -1,15 +1,9 @@
 <h1>
-  GitHub Trending Dashboard
+  GitHub Trending Inspector
 </h1>
-<h3>
-  Interactive visualization of GitHub trending repositories
-</h3>
 <p>
-  Web interface for exploring GitHub trending data<br />
-  with historical analysis and repository insights.
+  Web interface for exploring GitHub trending data with historical analysis and repository insights.
 </p>
-
-<br/>
 
 ## Screenshots
 
