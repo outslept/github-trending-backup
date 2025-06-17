@@ -2,7 +2,8 @@
   GitHub Trending Inspector
 </h1>
 <p>
-  Web interface for exploring GitHub trending data with historical analysis and repository insights.
+  Browse GitHub trending repositories by date
+  with interactive tables and calendar selection.
 </p>
 
 ## Screenshots
