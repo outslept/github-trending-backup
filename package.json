@@ -3,24 +3,24 @@
   "packageManager": "pnpm@10.6.3",
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "npx oxlint && npx eslint",
+    "lint:fix": "npx oxlint && npx eslint --fix",
     "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "prepare": "lint-staged"
   },
   "devDependencies": {
     "@sxzz/eslint-config": "^7.0.2",
     "@types/node": "^22.15.17",
     "eslint": "^9.22.0",
-    "nano-staged": "^0.8.0",
+    "eslint-plugin-oxlint": "^1.2.0",
+    "lint-staged": "^16.1.2",
     "publint": "^0.3.12",
-    "simple-git-hooks": "^2.11.1",
     "typescript": "^5.8.2"
   },
-  "simple-git-hooks": {
-    "pre-commit": "pnpx nano-staged"
-  },
-  "nano-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix"
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "oxlint",
+      "eslint --fix"
+    ]
   }
 }
