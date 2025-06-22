@@ -3,11 +3,6 @@
 import { cache } from "./cache";
 import type { LanguageGroup, Repository } from "./types";
 
-interface CacheEntry<T = unknown> {
-  data: T;
-  _cachedAt: number;
-}
-
 interface GitHubFile {
   name: string;
   download_url: string;
@@ -25,12 +20,6 @@ export interface FetchMetadataResult {
   totalDays: number;
 }
 
-export interface CacheStats {
-  size: number;
-  maxSize: number;
-  keys: string[];
-}
-
 const isToday = (dateStr: string): boolean => {
   const today = new Date();
   const utcToday = new Date(
@@ -41,13 +30,6 @@ const isToday = (dateStr: string): boolean => {
   const targetDate = new Date(dateStr);
   return targetDate.getTime() === utcToday.getTime();
 };
-
-const getCacheKey = (
-  month: string,
-  page: number,
-  limit: number,
-  specificDate?: string,
-): string => `${month}-${page}-${limit}-${specificDate || "all"}`;
 
 const shouldRefreshTodayCache = (cachedAt: number): boolean => {
   const utcHour = new Date().getUTCHours();
@@ -64,10 +46,10 @@ export async function fetchMonthData(
   limit = 5,
   specificDate?: string,
 ): Promise<FetchMonthDataResult> {
-  const cacheKey = getCacheKey(month, page, limit, specificDate);
+  const cacheKey = `${month}-${page}-${limit}-${specificDate || "all"}`;
 
   if (cache.has(cacheKey)) {
-    const cached = cache.get(cacheKey) as CacheEntry<FetchMonthDataResult>;
+    const cached = cache.get(cacheKey) as any;
 
     if (specificDate && isToday(specificDate)) {
       const cacheTime = cached._cachedAt || 0;
@@ -137,7 +119,7 @@ export async function fetchMonthData(
     {
       data: result,
       _cachedAt: Date.now(),
-    } as CacheEntry<FetchMonthDataResult>,
+    },
     { maxAge },
   );
 
@@ -268,11 +250,3 @@ const parseMdToLanguageGroups = (mdContent: string): LanguageGroup[] => {
 
   return languageGroups;
 };
-
-export const clearCache = (): void => cache.clear();
-
-export const getCacheStats = (): CacheStats => ({
-  size: cache.getSize(),
-  maxSize: cache.getMaxSize(),
-  keys: cache.keys(),
-});

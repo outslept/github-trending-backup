@@ -1,11 +1,8 @@
-interface CacheEntry<T = unknown> {
-  data: T;
-  _cachedAt: number;
-  maxAge: number;
-}
-
 class SimpleCache<T> {
-  private cache = new Map<string, CacheEntry<T>>();
+  private cache = new Map<
+    string,
+    { data: T; _cachedAt: number; maxAge: number }
+  >();
   private _maxSize: number;
   private defaultMaxAge: number;
 
@@ -47,22 +44,6 @@ class SimpleCache<T> {
 
   delete(key: string): void {
     this.cache.delete(key);
-  }
-
-  clear(): void {
-    this.cache.clear();
-  }
-
-  getSize(): number {
-    return this.cache.size;
-  }
-
-  getMaxSize(): number {
-    return this._maxSize;
-  }
-
-  keys(): string[] {
-    return Array.from(this.cache.keys());
   }
 }
 
