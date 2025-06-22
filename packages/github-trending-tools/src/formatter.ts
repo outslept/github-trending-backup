@@ -16,7 +16,8 @@ interface ScrapingResult {
 }
 
 function createAnchor(text: string): string {
-  return text.toLowerCase().replaceAll(/\W/g, "-");
+  // eslint-disable-next-line unicorn/prefer-string-replace-all
+  return text.toLowerCase().replace(/\W/g, "-");
 }
 
 function formatTableRow(repo: Repository): string {

@@ -17,7 +17,8 @@ export function TableHeader({
   onFilterChange,
   isLoading = false,
 }: TableHeaderProps) {
-  const languageId = language.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+  // eslint-disable-next-line unicorn/prefer-string-replace-all
+  const languageId = language.toLowerCase().replace(/[^a-z0-9]/g, "");
 
   return (
     <div

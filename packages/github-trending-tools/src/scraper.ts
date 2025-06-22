@@ -104,7 +104,8 @@ async function scrapeLanguage(
 
       repositories.push({
         rank: index + 1,
-        title: repoURL.slice(1).replaceAll(/\s/g, ""),
+        // eslint-disable-next-line unicorn/prefer-string-replace-all
+        title: repoURL.slice(1).replace(/\s/g, ""),
         url: `https://github.com${repoURL}`,
         description:
           row.querySelector("p.col-9")?.text?.trim() || "No description",
