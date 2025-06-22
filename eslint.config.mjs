@@ -1,10 +1,11 @@
 import { sxzz } from "@sxzz/eslint-config";
-import oxlint from 'eslint-plugin-oxlint';
+import oxlint from "eslint-plugin-oxlint";
 
-export default sxzz({},
+export default sxzz(
+  {},
   {
-  name: 'ignores/generated',
-  ignores: ["data/**", "routeTree.gen.ts"],
+    name: "ignores/generated",
+    ignores: ["data/**", "routeTree.gen.ts"],
   },
-  ...oxlint.configs['flat/recommended']
+  ...oxlint.configs["flat/recommended"],
 );
