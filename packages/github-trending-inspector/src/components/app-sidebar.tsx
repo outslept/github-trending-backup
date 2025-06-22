@@ -67,7 +67,7 @@ export function AppSidebar({ selectedDate }: AppSidebarProps) {
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="flex-1">
+        <SidebarContent className="flex-1 px-1">
           <DateSelector selectedDate={selectedDate} />
         </SidebarContent>
 
