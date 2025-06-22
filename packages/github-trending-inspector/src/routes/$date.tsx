@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { AppSidebar } from "../components/app-sidebar";
 import { DailyTrending } from "../components/daily-trending";
+import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
 
 export const Route = createFileRoute("/$date")({
   validateSearch: (search) => search,
@@ -24,13 +25,21 @@ function DatePage() {
   const { date } = Route.useParams();
 
   return (
-    <div className="flex min-h-screen">
+    <SidebarProvider
+      defaultOpen={true}
+      style={
+        {
+          "--sidebar-width": "18rem",
+          "--sidebar-width-mobile": "18rem",
+        } as React.CSSProperties
+      }
+    >
       <AppSidebar selectedDate={new Date(date)} />
-      <div className="flex flex-col flex-1 min-w-0">
-        <div className="container mx-auto px-4 py-6">
+      <SidebarInset>
+        <div className="w-[85%] max-w-none mx-auto py-6">
           <DailyTrending date={date} />
         </div>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
-import { AlertCircle, Database, Loader2 } from "lucide-react";
+import { AlertCircle, Database } from "lucide-react";
 import { useTrendingData } from "../hooks/use-trending-data";
 import { LanguageSection } from "./language-section";
+import { LanguageSectionSkeleton } from "./language-section-skeleton";
 
 function StateContainer({
   icon: Icon,
@@ -40,70 +41,37 @@ function StateContainer({
   );
 }
 
-function LoadingSkeleton() {
-  return (
-    <div className="space-y-6">
-      {Array.from({ length: 3 }).map((_, groupIndex) => (
-        <div
-          key={groupIndex}
-          className="border border-border/60 rounded-xl bg-background shadow-sm h-[800px] flex flex-col"
-        >
-          <div className="px-6 py-4 border-b border-border/40 bg-muted/20 flex-shrink-0">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-background border border-border/60 shadow-sm">
-                  <div className="size-5 bg-muted animate-pulse rounded" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-24 bg-muted animate-pulse rounded" />
-                    <div className="h-6 w-8 bg-muted animate-pulse rounded" />
-                  </div>
-                </div>
-              </div>
-              <div className="h-9 w-64 bg-muted animate-pulse rounded" />
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-center flex-1 gap-4 px-6 py-4">
-            <Loader2 className="size-8 text-muted-foreground animate-spin" />
-            <p className="text-sm text-muted-foreground">
-              Loading repositories...
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-border/40 bg-muted/10 flex-shrink-0">
-            <div className="h-4 w-48 bg-muted animate-pulse rounded" />
-            <div className="flex items-center gap-2">
-              <div className="h-4 w-16 bg-muted animate-pulse rounded" />
-              <div className="flex items-center gap-1 ml-2">
-                <div className="size-8 bg-muted animate-pulse rounded-lg" />
-                <div className="size-8 bg-muted animate-pulse rounded-lg" />
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+function createSkeletonGroups(count: number = 3) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `skeleton-${index}`,
+    language: `Language ${index + 1}`,
+    repos: Array.from({ length: 10 }, (_, repoIndex) => ({
+      id: `skeleton-repo-${index}-${repoIndex}`,
+      rank: repoIndex + 1,
+      repo: `skeleton/repo-${repoIndex + 1}`,
+      desc: "Loading repository description...",
+      stars: 0,
+      forks: 0,
+      today: 0,
+    })),
+  }));
 }
 
 export function DailyTrending({ date }: { date: string }) {
   const { state, groups, error } = useTrendingData(date);
 
+  const displayGroups = state === "loading" ? createSkeletonGroups() : groups;
+  const isLoading = state === "loading";
+
   const virtualizer = useWindowVirtualizer({
-    count: groups.length,
-    estimateSize: () => 50,
+    count: displayGroups.length,
+    estimateSize: () => 800,
     overscan: 2,
     measureElement: (element) => {
-      if (!element) return 50;
+      if (!element) return 800;
       return element.getBoundingClientRect().height;
     },
   });
-
-  if (state === "loading") {
-    return <LoadingSkeleton />;
-  }
 
   if (state === "error") {
     return (
@@ -138,7 +106,7 @@ export function DailyTrending({ date }: { date: string }) {
       }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {
-        const group = groups[virtualItem.index];
+        const group = displayGroups[virtualItem.index];
         return (
           <div
             key={virtualItem.key}
@@ -153,7 +121,14 @@ export function DailyTrending({ date }: { date: string }) {
             }}
           >
             <div className="mb-6">
-              <LanguageSection group={group} />
+              {isLoading ? (
+                <LanguageSectionSkeleton
+                  language={group.language}
+                  repoCount={10}
+                />
+              ) : (
+                <LanguageSection group={group} />
+              )}
             </div>
           </div>
         );

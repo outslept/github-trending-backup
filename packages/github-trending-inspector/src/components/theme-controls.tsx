@@ -73,6 +73,7 @@ function ThemeSwitcher() {
     <div className="relative flex items-center bg-muted/40 backdrop-blur-sm rounded-lg p-1">
       <motion.div
         className="absolute bg-background/90 backdrop-blur-md rounded-md shadow-sm border border-border/50"
+        initial={false}
         animate={{
           x: getActiveIndex() * 28, // 28px = button width
           opacity: 1,

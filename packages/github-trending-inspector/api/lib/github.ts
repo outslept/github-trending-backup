@@ -272,7 +272,7 @@ const parseMdToLanguageGroups = (mdContent: string): LanguageGroup[] => {
 export const clearCache = (): void => cache.clear();
 
 export const getCacheStats = (): CacheStats => ({
-  size: cache.getSize(), // Исправлено: используем метод вместо геттера
-  maxSize: cache.getMaxSize(), // Исправлено: используем метод вместо геттера
+  size: cache.getSize(),
+  maxSize: cache.getMaxSize(),
   keys: cache.keys(),
 });

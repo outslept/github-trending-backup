@@ -15,11 +15,7 @@ import {
   TableRow,
 } from "./ui/table";
 
-interface MobileCardProps {
-  repo: Repository;
-}
-
-function MobileCard({ repo }: MobileCardProps) {
+function MobileCard({ repo }: { repo: Repository }) {
   return (
     <div className="p-4 border-b border-border/40 last:border-b-0 hover:bg-muted/30 transition-colors duration-200">
       <div className="flex items-start justify-between gap-3 mb-3">
@@ -82,27 +78,31 @@ function MobileCard({ repo }: MobileCardProps) {
   );
 }
 
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center gap-3 text-muted-foreground py-12">
+      <div className="p-3 rounded-full bg-muted/40">
+        <Search className="size-5" />
+      </div>
+      <div className="text-center">
+        <p className="text-sm font-medium text-foreground mb-1">
+          No repositories found
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Try adjusting your search criteria
+        </p>
+      </div>
+    </div>
+  );
+}
+
 interface MobileViewProps {
   rows: Row<Repository>[];
 }
 
 export function MobileView({ rows }: MobileViewProps) {
   if (rows.length === 0) {
-    return (
-      <div className="flex flex-col items-center gap-3 text-muted-foreground py-12">
-        <div className="p-3 rounded-full bg-muted/40">
-          <Search className="size-5" />
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-medium text-foreground mb-1">
-            No repositories found
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Try adjusting your search criteria
-          </p>
-        </div>
-      </div>
-    );
+    return <EmptyState />;
   }
 
   return (
@@ -121,12 +121,13 @@ interface DesktopViewProps {
 
 export function DesktopView({ table, columns }: DesktopViewProps) {
   const rows = table.getRowModel().rows;
+  const headerGroups = table.getHeaderGroups();
 
   return (
     <div className="hidden md:block">
       <TableComponent>
         <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {headerGroups.map((headerGroup) => (
             <TableRow
               key={headerGroup.id}
               className="hover:bg-transparent border-border/40"
@@ -164,19 +165,7 @@ export function DesktopView({ table, columns }: DesktopViewProps) {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-32 text-center">
-                <div className="flex flex-col items-center gap-3 text-muted-foreground py-8">
-                  <div className="p-3 rounded-full bg-muted/40">
-                    <Search className="size-5" />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      No repositories found
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Try adjusting your search criteria
-                    </p>
-                  </div>
-                </div>
+                <EmptyState />
               </TableCell>
             </TableRow>
           )}

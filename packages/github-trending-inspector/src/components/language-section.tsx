@@ -1,6 +1,3 @@
-/* eslint-disable unicorn/prefer-string-replace-all */
-"use client";
-
 import { useMediaQuery } from "../hooks/use-media-query";
 import { useTable } from "../hooks/use-table";
 import type { LanguageGroup } from "../lib/types";
@@ -10,16 +7,17 @@ import { TablePagination } from "./table-pagination";
 import { DesktopView, MobileView } from "./table-views";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
+const columns = createColumns();
+
 export function LanguageSection({ group }: { group: LanguageGroup }) {
   const isMobile = useMediaQuery("(max-width: 767px)");
-  const columns = createColumns();
 
   const { table, state, paginationStats, pagination, updateGlobalFilter } =
     useTable(group.repos, columns);
 
   return (
     <section
-      id={group.language.toLowerCase().replace(/[^a-z0-9]/g, "")}
+      id={group.language.toLowerCase().replaceAll(/[^a-z0-9]/g, "")}
       className="border border-border/60 rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow duration-300"
     >
       <TableHeader
@@ -27,6 +25,7 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         repoCount={group.repos.length}
         globalFilter={state.globalFilter}
         onFilterChange={updateGlobalFilter}
+        isLoading={false}
       />
 
       <div className="overflow-hidden">
@@ -42,7 +41,11 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         )}
       </div>
 
-      <TablePagination stats={paginationStats} pagination={pagination} />
+      <TablePagination
+        stats={paginationStats}
+        pagination={pagination}
+        isLoading={false}
+      />
     </section>
   );
 }

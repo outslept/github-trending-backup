@@ -1,53 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { Calendar } from "../components/ui/calendar";
+import { Skeleton } from "../components/ui/skeleton";
 import { API_BASE_URL } from "../lib/constants";
-
-const weekDays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
 
 function CalendarSkeleton() {
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-7 gap-1">
-        {weekDays.map((day, index) => (
-          <div
-            key={`weekday-${index}`}
-            className="text-[10px] font-medium text-muted-foreground/60 p-2 text-center tracking-tight"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-7 gap-1">
-        {Array.from({ length: 35 }, (_, i) => (
-          <motion.div
-            key={i}
-            className="size-8 bg-muted/30 rounded-md"
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              delay: i * 0.02,
-            }}
-          />
-        ))}
-      </div>
+    <div className="group/calendar p-3 w-fit opacity-50 pointer-events-none">
+      <Calendar
+        mode="single"
+        selected={undefined}
+        month={new Date()}
+        disabled={() => true}
+        className="w-full"
+        components={{
+          DayButton: () => (
+            <div className="relative w-full h-full aspect-square select-none group/day">
+              <Skeleton className="flex aspect-square h-auto w-full min-w-8 flex-col gap-1 leading-none font-normal rounded-md" />
+            </div>
+          ),
+        }}
+      />
     </div>
   );
 }
@@ -59,183 +34,84 @@ async function fetchMonthData(month: string) {
 }
 
 export function DateSelector({ selectedDate }: { selectedDate: Date }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(selectedDate);
   const navigate = useNavigate();
 
-  const currentMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
+  const monthString = useMemo(
+    () =>
+      `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}`,
+    [currentMonth],
+  );
 
   const { data: monthData, isPending } = useQuery({
-    queryKey: ["month-dates", currentMonth],
-    queryFn: () => fetchMonthData(currentMonth),
+    queryKey: ["month-dates", monthString],
+    queryFn: () => fetchMonthData(monthString),
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 24,
     refetchOnWindowFocus: false,
   });
 
-  const currentMonthNum = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const daysInMonth = new Date(currentYear, currentMonthNum + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonthNum, 1).getDay();
   const availableDates = monthData?.availableDates || [];
 
-  const goToPreviousMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonthNum - 1, 1));
-  };
+  const handleDateSelect = useCallback(
+    (date: Date | undefined) => {
+      if (!date) return;
 
-  const goToNextMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonthNum + 1, 1));
-  };
-
-  const isDateAvailable = (date: number) => {
-    const dayStr = String(date).padStart(2, "0");
-    return availableDates.includes(dayStr);
-  };
-
-  const isDateSelected = (date: number) => {
-    return (
-      selectedDate.getDate() === date &&
-      selectedDate.getMonth() === currentMonthNum &&
-      selectedDate.getFullYear() === currentYear
-    );
-  };
-
-  const handleDateClick = (date: number) => {
-    if (isDateAvailable(date)) {
-      const dateStr = `${currentYear}-${String(currentMonthNum + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       navigate({ to: "/$date", params: { date: dateStr } });
-    }
-  };
+    },
+    [navigate],
+  );
+
+  const handleMonthChange = useCallback((date: Date) => {
+    setCurrentMonth(date);
+  }, []);
+
+  const isDateAvailable = useCallback(
+    (date: Date) => {
+      const dayStr = String(date.getDate()).padStart(2, "0");
+      const dateMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+      if (dateMonth !== monthString) return false;
+      return availableDates.includes(dayStr);
+    },
+    [monthString, availableDates],
+  );
 
   return (
     <motion.div
-      className="px-6 py-5 border-b border-border/40 bg-background flex-shrink-0"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <motion.button
-          onClick={goToPreviousMonth}
-          className="size-8 flex items-center justify-center rounded-lg transition-colors duration-150 ease-out hover:bg-muted/60 text-muted-foreground hover:text-foreground"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          aria-label="Previous month"
-        >
-          <ChevronLeft className="size-4" />
-        </motion.button>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentMonth}
-            className="text-center"
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <h3 className="text-sm font-semibold text-foreground tracking-tight">
-              {monthNames[currentMonthNum]} {currentYear}
-            </h3>
-            <p className="text-xs text-muted-foreground tracking-tight mt-0.5">
-              {availableDates.length} days available
-            </p>
-          </motion.div>
-        </AnimatePresence>
-
-        <motion.button
-          onClick={goToNextMonth}
-          className="size-8 flex items-center justify-center rounded-lg transition-colors duration-150 ease-out hover:bg-muted/60 text-muted-foreground hover:text-foreground"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          aria-label="Next month"
-        >
-          <ChevronRight className="size-4" />
-        </motion.button>
-      </div>
-
       <AnimatePresence mode="wait">
         {isPending ? (
-          <CalendarSkeleton />
+          <motion.div
+            key="skeleton"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <CalendarSkeleton />
+          </motion.div>
         ) : (
           <motion.div
-            key={currentMonth}
-            className="space-y-2"
+            key={monthString}
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.02 }}
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
           >
-            <div className="grid grid-cols-7 gap-1">
-              {weekDays.map((day, index) => (
-                <div
-                  key={`weekday-${index}`}
-                  className="text-[10px] font-medium text-muted-foreground/60 p-2 text-center tracking-tight"
-                >
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: firstDayOfMonth }, (_, i) => (
-                <div key={`empty-${i}`} className="size-8" />
-              ))}
-
-              {Array.from({ length: daysInMonth }, (_, i) => {
-                const date = i + 1;
-                const available = isDateAvailable(date);
-                const selected = isDateSelected(date);
-
-                return (
-                  <motion.button
-                    key={`date-${date}`}
-                    onClick={() => handleDateClick(date)}
-                    disabled={!available}
-                    className={`
-                      size-8 text-xs font-medium flex items-center justify-center rounded-lg relative
-                      transition-colors duration-150 ease-out tracking-tight
-                      ${
-                        available
-                          ? selected
-                            ? "text-primary-foreground"
-                            : "text-foreground hover:text-foreground"
-                          : "text-muted-foreground/25 cursor-not-allowed"
-                      }
-                    `}
-                    whileHover={available ? { scale: 1.05 } : {}}
-                    whileTap={available ? { scale: 0.95 } : {}}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    style={{ transitionDelay: `${i * 8}ms` }}
-                  >
-                    {selected && (
-                      <motion.div
-                        className="absolute inset-0 bg-primary rounded-lg shadow-sm"
-                        layoutId="selected-date"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                    {available && !selected && (
-                      <motion.div
-                        className="absolute inset-0 bg-muted/60 rounded-lg opacity-0"
-                        whileHover={{ opacity: 1 }}
-                        transition={{ duration: 0.15 }}
-                      />
-                    )}
-                    <span className="relative z-10">{date}</span>
-                  </motion.button>
-                );
-              })}
-            </div>
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={handleDateSelect}
+              month={currentMonth}
+              onMonthChange={handleMonthChange}
+              disabled={(date) => !isDateAvailable(date)}
+              className="w-full"
+            />
           </motion.div>
         )}
       </AnimatePresence>
