@@ -1,10 +1,20 @@
 "use client";
 
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
-import { AlertCircle, Database } from "lucide-react";
+import { AlertCircle, Database, type LucideIcon } from "lucide-react";
 import { useTrendingData } from "../hooks/use-trending-data";
+import type { LanguageGroup } from "../lib/types";
 import { LanguageSection } from "./language-section";
 import { LanguageSectionSkeleton } from "./language-section-skeleton";
+
+interface StateContainerProps {
+  icon: LucideIcon;
+  iconColor: string;
+  title: string;
+  description: string;
+  subtitle?: string;
+  className?: string;
+}
 
 function StateContainer({
   icon: Icon,
@@ -13,14 +23,7 @@ function StateContainer({
   description,
   subtitle,
   className = "border",
-}: {
-  icon: any;
-  iconColor: string;
-  title: string;
-  description: string;
-  subtitle?: string;
-  className?: string;
-}) {
+}: StateContainerProps) {
   return (
     <div className={`w-full bg-background ${className}`}>
       <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 p-8">
@@ -41,12 +44,10 @@ function StateContainer({
   );
 }
 
-function createSkeletonGroups(count: number = 3) {
+function createSkeletonGroups(count = 3): LanguageGroup[] {
   return Array.from({ length: count }, (_, index) => ({
-    id: `skeleton-${index}`,
     language: `Language ${index + 1}`,
     repos: Array.from({ length: 10 }, (_, repoIndex) => ({
-      id: `skeleton-repo-${index}-${repoIndex}`,
       rank: repoIndex + 1,
       repo: `skeleton/repo-${repoIndex + 1}`,
       desc: "Loading repository description...",
@@ -58,10 +59,14 @@ function createSkeletonGroups(count: number = 3) {
 }
 
 export function DailyTrending({ date }: { date: string }) {
-  const { state, groups, error } = useTrendingData(date);
+  const {
+    data: groups = [],
+    isLoading,
+    error,
+    isError,
+  } = useTrendingData(date);
 
-  const displayGroups = state === "loading" ? createSkeletonGroups() : groups;
-  const isLoading = state === "loading";
+  const displayGroups = isLoading ? createSkeletonGroups() : groups;
 
   const virtualizer = useWindowVirtualizer({
     count: displayGroups.length,
@@ -73,19 +78,31 @@ export function DailyTrending({ date }: { date: string }) {
     },
   });
 
-  if (state === "error") {
+  if (isError && error?.message === "DATE_NOT_FOUND") {
+    return (
+      <StateContainer
+        icon={Database}
+        iconColor="bg-muted/50"
+        title="No data available"
+        description="No trending repositories found for this date. Try selecting a different date from the calendar."
+        className="border border-dashed"
+      />
+    );
+  }
+
+  if (isError) {
     return (
       <StateContainer
         icon={AlertCircle}
         iconColor="bg-destructive/10"
         title="Something went wrong"
-        description={error || "Unknown error occurred"}
+        description={error?.message || "Unknown error occurred"}
         subtitle="Please try refreshing the page or selecting a different date"
       />
     );
   }
 
-  if (state === "date-unavailable" || state === "empty") {
+  if (!isLoading && groups.length === 0) {
     return (
       <StateContainer
         icon={Database}

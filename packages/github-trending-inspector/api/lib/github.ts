@@ -1,6 +1,5 @@
 /* eslint-disable unicorn/prefer-string-replace-all */
 
-import { cache } from "./cache";
 import type { LanguageGroup, Repository } from "./types";
 
 interface GitHubFile {
@@ -20,70 +19,23 @@ export interface FetchMetadataResult {
   totalDays: number;
 }
 
-const isToday = (dateStr: string): boolean => {
-  const today = new Date();
-  const utcToday = new Date(
-    today.getUTCFullYear(),
-    today.getUTCMonth(),
-    today.getUTCDate(),
-  );
-  const targetDate = new Date(dateStr);
-  return targetDate.getTime() === utcToday.getTime();
-};
-
-const shouldRefreshTodayCache = (cachedAt: number): boolean => {
-  const utcHour = new Date().getUTCHours();
-  const hoursSinceCache = (Date.now() - cachedAt) / (1000 * 60 * 60);
-
-  if (utcHour < 1) return false;
-  if (utcHour >= 1 && utcHour < 5) return hoursSinceCache > 1.5;
-  return hoursSinceCache > 3;
-};
-
 export async function fetchMonthData(
   month: string,
   page = 1,
   limit = 5,
   specificDate?: string,
 ): Promise<FetchMonthDataResult> {
-  const cacheKey = `${month}-${page}-${limit}-${specificDate || "all"}`;
+  const [year, monthNum] = month.split("-");
+  const response = await fetch(
+    `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
+  );
 
-  if (cache.has(cacheKey)) {
-    const cached = cache.get(cacheKey) as any;
-
-    if (specificDate && isToday(specificDate)) {
-      const cacheTime = cached._cachedAt || 0;
-
-      if (!shouldRefreshTodayCache(cacheTime)) {
-        return cached.data;
-      } else {
-        cache.delete(cacheKey);
-      }
-    } else {
-      return cached.data;
-    }
+  if (!response.ok) {
+    throw new Error("Month not found");
   }
 
-  const monthCacheKey = `month-files-${month}`;
-  let files: GitHubFile[];
-
-  if (cache.has(monthCacheKey)) {
-    files = cache.get(monthCacheKey) as GitHubFile[];
-  } else {
-    const [year, monthNum] = month.split("-");
-    const response = await fetch(
-      `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Month not found");
-    }
-
-    const allFiles = (await response.json()) as GitHubFile[];
-    files = allFiles.filter((file) => file.name.endsWith(".md"));
-
-    cache.set(monthCacheKey, files);
-  }
+  const allFiles = (await response.json()) as GitHubFile[];
+  const files = allFiles.filter((file) => file.name.endsWith(".md"));
 
   const mdFiles = specificDate
     ? files.filter((file) => file.name === `${specificDate}.md`)
@@ -104,52 +56,17 @@ export async function fetchMonthData(
     }
   }
 
-  const result: FetchMonthDataResult = {
+  return {
     repositories,
     totalFiles: files.length,
     currentPage: page,
     totalPages: Math.ceil(files.length / limit),
   };
-
-  const isHistorical = specificDate ? !isToday(specificDate) : true;
-  const maxAge = isHistorical ? 7 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000;
-
-  cache.set(
-    cacheKey,
-    {
-      data: result,
-      _cachedAt: Date.now(),
-    },
-    { maxAge },
-  );
-
-  return result;
 }
 
 export async function fetchMetadata(
   month: string,
 ): Promise<FetchMetadataResult> {
-  const cacheKey = `metadata-${month}`;
-
-  if (cache.has(cacheKey)) {
-    return cache.get(cacheKey) as FetchMetadataResult;
-  }
-
-  const monthCacheKey = `month-files-${month}`;
-
-  if (cache.has(monthCacheKey)) {
-    const files = cache.get(monthCacheKey) as GitHubFile[];
-    const result: FetchMetadataResult = {
-      availableDates: files
-        .map((file) => file.name.replace(".md", "").split("-")[2])
-        .sort(),
-      totalDays: files.length,
-    };
-
-    cache.set(cacheKey, result, { maxAge: 60 * 60 * 1000 });
-    return result;
-  }
-
   const [year, monthNum] = month.split("-");
 
   try {
@@ -158,29 +75,20 @@ export async function fetchMetadata(
     );
 
     if (!response.ok) {
-      const result: FetchMetadataResult = { availableDates: [], totalDays: 0 };
-      cache.set(cacheKey, result, { maxAge: 5 * 60 * 1000 });
-      return result;
+      return { availableDates: [], totalDays: 0 };
     }
 
     const allFiles = (await response.json()) as GitHubFile[];
     const files = allFiles.filter((file) => file.name.endsWith(".md"));
 
-    cache.set(monthCacheKey, files);
-
-    const result: FetchMetadataResult = {
+    return {
       availableDates: files
         .map((file) => file.name.replace(".md", "").split("-")[2])
         .sort(),
       totalDays: files.length,
     };
-
-    cache.set(cacheKey, result, { maxAge: 60 * 60 * 1000 });
-    return result;
   } catch {
-    const result: FetchMetadataResult = { availableDates: [], totalDays: 0 };
-    cache.set(cacheKey, result, { maxAge: 5 * 60 * 1000 });
-    return result;
+    return { availableDates: [], totalDays: 0 };
   }
 }
 

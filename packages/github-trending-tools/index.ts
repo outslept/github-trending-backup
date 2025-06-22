@@ -27,15 +27,19 @@ const LANGUAGES: GitHubLanguage[] = [
 ];
 
 function findProjectRoot(path: string = process.cwd()): string {
-  return existsSync(join(path, ".git")) ? path : findProjectRoot(dirname(path));
+  if (existsSync(join(path, ".git"))) {
+    return path;
+  }
+  return findProjectRoot(dirname(path));
 }
 
 function getOutputPath(date: string): string {
-  const projectRoot = findProjectRoot();
-  const year = date.slice(0, 4);
-  const month = date.slice(5, 7);
-
-  const outputDir = join(projectRoot, "data", year, month);
+  const outputDir = join(
+    findProjectRoot(),
+    "data",
+    date.slice(0, 4), // year
+    date.slice(5, 7), // month
+  );
 
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, { recursive: true });
@@ -55,18 +59,18 @@ async function main() {
   const date = new Date().toISOString().slice(0, 10);
 
   const results = await scrapeLanguages(LANGUAGES, CONFIG);
-  const markdown = formatToMarkdown(results, date);
 
   const outputPath = getOutputPath(date);
-  writeFileSync(outputPath, markdown, "utf8");
+  writeFileSync(outputPath, formatToMarkdown(results, date), "utf8");
 
   // eslint-disable-next-line no-console
   console.log(`Report saved to: ${outputPath}`);
 
   const failed = results.filter((r) => !r.success);
   if (failed.length > 0) {
-    const failedLanguages = failed.map((r) => r.language).join(", ");
-    console.error(`Failed languages: ${failedLanguages}`);
+    console.error(
+      `Failed languages: ${failed.map((r) => r.language).join(", ")}`,
+    );
     process.exit(1);
   }
 }

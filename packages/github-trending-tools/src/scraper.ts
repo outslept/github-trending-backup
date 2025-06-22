@@ -83,40 +83,40 @@ async function scrapeLanguage(
       config,
     );
     const root = parse(html);
-    const repositories: Repository[] = [];
 
-    root.querySelectorAll(".Box-row").forEach((row, index) => {
-      const repoURL = row.querySelector("h2 a")?.getAttribute("href");
-      if (!repoURL) return;
+    const repositories: Repository[] = root
+      .querySelectorAll(".Box-row")
+      .map((row, index) => {
+        const titleElement = row.querySelector("h2 a");
+        const href = titleElement?.getAttribute("href");
+        if (!href) return null;
 
-      let stars = "0";
-      let forks = "0";
+        const statLinks = row.querySelectorAll(
+          "a.Link--muted.d-inline-block.mr-3",
+        );
+        const getStat = (type: string) =>
+          Array.from(statLinks)
+            .find(
+              (link: any) =>
+                link.querySelector("svg")?.getAttribute("aria-label") === type,
+            )
+            ?.text?.trim() || "0";
 
-      row
-        .querySelectorAll("a.Link--muted.d-inline-block.mr-3")
-        .forEach((link) => {
-          const label = link.querySelector("svg")?.getAttribute("aria-label");
-          const value = link.text.trim();
-
-          if (label === "star") stars = value;
-          else if (label === "fork") forks = value;
-        });
-
-      repositories.push({
-        rank: index + 1,
-        // eslint-disable-next-line unicorn/prefer-string-replace-all
-        title: repoURL.slice(1).replace(/\s/g, ""),
-        url: `https://github.com${repoURL}`,
-        description:
-          row.querySelector("p.col-9")?.text?.trim() || "No description",
-        stars,
-        forks,
-        todayStars:
-          row
-            .querySelector("span.d-inline-block.float-sm-right")
-            ?.text?.trim() || "N/A",
-      });
-    });
+        return {
+          rank: index + 1,
+          title: href.slice(1).replaceAll(/\s/g, ""),
+          url: `https://github.com${href}`,
+          description:
+            row.querySelector("p.col-9")?.text?.trim() || "No description",
+          stars: getStat("star"),
+          forks: getStat("fork"),
+          todayStars:
+            row
+              .querySelector("span.d-inline-block.float-sm-right")
+              ?.text?.trim() || "N/A",
+        };
+      })
+      .filter((repo): repo is Repository => repo !== null);
 
     await new Promise((resolve) =>
       setTimeout(resolve, 500 + Math.random() * 500),
@@ -127,7 +127,7 @@ async function scrapeLanguage(
       language,
       repositories: [],
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: String(error),
     };
   }
 }
@@ -139,9 +139,10 @@ export async function scrapeLanguages(
   const results: ScrapingResult[] = [];
 
   for (let i = 0; i < languages.length; i += config.concurrency) {
-    const batch = languages.slice(i, i + config.concurrency);
     const batchResults = await Promise.all(
-      batch.map((language) => scrapeLanguage(language, config)),
+      languages
+        .slice(i, i + config.concurrency)
+        .map((language) => scrapeLanguage(language, config)),
     );
     results.push(...batchResults);
   }

@@ -9,7 +9,7 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Repository } from "../lib/types";
 import { useMediaQuery } from "./use-media-query";
 
@@ -68,9 +68,14 @@ export function useTable(
     setPageIndex(0);
   }, []);
 
-  if (pageIndex >= paginationStats.pageCount && paginationStats.pageCount > 0) {
-    setPageIndex(0);
-  }
+  useEffect(() => {
+    if (
+      pageIndex >= paginationStats.pageCount &&
+      paginationStats.pageCount > 0
+    ) {
+      setPageIndex(0);
+    }
+  }, [pageIndex, paginationStats.pageCount]);
 
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex < paginationStats.pageCount - 1;

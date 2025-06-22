@@ -1,43 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_BASE_URL } from "../lib/constants";
-import type { TrendingData } from "../lib/types";
+import type { LanguageGroup } from "../lib/types";
 
-export function useTrendingData(date: string): TrendingData {
-  const query = useQuery({
+export function useTrendingData(date: string) {
+  return useQuery({
     queryKey: ["trending-data", date],
-    queryFn: async () => {
+    queryFn: async (): Promise<LanguageGroup[]> => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        throw new Error("Invalid date format. Expected YYYY-MM-DD");
+      }
+
       const res = await fetch(`${API_BASE_URL}/trending/${date}`);
       if (!res.ok) {
-        throw new Error(
-          res.status === 404
-            ? "DATE_NOT_FOUND"
-            : `Failed to fetch data: ${res.status}`,
-        );
+        if (res.status === 404) {
+          throw new Error("DATE_NOT_FOUND");
+        }
+        throw new Error(`Failed to fetch data: ${res.status}`);
       }
-      return res.json();
+
+      const data = await res.json();
+      const repositories = data?.repositories || {};
+
+      const day = date.slice(8);
+      return repositories[day] || [];
     },
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
-
-  if (query.error) {
-    return {
-      state:
-        query.error.message === "DATE_NOT_FOUND" ? "date-unavailable" : "error",
-      groups: [],
-      error: query.error.message,
-    };
-  }
-
-  if (query.isLoading) {
-    return { state: "loading", groups: [] };
-  }
-
-  const repositories =
-    query.data?.repositories?.[Object.keys(query.data?.repositories || {})[0]];
-
-  return {
-    state: repositories?.length > 0 ? "success" : "empty",
-    groups: repositories || [],
-  };
 }
