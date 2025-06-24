@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { formatNumber } from "../lib/format";
 
 interface TablePaginationProps {
   stats: {
@@ -40,11 +41,11 @@ export const TablePagination = ({
             <>
               Showing{" "}
               <span className="font-medium text-foreground">
-                {firstItemOnPage}
+                {formatNumber(firstItemOnPage)}
               </span>{" "}
               to{" "}
               <span className="font-medium text-foreground">
-                {lastItemOnPage}
+                {formatNumber(lastItemOnPage)}
               </span>{" "}
               of{" "}
               <span className="inline-flex items-center gap-1">
@@ -56,15 +57,15 @@ export const TablePagination = ({
             <>
               Showing{" "}
               <span className="font-medium text-foreground">
-                {firstItemOnPage}
+                {formatNumber(firstItemOnPage)}
               </span>{" "}
               to{" "}
               <span className="font-medium text-foreground">
-                {lastItemOnPage}
+                {formatNumber(lastItemOnPage)}
               </span>{" "}
               of{" "}
               <span className="font-medium text-foreground">
-                {totalFilteredRows.toLocaleString()}
+                {formatNumber(totalFilteredRows)}
               </span>{" "}
               repositories
             </>
@@ -78,12 +79,16 @@ export const TablePagination = ({
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 text-sm text-muted-foreground tracking-tight">
             <span>Page</span>
-            <span className="font-medium text-foreground">{pageIndex + 1}</span>
+            <span className="font-medium text-foreground">
+              {formatNumber(pageIndex + 1)}
+            </span>
             <span>of</span>
             {isLoading ? (
               <div className="h-4 w-4 bg-muted animate-pulse rounded inline-block" />
             ) : (
-              <span className="font-medium text-foreground">{pageCount}</span>
+              <span className="font-medium text-foreground">
+                {formatNumber(pageCount)}
+              </span>
             )}
           </div>
 

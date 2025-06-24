@@ -1,5 +1,6 @@
 import { Search, X } from "lucide-react";
 import { languageIcons } from "../lib/constants";
+import { formatNumber } from "../lib/format";
 import { Input } from "./ui/input";
 
 interface TableHeaderProps {
@@ -56,7 +57,7 @@ export function TableHeader({
                   </h2>
                   <div className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded-md">
                     <span className="text-xs font-medium tracking-tight">
-                      {repoCount.toLocaleString()}
+                      {formatNumber(repoCount)}
                     </span>
                   </div>
                 </>

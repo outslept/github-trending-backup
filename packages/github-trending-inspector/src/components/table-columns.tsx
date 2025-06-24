@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { formatNumber, getNumberValue } from "../lib/format";
 import type { Repository } from "../lib/types";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -11,7 +12,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <div className="inline-flex items-center justify-center min-w-[2.5rem] h-6 px-2 bg-muted/60 text-[10px] font-mono text-muted-foreground rounded-md hover:bg-muted transition-colors">
-          #{row.getValue("rank")}
+          #{formatNumber(row.getValue("rank"))}
         </div>
       ),
       enableSorting: true,
@@ -61,7 +62,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {(row.getValue("stars") as number).toLocaleString()}
+          {formatNumber(row.getValue("stars"))}
         </span>
       ),
       enableSorting: true,
@@ -74,7 +75,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {(row.getValue("forks") as number).toLocaleString()}
+          {formatNumber(row.getValue("forks"))}
         </span>
       ),
       enableSorting: true,
@@ -86,7 +87,7 @@ export function createColumns(): ColumnDef<Repository>[] {
         <SortableHeader column={column} label="today" type="number" />
       ),
       cell: ({ row }) => {
-        const today = row.getValue("today") as number;
+        const today = getNumberValue(row.getValue("today"));
         return (
           <div className="flex items-center gap-2">
             <span
@@ -96,9 +97,7 @@ export function createColumns(): ColumnDef<Repository>[] {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {today > 0
-                ? `+${today.toLocaleString()}`
-                : today.toLocaleString()}
+              {today > 0 ? `+${formatNumber(today)}` : formatNumber(today)}
             </span>
             {today > 0 && (
               <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
