@@ -1,5 +1,3 @@
-"use client";
-
 import { useMediaQuery } from "../hooks/use-media-query";
 import { TableHeader } from "./table-header";
 import { TablePagination } from "./table-pagination";

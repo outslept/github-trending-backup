@@ -1,5 +1,3 @@
-"use client";
-
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { AlertCircle, Database, type LucideIcon } from "lucide-react";
 import { useTrendingData } from "../hooks/use-trending-data";
