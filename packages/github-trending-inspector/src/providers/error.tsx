@@ -1,5 +1,3 @@
-"use client";
-
 import { AlertCircle } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "../components/ui/button";
