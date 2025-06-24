@@ -33,9 +33,7 @@ export function TableHeader({
               <div className="size-5 bg-muted animate-pulse rounded" />
             ) : (
               <img
-                src={
-                  languageIcons[language.toLowerCase()] || "/icons/_file.svg"
-                }
+                src={languageIcons[language.toLowerCase()]}
                 alt={language}
                 width={20}
                 height={20}
