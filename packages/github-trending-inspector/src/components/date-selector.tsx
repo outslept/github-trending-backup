@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar } from "../components/ui/calendar";
 import { Skeleton } from "../components/ui/skeleton";
 import { API_BASE_URL } from "../lib/constants";
@@ -35,6 +34,8 @@ async function fetchMonthData(month: string) {
 
 export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   const [currentMonth, setCurrentMonth] = useState(selectedDate);
+  const [isVisible, setIsVisible] = useState(false);
+  const [contentKey, setContentKey] = useState(0);
   const navigate = useNavigate();
 
   const monthString = useMemo(
@@ -52,6 +53,14 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   });
 
   const availableDates = monthData?.availableDates || [];
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  useEffect(() => {
+    setContentKey((prev) => prev + 1);
+  }, [isPending, monthString]);
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
@@ -79,29 +88,23 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+    <div
+      className={`transform transition-all duration-300 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+      }`}
     >
-      <AnimatePresence mode="wait">
+      <div className="relative overflow-hidden">
         {isPending ? (
-          <motion.div
-            key="skeleton"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+          <div
+            key={`skeleton-${contentKey}`}
+            className="animate-in fade-in-0 duration-200"
           >
             <CalendarSkeleton />
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            key={monthString}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          <div
+            key={`calendar-${contentKey}`}
+            className="animate-in fade-in-0 zoom-in-95 duration-250 ease-out"
           >
             <Calendar
               mode="single"
@@ -112,9 +115,9 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
               disabled={(date) => !isDateAvailable(date)}
               className="w-full"
             />
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.div>
+      </div>
+    </div>
   );
 }

@@ -1,18 +1,17 @@
 "use client";
 
 import { Clock, Monitor, Moon, Sun } from "lucide-react";
-import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 function ClockDisplay() {
-  const [currentTime, setCurrentTime] = useState(() =>
-    new Date().toLocaleTimeString("en-US", {
+  const [currentTime, setCurrentTime] = useState(() => {
+    return new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    }),
-  );
+    });
+  });
 
   useEffect(() => {
     const updateTime = () => {
@@ -69,26 +68,18 @@ function ThemeSwitcher() {
     return themeButtons.findIndex((btn) => btn.theme === theme);
   };
 
+  const activeIndex = getActiveIndex();
+
   return (
     <div className="relative flex items-center bg-muted/40 backdrop-blur-sm rounded-lg p-1">
-      <motion.div
-        className="absolute bg-background/90 backdrop-blur-md rounded-md shadow-sm border border-border/50"
-        initial={false}
-        animate={{
-          x: getActiveIndex() * 28, // 28px = button width
-          opacity: 1,
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 500,
-          damping: 35,
-          mass: 0.5,
-        }}
+      <div
+        className="absolute bg-background/90 backdrop-blur-md rounded-md shadow-sm border border-border/50 transition-transform duration-300 ease-out"
         style={{
           width: "28px",
           height: "28px",
           top: "4px",
           left: "4px",
+          transform: `translateX(${activeIndex * 28}px)`,
         }}
       />
 
