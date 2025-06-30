@@ -1,6 +1,8 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { AppSidebar } from "../components/app-sidebar";
 import { DailyTrending } from "../components/daily-trending";
+import { TrendingSkeleton } from "../components/skeletons";
 import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
 
 export const Route = createFileRoute("/$date")({
@@ -37,7 +39,9 @@ function DatePage() {
       <AppSidebar selectedDate={new Date(date)} />
       <SidebarInset>
         <div className="w-[85%] max-w-none mx-auto py-6">
-          <DailyTrending date={date} />
+          <Suspense fallback={<TrendingSkeleton />}>
+            <DailyTrending date={date} />
+          </Suspense>
         </div>
       </SidebarInset>
     </SidebarProvider>

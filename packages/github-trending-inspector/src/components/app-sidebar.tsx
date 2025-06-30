@@ -1,4 +1,5 @@
 import { PanelLeftOpen } from "lucide-react";
+import { Suspense } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,6 +9,7 @@ import {
   useSidebar,
 } from "../components/ui/sidebar";
 import { DateSelector } from "./date-selector";
+import { CalendarSkeleton } from "./skeletons";
 import { ThemeControls } from "./theme-controls";
 
 interface AppSidebarProps {
@@ -66,7 +68,9 @@ export function AppSidebar({ selectedDate }: AppSidebarProps) {
         </SidebarHeader>
 
         <SidebarContent className="flex-1 px-1">
-          <DateSelector selectedDate={selectedDate} />
+          <Suspense fallback={<CalendarSkeleton />}>
+            <DateSelector selectedDate={selectedDate} />
+          </Suspense>
         </SidebarContent>
 
         <SidebarFooter>

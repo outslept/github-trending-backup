@@ -1,9 +1,7 @@
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { AlertCircle, Database, type LucideIcon } from "lucide-react";
 import { useTrendingData } from "../hooks/use-trending-data";
-import type { LanguageGroup } from "../lib/types";
 import { LanguageSection } from "./language-section";
-import { LanguageSectionSkeleton } from "./language-section-skeleton";
 
 interface StateContainerProps {
   icon: LucideIcon;
@@ -42,53 +40,76 @@ function StateContainer({
   );
 }
 
-function createSkeletonGroups(count = 3): LanguageGroup[] {
-  return Array.from({ length: count }, (_, index) => ({
-    language: `Language ${index + 1}`,
-    repos: Array.from({ length: 10 }, (_, repoIndex) => ({
-      rank: repoIndex + 1,
-      repo: `skeleton/repo-${repoIndex + 1}`,
-      desc: "Loading repository description...",
-      stars: 0,
-      forks: 0,
-      today: 0,
-    })),
-  }));
-}
-
 export function DailyTrending({ date }: { date: string }) {
-  const {
-    data: groups = [],
-    isLoading,
-    error,
-    isError,
-  } = useTrendingData(date);
+  try {
+    const { data: groups } = useTrendingData(date);
 
-  const displayGroups = isLoading ? createSkeletonGroups() : groups;
+    if (groups.length === 0) {
+      return (
+        <StateContainer
+          icon={Database}
+          iconColor="bg-muted/50"
+          title="No data available"
+          description="No trending repositories found for this date. Try selecting a different date from the calendar."
+          className="border border-dashed"
+        />
+      );
+    }
 
-  const virtualizer = useWindowVirtualizer({
-    count: displayGroups.length,
-    estimateSize: () => 800,
-    overscan: 2,
-    measureElement: (element) => {
-      if (!element) return 800;
-      return element.getBoundingClientRect().height;
-    },
-  });
+    const virtualizer = useWindowVirtualizer({
+      count: groups.length,
+      estimateSize: () => 800,
+      overscan: 2,
+      measureElement: (element) => {
+        if (!element) return 800;
+        return element.getBoundingClientRect().height;
+      },
+    });
 
-  if (isError && error?.message === "DATE_NOT_FOUND") {
     return (
-      <StateContainer
-        icon={Database}
-        iconColor="bg-muted/50"
-        title="No data available"
-        description="No trending repositories found for this date. Try selecting a different date from the calendar."
-        className="border border-dashed"
-      />
+      <div
+        style={{
+          height: `${virtualizer.getTotalSize()}px`,
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        {virtualizer.getVirtualItems().map((virtualItem) => {
+          const group = groups[virtualItem.index];
+          return (
+            <div
+              key={virtualItem.key}
+              data-index={virtualItem.index}
+              ref={virtualizer.measureElement}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              <div className="mb-6">
+                <LanguageSection group={group} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     );
-  }
+  } catch (error: any) {
+    if (error?.message === "DATE_NOT_FOUND") {
+      return (
+        <StateContainer
+          icon={Database}
+          iconColor="bg-muted/50"
+          title="No data available"
+          description="No trending repositories found for this date. Try selecting a different date from the calendar."
+          className="border border-dashed"
+        />
+      );
+    }
 
-  if (isError) {
     return (
       <StateContainer
         icon={AlertCircle}
@@ -99,55 +120,4 @@ export function DailyTrending({ date }: { date: string }) {
       />
     );
   }
-
-  if (!isLoading && groups.length === 0) {
-    return (
-      <StateContainer
-        icon={Database}
-        iconColor="bg-muted/50"
-        title="No data available"
-        description="No trending repositories found for this date. Try selecting a different date from the calendar."
-        className="border border-dashed"
-      />
-    );
-  }
-
-  return (
-    <div
-      style={{
-        height: `${virtualizer.getTotalSize()}px`,
-        width: "100%",
-        position: "relative",
-      }}
-    >
-      {virtualizer.getVirtualItems().map((virtualItem) => {
-        const group = displayGroups[virtualItem.index];
-        return (
-          <div
-            key={virtualItem.key}
-            data-index={virtualItem.index}
-            ref={virtualizer.measureElement}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              transform: `translateY(${virtualItem.start}px)`,
-            }}
-          >
-            <div className="mb-6">
-              {isLoading ? (
-                <LanguageSectionSkeleton
-                  language={group.language}
-                  repoCount={10}
-                />
-              ) : (
-                <LanguageSection group={group} />
-              )}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
 }

@@ -11,7 +11,6 @@ const columns = createColumns();
 
 export function LanguageSection({ group }: { group: LanguageGroup }) {
   const isMobile = useMediaQuery("(max-width: 767px)");
-
   const { table, state, paginationStats, pagination, updateGlobalFilter } =
     useTable(group.repos, columns);
 
@@ -26,7 +25,6 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         repoCount={group.repos.length}
         globalFilter={state.globalFilter}
         onFilterChange={updateGlobalFilter}
-        isLoading={false}
       />
 
       <div className="overflow-hidden">
@@ -42,11 +40,7 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         )}
       </div>
 
-      <TablePagination
-        stats={paginationStats}
-        pagination={pagination}
-        isLoading={false}
-      />
+      <TablePagination stats={paginationStats} pagination={pagination} />
     </section>
   );
 }
