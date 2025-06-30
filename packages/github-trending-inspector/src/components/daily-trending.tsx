@@ -1,5 +1,5 @@
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
-import { AlertCircle, Database, type LucideIcon } from "lucide-react";
+import { Database, type LucideIcon } from "lucide-react";
 import { useTrendingData } from "../hooks/use-trending-data";
 import { LanguageSection } from "./language-section";
 
@@ -41,83 +41,59 @@ function StateContainer({
 }
 
 export function DailyTrending({ date }: { date: string }) {
-  try {
-    const { data: groups } = useTrendingData(date);
+  const { data: groups } = useTrendingData(date);
 
-    if (groups.length === 0) {
-      return (
-        <StateContainer
-          icon={Database}
-          iconColor="bg-muted/50"
-          title="No data available"
-          description="No trending repositories found for this date. Try selecting a different date from the calendar."
-          className="border border-dashed"
-        />
-      );
-    }
-
-    const virtualizer = useWindowVirtualizer({
-      count: groups.length,
-      estimateSize: () => 800,
-      overscan: 2,
-      measureElement: (element) => {
-        if (!element) return 800;
-        return element.getBoundingClientRect().height;
-      },
-    });
-
-    return (
-      <div
-        style={{
-          height: `${virtualizer.getTotalSize()}px`,
-          width: "100%",
-          position: "relative",
-        }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem) => {
-          const group = groups[virtualItem.index];
-          return (
-            <div
-              key={virtualItem.key}
-              data-index={virtualItem.index}
-              ref={virtualizer.measureElement}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                transform: `translateY(${virtualItem.start}px)`,
-              }}
-            >
-              <div className="mb-6">
-                <LanguageSection group={group} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  } catch (error: any) {
-    if (error?.message === "DATE_NOT_FOUND") {
-      return (
-        <StateContainer
-          icon={Database}
-          iconColor="bg-muted/50"
-          title="No data available"
-          description="No trending repositories found for this date. Try selecting a different date from the calendar."
-          className="border border-dashed"
-        />
-      );
-    }
-
+  if (groups.length === 0) {
     return (
       <StateContainer
-        icon={AlertCircle}
-        iconColor="bg-destructive/10"
-        title="Something went wrong"
-        description={error?.message || "Unknown error occurred"}
-        subtitle="Please try refreshing the page or selecting a different date"
+        icon={Database}
+        iconColor="bg-muted/50"
+        title="No data available"
+        description="No trending repositories found for this date. Try selecting a different date from the calendar."
+        className="border border-dashed"
       />
     );
   }
+
+  const virtualizer = useWindowVirtualizer({
+    count: groups.length,
+    estimateSize: () => 800,
+    overscan: 2,
+    measureElement: (element) => {
+      if (!element) return 800;
+      return element.getBoundingClientRect().height;
+    },
+  });
+
+  return (
+    <div
+      style={{
+        height: `${virtualizer.getTotalSize()}px`,
+        width: "100%",
+        position: "relative",
+      }}
+    >
+      {virtualizer.getVirtualItems().map((virtualItem) => {
+        const group = groups[virtualItem.index];
+        return (
+          <div
+            key={virtualItem.key}
+            data-index={virtualItem.index}
+            ref={virtualizer.measureElement}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              transform: `translateY(${virtualItem.start}px)`,
+            }}
+          >
+            <div className="mb-6">
+              <LanguageSection group={group} />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
