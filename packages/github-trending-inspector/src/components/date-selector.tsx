@@ -59,6 +59,25 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
     [monthString, availableDates],
   );
 
+  const isMonthNavigationDisabled = useCallback(
+    (direction: "previous" | "next") => {
+      const targetMonth = new Date(currentMonth);
+      targetMonth.setMonth(
+        targetMonth.getMonth() + (direction === "next" ? 1 : -1),
+      );
+
+      const monthStr = `${targetMonth.getFullYear()}-${String(targetMonth.getMonth() + 1).padStart(2, "0")}`;
+      const cachedData = queryClient.getQueryData<{
+        availableDates?: string[];
+      }>(["month-dates", monthStr]);
+
+      if (cachedData == null) return false;
+      const dates = cachedData.availableDates ?? [];
+      return dates.length === 0;
+    },
+    [currentMonth, queryClient],
+  );
+
   const handleMonthChange = useCallback(
     (month: Date) => {
       const monthStr = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
@@ -84,6 +103,16 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
       month={currentMonth}
       onMonthChange={handleMonthChange}
       disabled={(date) => !isDateAvailable(date)}
+      modifiers={{
+        disabled_previous: () => isMonthNavigationDisabled("previous"),
+        disabled_next: () => isMonthNavigationDisabled("next"),
+      }}
+      modifiersClassNames={{
+        disabled_previous:
+          "[&_.rdp-button_previous]:opacity-50 [&_.rdp-button_previous]:pointer-events-none",
+        disabled_next:
+          "[&_.rdp-button_next]:opacity-50 [&_.rdp-button_next]:pointer-events-none",
+      }}
       className="w-full"
     />
   );
