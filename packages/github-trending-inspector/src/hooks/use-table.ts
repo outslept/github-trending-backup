@@ -7,7 +7,7 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Repository } from "../lib/types";
 import { useMediaQuery } from "./use-media-query";
 
@@ -54,11 +54,14 @@ export function useTable(
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageIndex, setPageIndex] = useState(0);
 
-  const filteredRepos = filterRepos(repos, globalFilter);
-  const paginationStats = calculatePaginationStats(
-    filteredRepos.length,
-    pageIndex,
-    pageSize,
+  const filteredRepos = useMemo(
+    () => filterRepos(repos, globalFilter),
+    [repos, globalFilter],
+  );
+
+  const paginationStats = useMemo(
+    () => calculatePaginationStats(filteredRepos.length, pageIndex, pageSize),
+    [filteredRepos.length, pageIndex, pageSize],
   );
 
   const updateGlobalFilter = useCallback((value: string) => {
@@ -75,21 +78,21 @@ export function useTable(
     }
   }, [pageIndex, paginationStats.pageCount]);
 
-  const canPreviousPage = pageIndex > 0;
-  const canNextPage = pageIndex < paginationStats.pageCount - 1;
-
-  const pagination = {
-    pageIndex,
-    pageCount: paginationStats.pageCount,
-    canPreviousPage,
-    canNextPage,
-    previousPage: () => setPageIndex((prev) => prev - 1),
-    nextPage: () => setPageIndex((prev) => prev + 1),
-  };
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageCount: paginationStats.pageCount,
+      canPreviousPage: pageIndex > 0,
+      canNextPage: pageIndex < paginationStats.pageCount - 1,
+      previousPage: () => setPageIndex((prev) => prev - 1),
+      nextPage: () => setPageIndex((prev) => prev + 1),
+    }),
+    [pageIndex, paginationStats.pageCount],
+  );
 
   const handleSortingChange = useCallback(
     (updater: SortingState | ((prev: SortingState) => SortingState)) => {
-      setSorting(typeof updater === "function" ? updater : () => updater);
+      setSorting(updater);
     },
     [],
   );
@@ -98,9 +101,7 @@ export function useTable(
     (
       updater: VisibilityState | ((prev: VisibilityState) => VisibilityState),
     ) => {
-      setColumnVisibility(
-        typeof updater === "function" ? updater : () => updater,
-      );
+      setColumnVisibility(updater);
     },
     [],
   );
