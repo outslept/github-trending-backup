@@ -17,7 +17,7 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   );
 
   const { data: monthData } = useMonthData(monthString);
-  const availableDates = monthData?.availableDates || [];
+  const availableDates = monthData?.availableDates ?? [];
 
   useEffect(() => {
     const prev = new Date(currentMonth);
@@ -42,7 +42,7 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
-      if (!date) return;
+      if (date == null) return;
       const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       navigate({ to: "/$date", params: { date: dateStr } });
     },
@@ -59,13 +59,30 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
     [monthString, availableDates],
   );
 
+  const handleMonthChange = useCallback(
+    (month: Date) => {
+      const monthStr = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`;
+      const cachedData = queryClient.getQueryData<{
+        availableDates?: string[];
+      }>(["month-dates", monthStr]);
+
+      if (cachedData != null) {
+        const dates = cachedData.availableDates ?? [];
+        if (dates.length === 0) return;
+      }
+
+      setCurrentMonth(month);
+    },
+    [queryClient],
+  );
+
   return (
     <Calendar
       mode="single"
       selected={selectedDate}
       onSelect={handleDateSelect}
       month={currentMonth}
-      onMonthChange={setCurrentMonth}
+      onMonthChange={handleMonthChange}
       disabled={(date) => !isDateAvailable(date)}
       className="w-full"
     />
