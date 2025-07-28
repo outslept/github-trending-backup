@@ -14,19 +14,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown index.ts --format esm --clean --sourcemap",
-    "start": "tsx index.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "node-html-parser": "^7.0.1"
   },
   "devDependencies": {
-    "@types/node": "^22.15.17",
-    "tsdown": "^0.11.7",
-    "tsx": "^4.19.4"
+    "@types/node": "^22.15.17"
   },
   "engines": {
     "node": ">=20.0.0"
