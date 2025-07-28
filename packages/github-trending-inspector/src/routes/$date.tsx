@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Suspense } from "react";
+
 import { AppSidebar } from "../components/app-sidebar";
 import { DailyTrending } from "../components/daily-trending";
 import { TrendingSkeleton } from "../components/skeletons";

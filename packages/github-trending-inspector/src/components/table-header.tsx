@@ -1,6 +1,8 @@
 import { Search, X } from "lucide-react";
+
 import { languageIcons } from "../lib/constants";
 import { formatNumber } from "../lib/format";
+
 import { Input } from "./ui/input";
 
 interface TableHeaderProps {

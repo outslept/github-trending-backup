@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { formatNumber } from "../lib/format";
 
 interface TablePaginationProps {

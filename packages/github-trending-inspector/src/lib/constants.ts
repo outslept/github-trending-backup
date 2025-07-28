@@ -1,4 +1,4 @@
-export const languageIcons: { [key: string]: string } = {
+export const languageIcons: Record<string, string> = {
   bash: "/icons/bash.svg",
   shell: "/icons/bash.svg",
   c: "/icons/c.svg",

@@ -1,7 +1,8 @@
 import { AlertCircle } from "lucide-react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Button } from "../components/ui/button";
 import type { ReactNode } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+import { Button } from "../components/ui/button";
 
 export function ErrorProvider({ children }: { children: ReactNode }) {
   return (

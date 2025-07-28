@@ -1,7 +1,8 @@
+import type { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
 import { formatNumber, getNumberValue } from "../lib/format";
 import type { Repository } from "../lib/types";
-import type { ColumnDef } from "@tanstack/react-table";
 
 export function createColumns(): ColumnDef<Repository>[] {
   return [

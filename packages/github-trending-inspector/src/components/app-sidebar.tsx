@@ -1,5 +1,6 @@
 import { PanelLeftOpen } from "lucide-react";
 import { Suspense } from "react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -8,6 +9,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "../components/ui/sidebar";
+
 import { DateSelector } from "./date-selector";
 import { CalendarSkeleton } from "./skeletons";
 import { ThemeControls } from "./theme-controls";

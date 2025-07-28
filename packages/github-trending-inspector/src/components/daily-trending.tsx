@@ -1,6 +1,8 @@
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { Database, type LucideIcon } from "lucide-react";
+
 import { useTrendingData } from "../hooks/use-trending-data";
+
 import { LanguageSection } from "./language-section";
 
 interface StateContainerProps {

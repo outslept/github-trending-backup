@@ -1,6 +1,7 @@
 import { useMediaQuery } from "../hooks/use-media-query";
 import { useTable } from "../hooks/use-table";
 import type { LanguageGroup } from "../lib/types";
+
 import { createColumns } from "./table-columns";
 import { TableHeader } from "./table-header";
 import { TablePagination } from "./table-pagination";

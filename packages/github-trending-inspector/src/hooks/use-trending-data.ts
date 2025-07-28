@@ -1,4 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
+
 import { API_BASE_URL } from "../lib/constants";
 import type { LanguageGroup } from "../lib/types";
 

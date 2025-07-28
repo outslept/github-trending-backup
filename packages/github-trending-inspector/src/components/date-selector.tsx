@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { Calendar } from "../components/ui/calendar";
 import { useMonthData } from "../hooks/use-trending-data";
 import { API_BASE_URL } from "../lib/constants";

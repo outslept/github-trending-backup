@@ -5,7 +5,9 @@ import {
   type Table,
 } from "@tanstack/react-table";
 import { ExternalLink, GitFork, Search, Star, TrendingUp } from "lucide-react";
+
 import type { Repository } from "../lib/types";
+
 import {
   TableBody,
   TableCell,

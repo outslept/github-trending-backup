@@ -8,7 +8,9 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
 import type { Repository } from "../lib/types";
+
 import { useMediaQuery } from "./use-media-query";
 
 function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
