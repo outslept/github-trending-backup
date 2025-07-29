@@ -30,8 +30,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: pnpm --filter github-trending-tools start
+      - name: Generate metadata
+        run: node scripts/get-metadata.mjs
       - name: Commit and push changes
         run: |
           git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update trending repositories [skip ci]"
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update trending repositories and metadata"
           git push
