@@ -15,6 +15,10 @@ export interface LanguageGroup {
 export interface TrendingResponse {
   month: string;
   repositories: Record<string, LanguageGroup[]>;
+  pagination?: {
+    page: number;
+    totalPages: number;
+  };
 }
 
 export interface TrendingMonthResponse extends TrendingResponse {

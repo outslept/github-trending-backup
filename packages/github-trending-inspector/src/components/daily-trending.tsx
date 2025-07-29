@@ -33,7 +33,7 @@ function StateContainer({
           <p className="text-sm text-muted-foreground max-w-md">
             {description}
           </p>
-          {subtitle && (
+          {Boolean(subtitle) && (
             <p className="text-xs text-muted-foreground">{subtitle}</p>
           )}
         </div>
@@ -44,6 +44,15 @@ function StateContainer({
 
 export function DailyTrending({ date }: { date: string }) {
   const { data: groups } = useTrendingData(date);
+
+  const virtualizer = useWindowVirtualizer({
+    count: groups.length,
+    estimateSize: () => 800,
+    overscan: 2,
+    measureElement: (element) => {
+      return element.getBoundingClientRect().height;
+    },
+  });
 
   if (groups.length === 0) {
     return (
@@ -56,16 +65,6 @@ export function DailyTrending({ date }: { date: string }) {
       />
     );
   }
-
-  const virtualizer = useWindowVirtualizer({
-    count: groups.length,
-    estimateSize: () => 800,
-    overscan: 2,
-    measureElement: (element) => {
-      if (!element) return 800;
-      return element.getBoundingClientRect().height;
-    },
-  });
 
   return (
     <div

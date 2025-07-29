@@ -1,5 +1,5 @@
-import { fetchMetadata, fetchMonthData } from '../lib/github';
 import type { MetadataResponse, TrendingResponse } from '../../src/lib/types';
+import { fetchMetadata, fetchMonthData } from '../lib/github';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const pathParts = url.pathname.split('/').filter(Boolean);
   const slug = pathParts.at(-1);
 
-  if (!slug) {
+  if (slug == null || slug.length === 0) {
     return new Response(JSON.stringify({ error: 'Invalid endpoint' }), {
       status: 404,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   // GET /api/trending/metadata?month=YYYY-MM
   if (slug === 'metadata') {
     const month = url.searchParams.get('month');
-    if (!month) {
+    if (month == null || month.length === 0) {
       return new Response(
         JSON.stringify({ error: 'Month parameter is required' }),
         {
@@ -89,8 +89,8 @@ export async function GET(request: Request) {
   // GET /api/trending/YYYY-MM?page=1&limit=5
   if (/^\d{4}-\d{2}$/.test(slug)) {
     const month = slug;
-    const page = Number.parseInt(url.searchParams.get('page') || '1');
-    const limit = Number.parseInt(url.searchParams.get('limit') || '5');
+    const page = Number.parseInt(url.searchParams.get('page') ?? '1');
+    const limit = Number.parseInt(url.searchParams.get('limit') ?? '5');
 
     try {
       const data = await fetchMonthData(month, page, limit);

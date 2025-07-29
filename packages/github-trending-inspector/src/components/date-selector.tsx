@@ -47,7 +47,7 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
               `${API_BASE_URL}/trending/metadata?month=${monthStr}`,
             );
             if (!res.ok) throw new Error('Failed to fetch dates');
-            return res.json();
+            return res.json() as Promise<MetadataResponse>;
           },
         });
       });

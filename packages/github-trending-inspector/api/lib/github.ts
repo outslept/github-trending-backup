@@ -34,11 +34,12 @@ export async function fetchMonthData(
   const allFiles = (await response.json()) as GitHubFile[];
   const files = allFiles.filter((file) => file.name.endsWith('.md'));
 
-  const mdFiles = specificDate
-    ? files.filter((file) => file.name === `${specificDate}.md`)
-    : files.slice((page - 1) * limit, page * limit);
+  const mdFiles =
+    specificDate != null
+      ? files.filter((file) => file.name === `${specificDate}.md`)
+      : files.slice((page - 1) * limit, page * limit);
 
-  if (specificDate && !mdFiles.length) {
+  if (specificDate != null && mdFiles.length === 0) {
     throw new Error('Date not found');
   }
 
@@ -123,28 +124,26 @@ const parseMdToLanguageGroups = (mdContent: string): LanguageGroup[] => {
         .filter(Boolean);
       if (columns.length < 6) continue;
 
-      const repoMatch = columns[1].match(/\[([^\]]+)\]\(([^)]+)\)/);
-      if (!repoMatch) continue;
-
-      const starsMatch = columns[3].match(/[\d,]+/);
-      const forksMatch = columns[4].match(/[\d,]+/);
-      const todayMatch = columns[5].match(/(\d+)\s+stars?\s+today/i);
+      const repoMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(columns[1]);
+      if (repoMatch == null) continue;
 
       currentRepos.push({
         rank: Number.parseInt(columns[0]) || currentRepos.length + 1,
         repo: repoMatch[1].trim(),
         desc: columns[2].trim() || 'No description',
-        stars: starsMatch
-          ? Number.parseInt(starsMatch[0].replace(/,/g, ''))
-          : 0,
-        forks: forksMatch
-          ? Number.parseInt(forksMatch[0].replace(/,/g, ''))
-          : 0,
-        today: todayMatch ? Number.parseInt(todayMatch[1]) : 0,
+        stars: Number.parseInt(
+          (/[\d,]+/.exec(columns[3])?.[0] ?? '0').replace(/,/g, ''),
+        ),
+        forks: Number.parseInt(
+          (/[\d,]+/.exec(columns[4])?.[0] ?? '0').replace(/,/g, ''),
+        ),
+        today: Number.parseInt(
+          /(\d+)\s+stars?\s+today/i.exec(columns[5])?.[1] ?? '0',
+        ),
       });
     }
 
-    if (inTable && (!trimmedLine || trimmedLine.startsWith('#'))) {
+    if (inTable && (trimmedLine.length === 0 || trimmedLine.startsWith('#'))) {
       inTable = false;
     }
   }

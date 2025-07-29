@@ -84,7 +84,7 @@ export function useMonthData(month: string) {
         `${API_BASE_URL}/trending/metadata?month=${month}`,
       );
       if (!res.ok) throw new Error('Failed to fetch dates');
-      return res.json();
+      return res.json() as Promise<MetadataResponse>;
     },
     staleTime: 1000 * 60 * 60,
   });

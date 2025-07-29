@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/no-nested-component-definitions */
 import { Calendar } from './ui/calendar';
 import { Skeleton } from './ui/skeleton';
 import {
