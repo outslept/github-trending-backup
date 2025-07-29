@@ -4,7 +4,9 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [tanstackRouter(), react(), tailwindcss()],
+  plugins: [tanstackRouter({
+      autoCodeSplitting: true,
+    }), react(), tailwindcss()],
   server: {
     port: 3000,
   },
@@ -13,16 +15,13 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
-          'tanstack-router': ['@tanstack/react-router'],
-          'tanstack-query': ['@tanstack/react-query'],
-          'tanstack-table': [
-            '@tanstack/react-table',
-            '@tanstack/react-virtual',
-          ],
+          router: ['@tanstack/react-router'],
+          query: ['@tanstack/react-query'],
+          table: ['@tanstack/react-table', '@tanstack/react-virtual'],
+          calendar: ['react-day-picker'],
+          radix: ['radix-ui'],
           ui: ['class-variance-authority', 'clsx', 'tailwind-merge'],
           icons: ['lucide-react'],
-          radix: ['radix-ui'],
-          calendar: ['react-day-picker'],
           themes: ['next-themes'],
           utils: ['react-error-boundary'],
         },

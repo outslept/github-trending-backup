@@ -42,7 +42,7 @@ export async function GET(request: Request) {
       };
 
       logger.info('Daily data fetched successfully', {
-        repositoryCount: Object.keys(data.repositories).length
+        repositoryCount: Object.keys(data.repositories).length,
       });
       logger.response(startTime, 200, { type: 'daily', date });
 
@@ -50,10 +50,14 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch data';
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch data';
       const status = message === 'Date not found' ? 404 : 500;
 
-      logger.error('Failed to fetch daily data', error as Error, { date, month });
+      logger.error('Failed to fetch daily data', error as Error, {
+        date,
+        month,
+      });
       logger.response(startTime, status);
 
       return new Response(JSON.stringify({ error: message }), {
@@ -81,7 +85,7 @@ export async function GET(request: Request) {
 
       logger.info('Monthly data fetched successfully', {
         repositoryCount: Object.keys(data.repositories).length,
-        totalPages: data.totalPages
+        totalPages: data.totalPages,
       });
       logger.response(startTime, 200, { type: 'monthly', month, page });
 
@@ -89,9 +93,14 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch data';
+      const message =
+        error instanceof Error ? error.message : 'Failed to fetch data';
 
-      logger.error('Failed to fetch monthly data', error as Error, { month, page, limit });
+      logger.error('Failed to fetch monthly data', error as Error, {
+        month,
+        page,
+        limit,
+      });
       logger.response(startTime, 500);
 
       return new Response(JSON.stringify({ error: message }), {
