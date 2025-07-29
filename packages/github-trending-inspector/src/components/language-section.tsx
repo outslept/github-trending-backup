@@ -17,7 +17,6 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
 
   return (
     <section
-      // eslint-disable-next-line unicorn/prefer-string-replace-all
       id={group.language.toLowerCase().replace(/[^a-z0-9]/g, '')}
       className="border border-border/60 rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow duration-300"
     >

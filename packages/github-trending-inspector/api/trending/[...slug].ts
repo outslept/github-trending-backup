@@ -1,5 +1,5 @@
 import { fetchMetadata, fetchMonthData } from '../lib/github';
-import type { MetadataResponse, TrendingResponse } from '../lib/types';
+import type { MetadataResponse, TrendingResponse } from '../../src/lib/types';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

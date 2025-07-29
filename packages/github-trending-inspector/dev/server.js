@@ -13,7 +13,10 @@ function log(level, message, ...args) {
     error: 'red',
   };
 
-  const styledLevel = styleText(levelColors[level] || 'reset', level.toUpperCase().padEnd(5));
+  const styledLevel = styleText(
+    levelColors[level] || 'reset',
+    level.toUpperCase().padEnd(5),
+  );
   console.log(`${styledTimestamp} ${styledLevel} ${message}`, ...args);
 }
 
@@ -42,7 +45,10 @@ const parseMdToLanguageGroups = (mdContent) => {
   for (const line of mdContent.split('\n')) {
     const trimmedLine = line.trim();
 
-    if (trimmedLine.startsWith('## ') && !trimmedLine.includes('Table of Contents')) {
+    if (
+      trimmedLine.startsWith('## ') &&
+      !trimmedLine.includes('Table of Contents')
+    ) {
       if (currentRepos.length > 0) {
         languageGroups.push({ language: currentLanguage, repos: currentRepos });
       }
@@ -58,7 +64,10 @@ const parseMdToLanguageGroups = (mdContent) => {
     }
 
     if (inTable && trimmedLine.startsWith('| ') && trimmedLine.endsWith(' |')) {
-      const columns = trimmedLine.split('|').map((col) => col.trim()).filter(Boolean);
+      const columns = trimmedLine
+        .split('|')
+        .map((col) => col.trim())
+        .filter(Boolean);
       if (columns.length < 6) continue;
 
       const repoMatch = columns[1].match(/\[([^\]]+)\]\(([^)]+)\)/);
@@ -101,13 +110,19 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
     res.writeHead(200, corsHeaders);
     res.end();
-    log('ok', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)}`);
+    log(
+      'ok',
+      `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)}`,
+    );
     return;
   }
 
   if (req.method !== 'GET') {
     sendError(res, 'Method not allowed', 405);
-    log('warn', `${req.method} ${pathname} ${styleText('gray', `405 ${Date.now() - startTime}ms`)}`);
+    log(
+      'warn',
+      `${req.method} ${pathname} ${styleText('gray', `405 ${Date.now() - startTime}ms`)}`,
+    );
     return;
   }
 
@@ -116,7 +131,10 @@ const server = http.createServer(async (req, res) => {
       const month = searchParams.get('month');
       if (!month) {
         sendError(res, 'Month parameter is required', 400);
-        log('warn', `${req.method} ${pathname} ${styleText('gray', `400 ${Date.now() - startTime}ms`)} - missing month param`);
+        log(
+          'warn',
+          `${req.method} ${pathname} ${styleText('gray', `400 ${Date.now() - startTime}ms`)} - missing month param`,
+        );
         return;
       }
 
@@ -133,17 +151,25 @@ const server = http.createServer(async (req, res) => {
           const allFiles = await response.json();
           const files = allFiles.filter((file) => file.name.endsWith('.md'));
           metadata = {
-            availableDates: files.map((file) => file.name.replace('.md', '').split('-')[2]).sort(),
+            availableDates: files
+              .map((file) => file.name.replace('.md', '').split('-')[2])
+              .sort(),
             totalDays: files.length,
           };
         }
 
         sendJSON(res, { month, ...metadata });
-        log('ok', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - ${metadata.totalDays} days`);
+        log(
+          'ok',
+          `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - ${metadata.totalDays} days`,
+        );
       } catch (error) {
         log('error', `Error fetching metadata: ${error.message}`);
         sendJSON(res, { month, availableDates: [], totalDays: 0 });
-        log('warn', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - fallback response`);
+        log(
+          'warn',
+          `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - fallback response`,
+        );
       }
       return;
     }
@@ -179,20 +205,30 @@ const server = http.createServer(async (req, res) => {
 
           const repositories = {};
           for (const file of mdFiles) {
-            const content = await fetch(file.download_url).then((res) => res.text());
+            const content = await fetch(file.download_url).then((res) =>
+              res.text(),
+            );
             const languageGroups = parseMdToLanguageGroups(content);
             if (languageGroups.length > 0) {
-              repositories[file.name.replace('.md', '').split('-')[2]] = languageGroups;
+              repositories[file.name.replace('.md', '').split('-')[2]] =
+                languageGroups;
             }
           }
 
           sendJSON(res, { month, repositories });
-          log('ok', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - date ${date}`);
+          log(
+            'ok',
+            `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - date ${date}`,
+          );
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Failed to fetch data';
+          const message =
+            error instanceof Error ? error.message : 'Failed to fetch data';
           const status = message === 'Date not found' ? 404 : 500;
           sendError(res, message, status);
-          log('error', `${req.method} ${pathname} ${styleText('gray', `${status} ${Date.now() - startTime}ms`)} - ${message}`);
+          log(
+            'error',
+            `${req.method} ${pathname} ${styleText('gray', `${status} ${Date.now() - startTime}ms`)} - ${message}`,
+          );
         }
         return;
       }
@@ -217,10 +253,13 @@ const server = http.createServer(async (req, res) => {
 
           const repositories = {};
           for (const file of mdFiles) {
-            const content = await fetch(file.download_url).then((res) => res.text());
+            const content = await fetch(file.download_url).then((res) =>
+              res.text(),
+            );
             const languageGroups = parseMdToLanguageGroups(content);
             if (languageGroups.length > 0) {
-              repositories[file.name.replace('.md', '').split('-')[2]] = languageGroups;
+              repositories[file.name.replace('.md', '').split('-')[2]] =
+                languageGroups;
             }
           }
 
@@ -229,33 +268,56 @@ const server = http.createServer(async (req, res) => {
             repositories,
             pagination: { page, totalPages: Math.ceil(files.length / limit) },
           });
-          log('ok', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - month ${month}, page ${page}`);
+          log(
+            'ok',
+            `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - month ${month}, page ${page}`,
+          );
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Failed to fetch data';
+          const message =
+            error instanceof Error ? error.message : 'Failed to fetch data';
           sendError(res, message, 500);
-          log('error', `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)} - ${message}`);
+          log(
+            'error',
+            `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)} - ${message}`,
+          );
         }
         return;
       }
 
-      sendError(res, 'Invalid endpoint. Use: metadata, YYYY-MM, or YYYY-MM-DD', 404);
-      log('warn', `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)} - invalid format: ${slug}`);
+      sendError(
+        res,
+        'Invalid endpoint. Use: metadata, YYYY-MM, or YYYY-MM-DD',
+        404,
+      );
+      log(
+        'warn',
+        `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)} - invalid format: ${slug}`,
+      );
       return;
     }
 
     // /health
     if (pathname === '/health') {
       sendJSON(res, { status: 'ok', timestamp: new Date().toISOString() });
-      log('ok', `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - health check`);
+      log(
+        'ok',
+        `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - health check`,
+      );
       return;
     }
 
     sendError(res, 'Not found', 404);
-    log('warn', `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)}`);
+    log(
+      'warn',
+      `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)}`,
+    );
   } catch (error) {
     log('error', `Server error: ${error.message}`);
     sendError(res, 'Internal server error', 500);
-    log('error', `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)}`);
+    log(
+      'error',
+      `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)}`,
+    );
   }
 });
 

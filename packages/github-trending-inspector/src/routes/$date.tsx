@@ -13,11 +13,13 @@ export const Route = createFileRoute('/$date')({
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
     if (!dateRegex.test(date)) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw notFound();
     }
 
     const parsedDate = new Date(date);
     if (Number.isNaN(parsedDate.getTime())) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw notFound();
     }
   },

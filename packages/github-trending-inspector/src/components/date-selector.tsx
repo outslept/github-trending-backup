@@ -1,10 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { Calendar } from '../components/ui/calendar';
 import { useMonthData } from '../hooks/use-trending-data';
 import { API_BASE_URL } from '../lib/constants';
+import type { MetadataResponse } from '../lib/types';
 
 export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   const [currentMonth, setCurrentMonth] = useState(selectedDate);
@@ -18,46 +19,51 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
   );
 
   const { data: monthData } = useMonthData(monthString);
-  const availableDates = monthData?.availableDates ?? [];
-
-  useEffect(() => {
-    const prev = new Date(currentMonth);
-    prev.setMonth(prev.getMonth() - 1);
-    const next = new Date(currentMonth);
-    next.setMonth(next.getMonth() + 1);
-
-    [prev, next].forEach((month) => {
-      const monthStr = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`;
-      queryClient.prefetchQuery({
-        queryKey: ['month-dates', monthStr],
-        queryFn: async () => {
-          const res = await fetch(
-            `${API_BASE_URL}/trending/metadata?month=${monthStr}`,
-          );
-          if (!res.ok) throw new Error('Failed to fetch dates');
-          return res.json();
-        },
-      });
-    });
-  }, [currentMonth, queryClient]);
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
       if (date == null) return;
       const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      navigate({ to: '/$date', params: { date: dateStr } });
+      void navigate({ to: '/$date', params: { date: dateStr } });
     },
     [navigate],
   );
 
+  const handleMonthChange = useCallback(
+    (month: Date) => {
+      setCurrentMonth(month);
+
+      const prev = new Date(month);
+      prev.setMonth(prev.getMonth() - 1);
+      const next = new Date(month);
+      next.setMonth(next.getMonth() + 1);
+
+      [prev, next].forEach((adjacentMonth) => {
+        const monthStr = `${adjacentMonth.getFullYear()}-${String(adjacentMonth.getMonth() + 1).padStart(2, '0')}`;
+        void queryClient.prefetchQuery({
+          queryKey: ['month-dates', monthStr],
+          queryFn: async (): Promise<MetadataResponse> => {
+            const res = await fetch(
+              `${API_BASE_URL}/trending/metadata?month=${monthStr}`,
+            );
+            if (!res.ok) throw new Error('Failed to fetch dates');
+            return res.json();
+          },
+        });
+      });
+    },
+    [queryClient],
+  );
+
   const isDateAvailable = useCallback(
     (date: Date) => {
+      const availableDates = monthData.availableDates;
       const dayStr = String(date.getDate()).padStart(2, '0');
       const dateMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       if (dateMonth !== monthString) return false;
       return availableDates.includes(dayStr);
     },
-    [monthString, availableDates],
+    [monthString, monthData],
   );
 
   return (
@@ -66,7 +72,7 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
       selected={selectedDate}
       onSelect={handleDateSelect}
       month={currentMonth}
-      onMonthChange={setCurrentMonth}
+      onMonthChange={handleMonthChange}
       disabled={(date) => !isDateAvailable(date)}
       className="w-full"
     />

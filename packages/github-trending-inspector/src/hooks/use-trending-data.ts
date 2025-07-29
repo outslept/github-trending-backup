@@ -1,7 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { API_BASE_URL } from '../lib/constants';
-import type { LanguageGroup } from '../lib/types';
+import type {
+  LanguageGroup,
+  TrendingResponse,
+  MetadataResponse,
+  CachedTrendingData,
+} from '../lib/types';
 
 const CACHE_KEY = 'trending-data';
 const CACHE_DURATION = 1000 * 60 * 60 * 24;
@@ -11,7 +16,7 @@ function getCachedTrendingData(date: string): LanguageGroup[] | null {
     const cached = localStorage.getItem(`${CACHE_KEY}-${date}`);
     if (cached == null) return null;
 
-    const { data, timestamp } = JSON.parse(cached);
+    const { data, timestamp } = JSON.parse(cached) as CachedTrendingData;
     if (Date.now() - timestamp < CACHE_DURATION) {
       return data;
     }
@@ -58,10 +63,10 @@ export function useTrendingData(date: string) {
         throw new Error(`Failed to fetch data: ${res.status}`);
       }
 
-      const data = await res.json();
-      const repositories = data?.repositories ?? {};
+      const data = (await res.json()) as TrendingResponse;
+      const repositories = data.repositories;
       const day = date.slice(8);
-      const result = repositories[day] ?? [];
+      const result: LanguageGroup[] = repositories[day] ?? [];
 
       setCachedTrendingData(date, result);
 
@@ -74,7 +79,7 @@ export function useTrendingData(date: string) {
 export function useMonthData(month: string) {
   return useSuspenseQuery({
     queryKey: ['month-dates', month],
-    queryFn: async () => {
+    queryFn: async (): Promise<MetadataResponse> => {
       const res = await fetch(
         `${API_BASE_URL}/trending/metadata?month=${month}`,
       );

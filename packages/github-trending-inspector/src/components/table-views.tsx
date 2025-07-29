@@ -18,10 +18,6 @@ import {
 } from './ui/table';
 
 function MobileCard({ repo }: { repo: Repository }) {
-  const stars = repo.stars ?? 0;
-  const forks = repo.forks ?? 0;
-  const today = repo.today ?? 0;
-
   return (
     <div className="p-4 border-b border-border/40 last:border-b-0 hover:bg-muted/30 transition-colors duration-200">
       <div className="flex items-start justify-between gap-3 mb-3">
@@ -52,29 +48,31 @@ function MobileCard({ repo }: { repo: Repository }) {
           <div className="flex items-center gap-1.5">
             <Star className="size-3 text-muted-foreground" />
             <span className="text-sm font-mono text-muted-foreground tracking-tight">
-              {stars.toLocaleString()}
+              {repo.stars.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <GitFork className="size-3 text-muted-foreground" />
             <span className="text-sm font-mono text-muted-foreground tracking-tight">
-              {forks.toLocaleString()}
+              {repo.forks.toLocaleString()}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5">
           <TrendingUp
-            className={`size-3 ${today > 0 ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`size-3 ${repo.today > 0 ? 'text-emerald-500' : 'text-muted-foreground'}`}
           />
           <span
             className={`text-sm font-mono tracking-tight ${
-              today > 0
+              repo.today > 0
                 ? 'text-emerald-600 dark:text-emerald-400 font-medium'
                 : 'text-muted-foreground'
             }`}
           >
-            {today > 0 ? `+${today.toLocaleString()}` : today.toLocaleString()}
+            {repo.today > 0
+              ? `+${repo.today.toLocaleString()}`
+              : repo.today.toLocaleString()}
           </span>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Column } from '@tanstack/react-table';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-import { formatNumber, getNumberValue } from '../lib/format';
+import { formatNumber } from '../lib/format';
 import type { Repository } from '../lib/types';
 
 export function createColumns(): ColumnDef<Repository>[] {
@@ -13,7 +13,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <div className="inline-flex items-center justify-center min-w-[2.5rem] h-6 px-2 bg-muted/60 text-[10px] font-mono text-muted-foreground rounded-md hover:bg-muted transition-colors">
-          #{formatNumber(row.getValue('rank'))}
+          #{formatNumber(row.original.rank)}
         </div>
       ),
       enableSorting: true,
@@ -26,12 +26,12 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <a
-          href={`https://github.com/${row.getValue('repo')}`}
+          href={`https://github.com/${row.original.repo}`}
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex items-center gap-2 min-w-0 max-w-[240px] text-sm font-medium text-foreground hover:text-primary transition-colors duration-200"
         >
-          <span className="truncate">{row.getValue('repo')}</span>
+          <span className="truncate">{row.original.repo}</span>
           <div className="size-1 rounded-full bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
         </a>
       ),
@@ -51,7 +51,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <p className="hidden lg:block max-w-md text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 leading-relaxed truncate whitespace-nowrap overflow-hidden text-ellipsis">
-          {row.getValue('desc') || 'No description available'}
+          {row.original.desc || 'No description available'}
         </p>
       ),
       enableSorting: false,
@@ -63,7 +63,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {formatNumber(row.getValue('stars'))}
+          {formatNumber(row.original.stars)}
         </span>
       ),
       enableSorting: true,
@@ -76,7 +76,7 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {formatNumber(row.getValue('forks'))}
+          {formatNumber(row.original.forks)}
         </span>
       ),
       enableSorting: true,
@@ -87,25 +87,24 @@ export function createColumns(): ColumnDef<Repository>[] {
       header: ({ column }) => (
         <SortableHeader column={column} label="today" type="number" />
       ),
-      cell: ({ row }) => {
-        const today = getNumberValue(row.getValue('today'));
-        return (
-          <div className="flex items-center gap-2">
-            <span
-              className={`font-mono text-sm transition-colors duration-200 tracking-tight ${
-                today > 0
-                  ? 'text-emerald-600 dark:text-emerald-400 font-medium'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {today > 0 ? `+${formatNumber(today)}` : formatNumber(today)}
-            </span>
-            {today > 0 && (
-              <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            )}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <span
+            className={`font-mono text-sm transition-colors duration-200 tracking-tight ${
+              row.original.today > 0
+                ? 'text-emerald-600 dark:text-emerald-400 font-medium'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {row.original.today > 0
+              ? `+${formatNumber(row.original.today)}`
+              : formatNumber(row.original.today)}
+          </span>
+          {row.original.today > 0 && (
+            <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          )}
+        </div>
+      ),
       enableSorting: true,
       size: 120,
     },
@@ -117,23 +116,21 @@ function SortableHeader({
   label,
   type,
 }: {
-  column: any;
+  column: Column<Repository>;
   label: string;
   type: string;
 }) {
-  const sortDirection = column.getIsSorted?.() || false;
+  const sortDirection = column.getIsSorted();
 
   return (
     <button
       onClick={() => {
-        if (column.toggleSorting) {
-          if (!sortDirection) {
-            column.toggleSorting(false);
-          } else if (sortDirection === 'asc') {
-            column.toggleSorting(true);
-          } else {
-            column.clearSorting();
-          }
+        if (sortDirection === false) {
+          column.toggleSorting(false);
+        } else if (sortDirection === 'asc') {
+          column.toggleSorting(true);
+        } else {
+          column.clearSorting();
         }
       }}
       className="group flex items-center gap-2 hover:text-foreground transition-colors duration-200 -ml-2 pl-2 pr-1 py-1 rounded-md hover:bg-muted/50"
@@ -154,7 +151,7 @@ function SortableHeader({
         {sortDirection === 'desc' && (
           <ChevronDown className="size-3 text-primary" />
         )}
-        {!sortDirection && (
+        {sortDirection === false && (
           <div className="flex flex-col gap-0.5">
             <ChevronUp className="size-2 text-muted-foreground/30" />
             <ChevronDown className="size-2 text-muted-foreground/30" />

@@ -7,7 +7,7 @@ import {
   type SortingState,
   type VisibilityState,
 } from '@tanstack/react-table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import type { Repository } from '../lib/types';
 
@@ -20,7 +20,7 @@ function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
   return repos.filter(
     (repo) =>
       repo.repo.toLowerCase().includes(term) ||
-      (repo.desc && repo.desc.toLowerCase().includes(term)),
+      repo.desc.toLowerCase().includes(term),
   );
 }
 
@@ -52,7 +52,7 @@ export function useTable(
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'rank', desc: false },
   ]);
-  const [columnVisibility, setColumnVisibility] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState('');
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -66,10 +66,10 @@ export function useTable(
     [filteredRepos.length, pageIndex, pageSize],
   );
 
-  const updateGlobalFilter = useCallback((value: string) => {
+  const updateGlobalFilter = (value: string) => {
     setGlobalFilter(value);
     setPageIndex(0);
-  }, []);
+  };
 
   useEffect(() => {
     if (
@@ -80,51 +80,14 @@ export function useTable(
     }
   }, [pageIndex, paginationStats.pageCount]);
 
-  const pagination = useMemo(
-    () => ({
-      pageIndex,
-      pageCount: paginationStats.pageCount,
-      canPreviousPage: pageIndex > 0,
-      canNextPage: pageIndex < paginationStats.pageCount - 1,
-      previousPage: () => setPageIndex((prev) => prev - 1),
-      nextPage: () => setPageIndex((prev) => prev + 1),
-    }),
-    [pageIndex, paginationStats.pageCount],
-  );
-
-  const handleSortingChange = useCallback(
-    (updater: SortingState | ((prev: SortingState) => SortingState)) => {
-      setSorting(updater);
-    },
-    [],
-  );
-
-  const handleColumnVisibilityChange = useCallback(
-    (
-      updater: VisibilityState | ((prev: VisibilityState) => VisibilityState),
-    ) => {
-      setColumnVisibility(updater);
-    },
-    [],
-  );
-
-  const handlePaginationChange = useCallback(
-    (
-      updater:
-        | { pageIndex: number; pageSize: number }
-        | ((prev: { pageIndex: number; pageSize: number }) => {
-            pageIndex: number;
-            pageSize: number;
-          }),
-    ) => {
-      const newPagination =
-        typeof updater === 'function'
-          ? updater({ pageIndex, pageSize })
-          : updater;
-      setPageIndex(newPagination.pageIndex);
-    },
-    [pageIndex, pageSize],
-  );
+  const pagination = {
+    pageIndex,
+    pageCount: paginationStats.pageCount,
+    canPreviousPage: pageIndex > 0,
+    canNextPage: pageIndex < paginationStats.pageCount - 1,
+    previousPage: () => setPageIndex((prev) => prev - 1),
+    nextPage: () => setPageIndex((prev) => prev + 1),
+  };
 
   const table = useReactTable({
     data: filteredRepos,
@@ -132,10 +95,15 @@ export function useTable(
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: handleSortingChange,
-    onColumnVisibilityChange: handleColumnVisibilityChange,
-    onGlobalFilterChange: () => {},
-    onPaginationChange: handlePaginationChange,
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: (updater) => {
+      const newPagination =
+        typeof updater === 'function'
+          ? updater({ pageIndex, pageSize })
+          : updater;
+      setPageIndex(newPagination.pageIndex);
+    },
     state: {
       sorting,
       columnVisibility,

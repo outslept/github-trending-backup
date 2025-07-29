@@ -1,11 +1,8 @@
-/* eslint-disable unicorn/prefer-string-replace-all */
-
-import type { LanguageGroup, Repository } from './types';
-
-interface GitHubFile {
-  name: string;
-  download_url: string;
-}
+import type {
+  LanguageGroup,
+  Repository,
+  GitHubFile,
+} from '../../src/lib/types';
 
 export interface FetchMonthDataResult {
   repositories: Record<string, LanguageGroup[]>;
