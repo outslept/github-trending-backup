@@ -73,6 +73,7 @@ export const TablePagination = ({
 
           <div className="flex items-center gap-1 ml-2">
             <button
+              type="button"
               className={`size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out ${
                 canPreviousPage
                   ? 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'
@@ -86,6 +87,7 @@ export const TablePagination = ({
             </button>
 
             <button
+              type="button"
               className={`size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out ${
                 canNextPage
                   ? 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'

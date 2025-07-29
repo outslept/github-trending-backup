@@ -60,6 +60,7 @@ export function TableHeader({
           />
           {globalFilter && (
             <button
+              type="button"
               className="absolute right-2 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-md transition-all duration-200"
               onClick={() => onFilterChange('')}
             >

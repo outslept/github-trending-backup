@@ -10,6 +10,14 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["packages/*/src/**/*", "packages/*/*.ts", "*.js", "*.ts"],
-  "exclude": ["node_modules", "**/dist", "**/build"]
+  "include": [
+    "packages/**/*",
+    "scripts/**/*",
+    "*.js",
+    "*.ts",
+    "*.mjs",
+    ".prettierc.js",
+    "eslint.config.mjs"
+  ],
+  "exclude": ["node_modules", "**/dist", "**/build", "data"]
 }

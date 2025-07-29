@@ -124,6 +124,7 @@ function SortableHeader({
 
   return (
     <button
+      type="button"
       onClick={() => {
         if (sortDirection === false) {
           column.toggleSorting(false);

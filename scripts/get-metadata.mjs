@@ -1,5 +1,7 @@
+import console from 'node:console';
 import { readdir, writeFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 

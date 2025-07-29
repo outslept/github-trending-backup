@@ -1,14 +1,16 @@
 // @ts-check
 
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import { fileURLToPath, URL } from 'node:url';
+
 import { includeIgnoreFile } from '@eslint/compat';
-import { fileURLToPath } from 'node:url';
+import js from '@eslint/js';
 import eslintReact from '@eslint-react/eslint-plugin';
+import prettierConfig from 'eslint-config-prettier';
+import importX from 'eslint-plugin-import-x';
 import reactHooks from 'eslint-plugin-react-hooks';
 import vitest from 'eslint-plugin-vitest';
-import importX from 'eslint-plugin-import-x';
-import prettierConfig from 'eslint-config-prettier';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
 
@@ -20,20 +22,19 @@ export default tseslint.config(
   },
 
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
 
   {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
+    ],
     languageOptions: {
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
-  },
-
-  {
-    files: ['**/*.{js,mjs,cjs,ts,tsx,jsx}'],
     plugins: {
       'import-x': importX,
     },
@@ -92,8 +93,48 @@ export default tseslint.config(
   },
 
   {
+    files: ['**/*.{js,mjs,cjs,jsx}'],
+    plugins: {
+      'import-x': importX,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    settings: {
+      'import-x/resolver': {
+        node: true,
+      },
+    },
+    rules: {
+      'import-x/no-duplicates': 'error',
+      'import-x/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc' },
+        },
+      ],
+
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'object-shorthand': 'error',
+      'prefer-arrow-callback': 'error',
+    },
+  },
+
+  {
     files: ['**/*.{jsx,tsx}'],
-    ...eslintReact.configs['recommended-type-checked'],
+    extends: [eslintReact.configs['recommended-type-checked']],
     plugins: {
       'react-hooks': reactHooks,
     },

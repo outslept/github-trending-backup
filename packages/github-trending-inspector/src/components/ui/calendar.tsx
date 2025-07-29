@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/no-nested-component-definitions */
 import {
   ChevronDownIcon,
   ChevronLeftIcon,

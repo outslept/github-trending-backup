@@ -27,6 +27,7 @@ function CustomSidebarTrigger() {
 
   return (
     <button
+      type="button"
       onClick={toggleSidebar}
       className="fixed top-4 left-4 z-40 size-10 border border-border/60 bg-background rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground shadow-sm hover:shadow-md hover:border-border transition-all duration-200 hover:scale-105 hover:-translate-y-0.5"
     >

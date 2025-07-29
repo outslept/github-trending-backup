@@ -83,6 +83,7 @@ function ThemeSwitcher() {
 
       {themeButtons.map(({ theme: themeOption, icon: Icon, label }) => (
         <button
+          type="button"
           key={themeOption}
           onClick={() => setTheme(themeOption)}
           title={label}
