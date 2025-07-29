@@ -2,23 +2,18 @@ import http from 'node:http';
 import { URL } from 'node:url';
 import { styleText } from 'node:util';
 
-function log(level, message, ...args) {
-  const timestamp = new Date().toISOString().slice(11, 23);
-  const styledTimestamp = styleText('gray', timestamp);
+const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const MONTH_FORMAT_REGEX = /^\d{4}-\d{2}$/;
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 5;
+const PORT = 3001;
 
-  const levelColors = {
-    info: 'blue',
-    ok: 'green',
-    warn: 'yellow',
-    error: 'red',
-  };
-
-  const styledLevel = styleText(
-    levelColors[level] || 'reset',
-    level.toUpperCase().padEnd(5),
-  );
-  console.log(`${styledTimestamp} ${styledLevel} ${message}`, ...args);
-}
+const LEVEL_COLORS = {
+  info: 'blue',
+  ok: 'green',
+  warn: 'yellow',
+  error: 'red',
+};
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': 'http://localhost:3000',
@@ -26,6 +21,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
 };
+
+function log(level, message, ...args) {
+  const timestamp = new Date().toISOString().slice(11, 23);
+  const styledTimestamp = styleText('gray', timestamp);
+  const styledLevel = styleText(
+    LEVEL_COLORS[level] || 'reset',
+    level.toUpperCase().padEnd(5),
+  );
+  console.log(`${styledTimestamp} ${styledLevel} ${message}`, ...args);
+}
 
 function sendJSON(res, data, status = 200) {
   res.writeHead(status, corsHeaders);
@@ -36,7 +41,25 @@ function sendError(res, message, status = 500) {
   sendJSON(res, { error: message }, status);
 }
 
-const parseMdToLanguageGroups = (mdContent) => {
+function logResponse(req, pathname, startTime, status, extra = '') {
+  const duration = Date.now() - startTime;
+  const level = status >= 400 ? 'error' : status >= 300 ? 'warn' : 'ok';
+  log(level, `${req.method} ${pathname} ${styleText('gray', `${status} ${duration}ms`)}${extra ? ` - ${extra}` : ''}`);
+}
+
+async function fetchGitHubContent(year, monthNum) {
+  const response = await fetch(
+    `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
+  );
+
+  if (!response.ok) {
+    throw new Error('Month not found');
+  }
+
+  return response.json();
+}
+
+function parseMdToLanguageGroups(mdContent) {
   const languageGroups = [];
   let currentLanguage = 'Unknown';
   let currentRepos = [];
@@ -45,10 +68,7 @@ const parseMdToLanguageGroups = (mdContent) => {
   for (const line of mdContent.split('\n')) {
     const trimmedLine = line.trim();
 
-    if (
-      trimmedLine.startsWith('## ') &&
-      !trimmedLine.includes('Table of Contents')
-    ) {
+    if (trimmedLine.startsWith('## ') && !trimmedLine.includes('Table of Contents')) {
       if (currentRepos.length > 0) {
         languageGroups.push({ language: currentLanguage, repos: currentRepos });
       }
@@ -64,10 +84,7 @@ const parseMdToLanguageGroups = (mdContent) => {
     }
 
     if (inTable && trimmedLine.startsWith('| ') && trimmedLine.endsWith(' |')) {
-      const columns = trimmedLine
-        .split('|')
-        .map((col) => col.trim())
-        .filter(Boolean);
+      const columns = trimmedLine.split('|').map((col) => col.trim()).filter(Boolean);
       if (columns.length < 6) continue;
 
       const repoMatch = columns[1].match(/\[([^\]]+)\]\(([^)]+)\)/);
@@ -97,32 +114,89 @@ const parseMdToLanguageGroups = (mdContent) => {
   }
 
   return languageGroups;
-};
+}
+
+async function handleDateRequest(req, res, date, startTime) {
+  const month = date.split('-').slice(0, 2).join('-');
+  const pathname = new URL(req.url, `http://localhost:${PORT}`).pathname;
+
+  try {
+    const [year, monthNum] = month.split('-');
+    const allFiles = await fetchGitHubContent(year, monthNum);
+    const files = allFiles.filter((file) => file.name.endsWith('.md'));
+    const mdFiles = files.filter((file) => file.name === `${date}.md`);
+
+    if (!mdFiles.length) {
+      throw new Error('Date not found');
+    }
+
+    const repositories = {};
+    for (const file of mdFiles) {
+      const content = await fetch(file.download_url).then((res) => res.text());
+      const languageGroups = parseMdToLanguageGroups(content);
+      if (languageGroups.length > 0) {
+        repositories[file.name.replace('.md', '').split('-')[2]] = languageGroups;
+      }
+    }
+
+    sendJSON(res, { month, repositories });
+    logResponse(req, pathname, startTime, 200, `date ${date}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch data';
+    const status = message === 'Date not found' ? 404 : 500;
+    sendError(res, message, status);
+    logResponse(req, pathname, startTime, status, message);
+  }
+}
+
+async function handleMonthRequest(req, res, month, page, limit, startTime) {
+  const pathname = new URL(req.url, `http://localhost:${PORT}`).pathname;
+
+  try {
+    const [year, monthNum] = month.split('-');
+    const allFiles = await fetchGitHubContent(year, monthNum);
+    const files = allFiles.filter((file) => file.name.endsWith('.md'));
+    const mdFiles = files.slice((page - 1) * limit, page * limit);
+
+    const repositories = {};
+    for (const file of mdFiles) {
+      const content = await fetch(file.download_url).then((res) => res.text());
+      const languageGroups = parseMdToLanguageGroups(content);
+      if (languageGroups.length > 0) {
+        repositories[file.name.replace('.md', '').split('-')[2]] = languageGroups;
+      }
+    }
+
+    sendJSON(res, {
+      month,
+      repositories,
+      pagination: { page, totalPages: Math.ceil(files.length / limit) },
+    });
+    logResponse(req, pathname, startTime, 200, `month ${month}, page ${page}`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch data';
+    sendError(res, message, 500);
+    logResponse(req, pathname, startTime, 500, message);
+  }
+}
 
 const server = http.createServer(async (req, res) => {
   const startTime = Date.now();
-  const url = new URL(req.url, `http://localhost:3001`);
+  const url = new URL(req.url, `http://localhost:${PORT}`);
   const { pathname, searchParams } = url;
 
-  // Log incoming request
   log('info', `${req.method} ${pathname}`);
 
   if (req.method === 'OPTIONS') {
     res.writeHead(200, corsHeaders);
     res.end();
-    log(
-      'ok',
-      `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)}`,
-    );
+    logResponse(req, pathname, startTime, 200);
     return;
   }
 
   if (req.method !== 'GET') {
     sendError(res, 'Method not allowed', 405);
-    log(
-      'warn',
-      `${req.method} ${pathname} ${styleText('gray', `405 ${Date.now() - startTime}ms`)}`,
-    );
+    logResponse(req, pathname, startTime, 405);
     return;
   }
 
@@ -130,150 +204,41 @@ const server = http.createServer(async (req, res) => {
     const trendingMatch = pathname.match(/^\/api\/trending\/(.+)$/);
     if (trendingMatch) {
       const slug = trendingMatch[1];
-      const page = parseInt(searchParams.get('page') || '1');
-      const limit = parseInt(searchParams.get('limit') || '5');
+      const page = parseInt(searchParams.get('page') || String(DEFAULT_PAGE));
+      const limit = parseInt(searchParams.get('limit') || String(DEFAULT_LIMIT));
 
-      // YYYY-MM-DD
-      if (/^\d{4}-\d{2}-\d{2}$/.test(slug)) {
-        const date = slug;
-        const month = date.split('-').slice(0, 2).join('-');
-
-        try {
-          const [year, monthNum] = month.split('-');
-          const response = await fetch(
-            `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
-          );
-
-          if (!response.ok) {
-            throw new Error('Month not found');
-          }
-
-          const allFiles = await response.json();
-          const files = allFiles.filter((file) => file.name.endsWith('.md'));
-          const mdFiles = files.filter((file) => file.name === `${date}.md`);
-
-          if (!mdFiles.length) {
-            throw new Error('Date not found');
-          }
-
-          const repositories = {};
-          for (const file of mdFiles) {
-            const content = await fetch(file.download_url).then((res) =>
-              res.text(),
-            );
-            const languageGroups = parseMdToLanguageGroups(content);
-            if (languageGroups.length > 0) {
-              repositories[file.name.replace('.md', '').split('-')[2]] =
-                languageGroups;
-            }
-          }
-
-          sendJSON(res, { month, repositories });
-          log(
-            'ok',
-            `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - date ${date}`,
-          );
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'Failed to fetch data';
-          const status = message === 'Date not found' ? 404 : 500;
-          sendError(res, message, status);
-          log(
-            'error',
-            `${req.method} ${pathname} ${styleText('gray', `${status} ${Date.now() - startTime}ms`)} - ${message}`,
-          );
-        }
+      if (DATE_FORMAT_REGEX.test(slug)) {
+        await handleDateRequest(req, res, slug, startTime);
         return;
       }
 
-      // YYYY-MM format
-      if (/^\d{4}-\d{2}$/.test(slug)) {
-        const month = slug;
-
-        try {
-          const [year, monthNum] = month.split('-');
-          const response = await fetch(
-            `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
-          );
-
-          if (!response.ok) {
-            throw new Error('Month not found');
-          }
-
-          const allFiles = await response.json();
-          const files = allFiles.filter((file) => file.name.endsWith('.md'));
-          const mdFiles = files.slice((page - 1) * limit, page * limit);
-
-          const repositories = {};
-          for (const file of mdFiles) {
-            const content = await fetch(file.download_url).then((res) =>
-              res.text(),
-            );
-            const languageGroups = parseMdToLanguageGroups(content);
-            if (languageGroups.length > 0) {
-              repositories[file.name.replace('.md', '').split('-')[2]] =
-                languageGroups;
-            }
-          }
-
-          sendJSON(res, {
-            month,
-            repositories,
-            pagination: { page, totalPages: Math.ceil(files.length / limit) },
-          });
-          log(
-            'ok',
-            `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - month ${month}, page ${page}`,
-          );
-        } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'Failed to fetch data';
-          sendError(res, message, 500);
-          log(
-            'error',
-            `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)} - ${message}`,
-          );
-        }
+      if (MONTH_FORMAT_REGEX.test(slug)) {
+        await handleMonthRequest(req, res, slug, page, limit, startTime);
         return;
       }
 
       sendError(res, 'Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD', 404);
-      log(
-        'warn',
-        `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)} - invalid format: ${slug}`,
-      );
+      logResponse(req, pathname, startTime, 404, `invalid format: ${slug}`);
       return;
     }
 
-    // /health
     if (pathname === '/health') {
       sendJSON(res, { status: 'ok', timestamp: new Date().toISOString() });
-      log(
-        'ok',
-        `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - health check`,
-      );
+      logResponse(req, pathname, startTime, 200, 'health check');
       return;
     }
 
     sendError(res, 'Not found', 404);
-    log(
-      'warn',
-      `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)}`,
-    );
+    logResponse(req, pathname, startTime, 404);
   } catch (error) {
     log('error', `Server error: ${error.message}`);
     sendError(res, 'Internal server error', 500);
-    log(
-      'error',
-      `${req.method} ${pathname} ${styleText('gray', `500 ${Date.now() - startTime}ms`)}`,
-    );
+    logResponse(req, pathname, startTime, 500);
   }
 });
 
-const port = 3001;
-
-server.listen(port, () => {
-  log('info', `Dev API server running on http://localhost:${port}`);
+server.listen(PORT, () => {
+  log('info', `Dev API server running on http://localhost:${PORT}`);
 });
 
 process.on('SIGINT', () => {

@@ -1,79 +1,80 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import type {
   LanguageGroup,
   TrendingResponse,
-  CachedTrendingData,
+  TrendingMonthResponse,
   MetadataFile,
 } from '../lib/types';
 
-const CACHE_KEY = 'trending-data';
-const CACHE_DURATION = 1000 * 60 * 60 * 24;
+const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
-function getCachedTrendingData(date: string): LanguageGroup[] | null {
-  try {
-    const cached = localStorage.getItem(`${CACHE_KEY}-${date}`);
-    if (cached == null) return null;
+const getApiUrl = (endpoint: string) => {
+  return import.meta.env.PROD
+    ? `/api/trending/${endpoint}`
+    : `http://localhost:3001/api/trending/${endpoint}`;
+};
 
-    const { data, timestamp } = JSON.parse(cached) as CachedTrendingData;
-    if (Date.now() - timestamp < CACHE_DURATION) {
-      return data;
-    }
-
-    localStorage.removeItem(`${CACHE_KEY}-${date}`);
-  } catch {
-    /** ignore */
-  }
-  return null;
-}
-
-function setCachedTrendingData(date: string, data: LanguageGroup[]): void {
-  try {
-    localStorage.setItem(
-      `${CACHE_KEY}-${date}`,
-      JSON.stringify({
-        data,
-        timestamp: Date.now(),
-      }),
-    );
-  } catch {
-    /** ignore */
-  }
-}
+const API_ERRORS = {
+  INVALID_DATE_FORMAT: 'Invalid date format. Expected YYYY-MM-DD',
+  DATE_NOT_FOUND: 'Date not found',
+  MONTH_FETCH_FAILED: 'Failed to fetch month data',
+  DATA_FETCH_FAILED: 'Failed to fetch data',
+  METADATA_FETCH_FAILED: 'Failed to fetch metadata',
+} as const;
 
 export function useTrendingData(date: string) {
+  const queryClient = useQueryClient();
+  const month = date.slice(0, 7);
+  const day = date.slice(8);
+
+  useEffect(() => {
+    const monthQueryKey = ['trending-month', month];
+    const existingMonthData = queryClient.getQueryData(monthQueryKey);
+
+    if (existingMonthData == null) {
+      void queryClient.prefetchQuery({
+        queryKey: monthQueryKey,
+        queryFn: async () => {
+          const res = await fetch(getApiUrl(month));
+          if (!res.ok) throw new Error(`${API_ERRORS.MONTH_FETCH_FAILED}: ${res.status}`);
+
+          const { repositories } = await res.json() as TrendingMonthResponse;
+
+          Object.entries(repositories).forEach(([day, dayData]) => {
+            queryClient.setQueryData(['trending-data', `${month}-${day.padStart(2, '0')}`], dayData);
+          });
+
+          return repositories;
+        },
+        staleTime: 1000 * 60 * 60 * 12,
+      });
+    }
+  }, [month, queryClient]);
+
   return useSuspenseQuery({
     queryKey: ['trending-data', date],
     queryFn: async (): Promise<LanguageGroup[]> => {
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error('Invalid date format. Expected YYYY-MM-DD');
+      if (!DATE_FORMAT_REGEX.test(date)) {
+        throw new Error(API_ERRORS.INVALID_DATE_FORMAT);
       }
 
-      const cachedData = getCachedTrendingData(date);
-      if (cachedData != null) {
-        return cachedData;
+      const monthData = queryClient.getQueryData(['trending-month', month]);
+      if (monthData != null && typeof monthData === 'object' && day in monthData) {
+        return (monthData as Record<string, LanguageGroup[]>)[day];
       }
 
-      const apiUrl = import.meta.env.PROD
-        ? `/api/trending/${date}`
-        : `http://localhost:3001/api/trending/${date}`;
-
-      const res = await fetch(apiUrl);
+      const res = await fetch(getApiUrl(date));
       if (!res.ok) {
         if (res.status === 404) {
-          throw new Error('DATE_NOT_FOUND');
+          throw new Error(API_ERRORS.DATE_NOT_FOUND);
         }
-        throw new Error(`Failed to fetch data: ${res.status}`);
+        throw new Error(`${API_ERRORS.DATA_FETCH_FAILED}: ${res.status}`);
       }
 
-      const data = (await res.json()) as TrendingResponse;
-      const repositories = data.repositories;
-      const day = date.slice(8);
-      const result: LanguageGroup[] = repositories[day] ?? [];
-
-      setCachedTrendingData(date, result);
-
-      return result;
+      const { repositories } = await res.json() as TrendingResponse;
+      return repositories[day] ?? [];
     },
     staleTime: 1000 * 60 * 60 * 12,
   });
@@ -86,7 +87,7 @@ export function useMetadata() {
       const res = await fetch(
         'https://raw.githubusercontent.com/outslept/github-trending-backup/master/data/metadata.json',
       );
-      if (!res.ok) throw new Error('Failed to fetch metadata');
+      if (!res.ok) throw new Error(API_ERRORS.METADATA_FETCH_FAILED);
       return res.json() as Promise<MetadataFile>;
     },
     staleTime: 1000 * 60 * 60,

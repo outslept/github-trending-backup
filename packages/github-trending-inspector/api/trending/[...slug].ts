@@ -2,6 +2,12 @@ import type { TrendingResponse } from '../../src/lib/types';
 import { fetchMonthData } from '../lib/github';
 import { Logger } from '../lib/logger';
 
+const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const MONTH_FORMAT_REGEX = /^\d{4}-\d{2}$/;
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_LIMIT = 5;
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
@@ -28,14 +34,14 @@ export async function GET(request: Request) {
   }
 
   // GET /api/trending/YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(slug)) {
+  if (DATE_FORMAT_REGEX.test(slug)) {
     const date = slug;
     const month = date.split('-').slice(0, 2).join('-');
 
     try {
       logger.info('Fetching daily data', { date, month });
 
-      const data = await fetchMonthData(month, 1, 1, date);
+      const data = await fetchMonthData(month, DEFAULT_PAGE, DEFAULT_LIMIT, date);
       const response: TrendingResponse = {
         month,
         repositories: data.repositories,
@@ -50,14 +56,10 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to fetch data';
+      const message = error instanceof Error ? error.message : 'Failed to fetch data';
       const status = message === 'Date not found' ? 404 : 500;
 
-      logger.error('Failed to fetch daily data', error as Error, {
-        date,
-        month,
-      });
+      logger.error('Failed to fetch daily data', error as Error, { date, month });
       logger.response(startTime, status);
 
       return new Response(JSON.stringify({ error: message }), {
@@ -68,10 +70,10 @@ export async function GET(request: Request) {
   }
 
   // GET /api/trending/YYYY-MM?page=1&limit=5
-  if (/^\d{4}-\d{2}$/.test(slug)) {
+  if (MONTH_FORMAT_REGEX.test(slug)) {
     const month = slug;
-    const page = Number.parseInt(url.searchParams.get('page') ?? '1');
-    const limit = Number.parseInt(url.searchParams.get('limit') ?? '5');
+    const page = Number.parseInt(url.searchParams.get('page') ?? String(DEFAULT_PAGE));
+    const limit = Number.parseInt(url.searchParams.get('limit') ?? String(DEFAULT_LIMIT));
 
     try {
       logger.info('Fetching monthly data', { month, page, limit });
@@ -93,14 +95,9 @@ export async function GET(request: Request) {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to fetch data';
+      const message = error instanceof Error ? error.message : 'Failed to fetch data';
 
-      logger.error('Failed to fetch monthly data', error as Error, {
-        month,
-        page,
-        limit,
-      });
+      logger.error('Failed to fetch monthly data', error as Error, { month, page, limit });
       logger.response(startTime, 500);
 
       return new Response(JSON.stringify({ error: message }), {
@@ -114,9 +111,7 @@ export async function GET(request: Request) {
   logger.response(startTime, 404);
 
   return new Response(
-    JSON.stringify({
-      error: 'Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD',
-    }),
+    JSON.stringify({ error: 'Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD' }),
     {
       status: 404,
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
