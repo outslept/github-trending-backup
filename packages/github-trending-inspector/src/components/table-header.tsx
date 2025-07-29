@@ -1,9 +1,9 @@
-import { Search, X } from "lucide-react";
+import { Search, X } from 'lucide-react';
 
-import { languageIcons } from "../lib/constants";
-import { formatNumber } from "../lib/format";
+import { languageIcons } from '../lib/constants';
+import { formatNumber } from '../lib/format';
 
-import { Input } from "./ui/input";
+import { Input } from './ui/input';
 
 interface TableHeaderProps {
   language: string;
@@ -19,7 +19,7 @@ export function TableHeader({
   onFilterChange,
 }: TableHeaderProps) {
   // eslint-disable-next-line unicorn/prefer-string-replace-all
-  const languageId = language.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const languageId = language.toLowerCase().replace(/[^a-z0-9]/g, '');
 
   return (
     <div
@@ -62,7 +62,7 @@ export function TableHeader({
           {globalFilter && (
             <button
               className="absolute right-2 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-md transition-all duration-200"
-              onClick={() => onFilterChange("")}
+              onClick={() => onFilterChange('')}
             >
               <X className="size-3" />
             </button>

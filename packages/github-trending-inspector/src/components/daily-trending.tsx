@@ -1,9 +1,9 @@
-import { useWindowVirtualizer } from "@tanstack/react-virtual";
-import { Database, type LucideIcon } from "lucide-react";
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import { Database, type LucideIcon } from 'lucide-react';
 
-import { useTrendingData } from "../hooks/use-trending-data";
+import { useTrendingData } from '../hooks/use-trending-data';
 
-import { LanguageSection } from "./language-section";
+import { LanguageSection } from './language-section';
 
 interface StateContainerProps {
   icon: LucideIcon;
@@ -20,7 +20,7 @@ function StateContainer({
   title,
   description,
   subtitle,
-  className = "border",
+  className = 'border',
 }: StateContainerProps) {
   return (
     <div className={`w-full bg-background ${className}`}>
@@ -71,8 +71,8 @@ export function DailyTrending({ date }: { date: string }) {
     <div
       style={{
         height: `${virtualizer.getTotalSize()}px`,
-        width: "100%",
-        position: "relative",
+        width: '100%',
+        position: 'relative',
       }}
     >
       {virtualizer.getVirtualItems().map((virtualItem) => {
@@ -83,10 +83,10 @@ export function DailyTrending({ date }: { date: string }) {
             data-index={virtualItem.index}
             ref={virtualizer.measureElement}
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              width: "100%",
+              width: '100%',
               transform: `translateY(${virtualItem.start}px)`,
             }}
           >

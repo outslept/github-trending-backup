@@ -3,10 +3,10 @@ import {
   type ColumnDef,
   type Row,
   type Table,
-} from "@tanstack/react-table";
-import { ExternalLink, GitFork, Search, Star, TrendingUp } from "lucide-react";
+} from '@tanstack/react-table';
+import { ExternalLink, GitFork, Search, Star, TrendingUp } from 'lucide-react';
 
-import type { Repository } from "../lib/types";
+import type { Repository } from '../lib/types';
 
 import {
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from './ui/table';
 
 function MobileCard({ repo }: { repo: Repository }) {
   const stars = repo.stars ?? 0;
@@ -65,13 +65,13 @@ function MobileCard({ repo }: { repo: Repository }) {
 
         <div className="flex items-center gap-1.5">
           <TrendingUp
-            className={`size-3 ${today > 0 ? "text-emerald-500" : "text-muted-foreground"}`}
+            className={`size-3 ${today > 0 ? 'text-emerald-500' : 'text-muted-foreground'}`}
           />
           <span
             className={`text-sm font-mono tracking-tight ${
               today > 0
-                ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                : "text-muted-foreground"
+                ? 'text-emerald-600 dark:text-emerald-400 font-medium'
+                : 'text-muted-foreground'
             }`}
           >
             {today > 0 ? `+${today.toLocaleString()}` : today.toLocaleString()}
@@ -156,7 +156,7 @@ export function DesktopView({ table, columns }: DesktopViewProps) {
                 key={row.id}
                 className={`
                   hover:bg-muted/30 transition-colors duration-200 border-border/40
-                  ${index % 2 === 0 ? "bg-background" : "bg-muted/10"}
+                  ${index % 2 === 0 ? 'bg-background' : 'bg-muted/10'}
                 `}
               >
                 {row.getVisibleCells().map((cell) => (

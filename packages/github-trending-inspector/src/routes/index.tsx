@@ -1,10 +1,10 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   beforeLoad: () => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split('T')[0];
     throw redirect({
-      to: "/$date",
+      to: '/$date',
       params: { date: today },
     });
   },

@@ -1,6 +1,6 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { formatNumber } from "../lib/format";
+import { formatNumber } from '../lib/format';
 
 interface TablePaginationProps {
   stats: {
@@ -38,22 +38,22 @@ export const TablePagination = ({
         <div className="text-sm text-muted-foreground tracking-tight">
           {totalFilteredRows > 0 ? (
             <>
-              Showing{" "}
+              Showing{' '}
               <span className="font-medium text-foreground">
                 {formatNumber(firstItemOnPage)}
-              </span>{" "}
-              to{" "}
+              </span>{' '}
+              to{' '}
               <span className="font-medium text-foreground">
                 {formatNumber(lastItemOnPage)}
-              </span>{" "}
-              of{" "}
+              </span>{' '}
+              of{' '}
               <span className="font-medium text-foreground">
                 {formatNumber(totalFilteredRows)}
-              </span>{" "}
+              </span>{' '}
               repositories
             </>
           ) : (
-            "No repositories found"
+            'No repositories found'
           )}
         </div>
       </div>
@@ -75,8 +75,8 @@ export const TablePagination = ({
             <button
               className={`size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out ${
                 canPreviousPage
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95"
-                  : "text-muted-foreground/30 cursor-not-allowed"
+                  ? 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'
+                  : 'text-muted-foreground/30 cursor-not-allowed'
               }`}
               onClick={previousPage}
               disabled={!canPreviousPage}
@@ -88,8 +88,8 @@ export const TablePagination = ({
             <button
               className={`size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out ${
                 canNextPage
-                  ? "text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95"
-                  : "text-muted-foreground/30 cursor-not-allowed"
+                  ? 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'
+                  : 'text-muted-foreground/30 cursor-not-allowed'
               }`}
               onClick={nextPage}
               disabled={!canNextPage}

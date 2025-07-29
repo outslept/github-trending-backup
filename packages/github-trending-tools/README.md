@@ -17,10 +17,10 @@ npm start
 ```markdown
 ## TypeScript
 
-| # | Repository | Description | Stars | Forks | Today |
-|---|------------|-------------|-------|-------|-------|
-| 1 | microsoft/vscode | Visual Studio Code | 162,127 | 28,513 | 89 |
-| 2 | angular/angular | The modern web developer's platform | 95,234 | 25,012 | 45 |
+| #   | Repository       | Description                         | Stars   | Forks  | Today |
+| --- | ---------------- | ----------------------------------- | ------- | ------ | ----- |
+| 1   | microsoft/vscode | Visual Studio Code                  | 162,127 | 28,513 | 89    |
+| 2   | angular/angular  | The modern web developer's platform | 95,234  | 25,012 | 45    |
 ```
 
 ## Languages included as a default
@@ -33,9 +33,9 @@ Want different languages? Edit the list:
 
 ```typescript
 const languages: GitHubLanguage[] = [
-  "JavaScript",
-  "Python",
-  "Rust",
+  'JavaScript',
+  'Python',
+  'Rust',
   // add whatever you want
 ];
 ```

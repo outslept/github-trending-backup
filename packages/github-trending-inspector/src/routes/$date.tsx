@@ -1,12 +1,12 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { createFileRoute, notFound } from '@tanstack/react-router';
+import { Suspense } from 'react';
 
-import { AppSidebar } from "../components/app-sidebar";
-import { DailyTrending } from "../components/daily-trending";
-import { TrendingSkeleton } from "../components/skeletons";
-import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
+import { AppSidebar } from '../components/app-sidebar';
+import { DailyTrending } from '../components/daily-trending';
+import { TrendingSkeleton } from '../components/skeletons';
+import { SidebarInset, SidebarProvider } from '../components/ui/sidebar';
 
-export const Route = createFileRoute("/$date")({
+export const Route = createFileRoute('/$date')({
   validateSearch: (search) => search,
   beforeLoad: ({ params }) => {
     const { date } = params;
@@ -32,8 +32,8 @@ function DatePage() {
       defaultOpen={true}
       style={
         {
-          "--sidebar-width": "18rem",
-          "--sidebar-width-mobile": "18rem",
+          '--sidebar-width': '18rem',
+          '--sidebar-width-mobile': '18rem',
         } as React.CSSProperties
       }
     >

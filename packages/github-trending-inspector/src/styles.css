@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -112,6 +112,9 @@
 body {
   font-family: theme(--font-sans);
 }
-code, pre, kbd, samp {
+code,
+pre,
+kbd,
+samp {
   font-family: theme(--font-mono);
 }

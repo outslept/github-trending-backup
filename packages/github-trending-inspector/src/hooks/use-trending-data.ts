@@ -1,9 +1,9 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { API_BASE_URL } from "../lib/constants";
-import type { LanguageGroup } from "../lib/types";
+import { API_BASE_URL } from '../lib/constants';
+import type { LanguageGroup } from '../lib/types';
 
-const CACHE_KEY = "trending-data";
+const CACHE_KEY = 'trending-data';
 const CACHE_DURATION = 1000 * 60 * 60 * 24;
 
 function getCachedTrendingData(date: string): LanguageGroup[] | null {
@@ -39,10 +39,10 @@ function setCachedTrendingData(date: string, data: LanguageGroup[]): void {
 
 export function useTrendingData(date: string) {
   return useSuspenseQuery({
-    queryKey: ["trending-data", date],
+    queryKey: ['trending-data', date],
     queryFn: async (): Promise<LanguageGroup[]> => {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error("Invalid date format. Expected YYYY-MM-DD");
+        throw new Error('Invalid date format. Expected YYYY-MM-DD');
       }
 
       const cachedData = getCachedTrendingData(date);
@@ -53,7 +53,7 @@ export function useTrendingData(date: string) {
       const res = await fetch(`${API_BASE_URL}/trending/${date}`);
       if (!res.ok) {
         if (res.status === 404) {
-          throw new Error("DATE_NOT_FOUND");
+          throw new Error('DATE_NOT_FOUND');
         }
         throw new Error(`Failed to fetch data: ${res.status}`);
       }
@@ -73,12 +73,12 @@ export function useTrendingData(date: string) {
 
 export function useMonthData(month: string) {
   return useSuspenseQuery({
-    queryKey: ["month-dates", month],
+    queryKey: ['month-dates', month],
     queryFn: async () => {
       const res = await fetch(
         `${API_BASE_URL}/trending/metadata?month=${month}`,
       );
-      if (!res.ok) throw new Error("Failed to fetch dates");
+      if (!res.ok) throw new Error('Failed to fetch dates');
       return res.json();
     },
     staleTime: 1000 * 60 * 60,

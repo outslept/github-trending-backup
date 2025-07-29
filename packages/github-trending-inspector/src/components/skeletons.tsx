@@ -1,5 +1,5 @@
-import { Calendar } from "./ui/calendar";
-import { Skeleton } from "./ui/skeleton";
+import { Calendar } from './ui/calendar';
+import { Skeleton } from './ui/skeleton';
 import {
   TableBody,
   TableCell,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from './ui/table';
 
 export function CalendarSkeleton() {
   return (

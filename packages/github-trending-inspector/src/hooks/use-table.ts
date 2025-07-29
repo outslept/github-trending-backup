@@ -6,12 +6,12 @@ import {
   type ColumnDef,
   type SortingState,
   type VisibilityState,
-} from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useState } from "react";
+} from '@tanstack/react-table';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Repository } from "../lib/types";
+import type { Repository } from '../lib/types';
 
-import { useMediaQuery } from "./use-media-query";
+import { useMediaQuery } from './use-media-query';
 
 function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
   if (!searchTerm) return repos;
@@ -46,14 +46,14 @@ export function useTable(
   repos: Repository[],
   columns: ColumnDef<Repository>[],
 ) {
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobile = useMediaQuery('(max-width: 767px)');
   const pageSize = isMobile ? 5 : 10;
 
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "rank", desc: false },
+    { id: 'rank', desc: false },
   ]);
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [globalFilter, setGlobalFilter] = useState('');
   const [pageIndex, setPageIndex] = useState(0);
 
   const filteredRepos = useMemo(
@@ -118,7 +118,7 @@ export function useTable(
           }),
     ) => {
       const newPagination =
-        typeof updater === "function"
+        typeof updater === 'function'
           ? updater({ pageIndex, pageSize })
           : updater;
       setPageIndex(newPagination.pageIndex);
@@ -139,7 +139,7 @@ export function useTable(
     state: {
       sorting,
       columnVisibility,
-      globalFilter: "",
+      globalFilter: '',
       pagination: { pageIndex, pageSize },
     },
   });

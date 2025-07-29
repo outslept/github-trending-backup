@@ -1,12 +1,12 @@
-import { Clock, Monitor, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Clock, Monitor, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 function ClockDisplay() {
   const [currentTime, setCurrentTime] = useState(() => {
-    return new Date().toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
       hour12: false,
     });
   });
@@ -14,9 +14,9 @@ function ClockDisplay() {
   useEffect(() => {
     const updateTime = () => {
       setCurrentTime(
-        new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
+        new Date().toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
           hour12: false,
         }),
       );
@@ -54,9 +54,9 @@ function ClockDisplay() {
 }
 
 const themeButtons = [
-  { theme: "light", icon: Sun, label: "Light" },
-  { theme: "dark", icon: Moon, label: "Dark" },
-  { theme: "system", icon: Monitor, label: "System" },
+  { theme: 'light', icon: Sun, label: 'Light' },
+  { theme: 'dark', icon: Moon, label: 'Dark' },
+  { theme: 'system', icon: Monitor, label: 'System' },
 ];
 
 function ThemeSwitcher() {
@@ -73,10 +73,10 @@ function ThemeSwitcher() {
       <div
         className="absolute bg-background/90 backdrop-blur-md rounded-md shadow-sm border border-border/50 transition-transform duration-300 ease-out"
         style={{
-          width: "28px",
-          height: "28px",
-          top: "4px",
-          left: "4px",
+          width: '28px',
+          height: '28px',
+          top: '4px',
+          left: '4px',
           transform: `translateX(${activeIndex * 28}px)`,
         }}
       />
@@ -91,8 +91,8 @@ function ThemeSwitcher() {
             transition-colors duration-150 ease-out
             ${
               theme === themeOption
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
             }
           `}
         >

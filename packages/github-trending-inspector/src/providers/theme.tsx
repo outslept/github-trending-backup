@@ -1,7 +1,7 @@
 import {
   ThemeProvider as NextThemeProvider,
   type ThemeProviderProps,
-} from "next-themes";
+} from 'next-themes';
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (

@@ -1,5 +1,5 @@
-import { PanelLeftOpen } from "lucide-react";
-import { Suspense } from "react";
+import { PanelLeftOpen } from 'lucide-react';
+import { Suspense } from 'react';
 
 import {
   Sidebar,
@@ -8,11 +8,11 @@ import {
   SidebarHeader,
   SidebarTrigger,
   useSidebar,
-} from "../components/ui/sidebar";
+} from '../components/ui/sidebar';
 
-import { DateSelector } from "./date-selector";
-import { CalendarSkeleton } from "./skeletons";
-import { ThemeControls } from "./theme-controls";
+import { DateSelector } from './date-selector';
+import { CalendarSkeleton } from './skeletons';
+import { ThemeControls } from './theme-controls';
 
 interface AppSidebarProps {
   selectedDate: Date;
@@ -21,7 +21,7 @@ interface AppSidebarProps {
 function CustomSidebarTrigger() {
   const { toggleSidebar, state } = useSidebar();
 
-  if (state === "expanded") {
+  if (state === 'expanded') {
     return null;
   }
 

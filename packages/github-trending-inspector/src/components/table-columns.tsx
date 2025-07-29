@@ -1,44 +1,44 @@
-import type { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import type { ColumnDef } from '@tanstack/react-table';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
-import { formatNumber, getNumberValue } from "../lib/format";
-import type { Repository } from "../lib/types";
+import { formatNumber, getNumberValue } from '../lib/format';
+import type { Repository } from '../lib/types';
 
 export function createColumns(): ColumnDef<Repository>[] {
   return [
     {
-      accessorKey: "rank",
+      accessorKey: 'rank',
       header: ({ column }) => (
         <SortableHeader column={column} label="rank" type="number" />
       ),
       cell: ({ row }) => (
         <div className="inline-flex items-center justify-center min-w-[2.5rem] h-6 px-2 bg-muted/60 text-[10px] font-mono text-muted-foreground rounded-md hover:bg-muted transition-colors">
-          #{formatNumber(row.getValue("rank"))}
+          #{formatNumber(row.getValue('rank'))}
         </div>
       ),
       enableSorting: true,
       size: 80,
     },
     {
-      accessorKey: "repo",
+      accessorKey: 'repo',
       header: ({ column }) => (
         <SortableHeader column={column} label="repository" type="string" />
       ),
       cell: ({ row }) => (
         <a
-          href={`https://github.com/${row.getValue("repo")}`}
+          href={`https://github.com/${row.getValue('repo')}`}
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex items-center gap-2 min-w-0 max-w-[240px] text-sm font-medium text-foreground hover:text-primary transition-colors duration-200"
         >
-          <span className="truncate">{row.getValue("repo")}</span>
+          <span className="truncate">{row.getValue('repo')}</span>
           <div className="size-1 rounded-full bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
         </a>
       ),
       enableSorting: true,
     },
     {
-      accessorKey: "desc",
+      accessorKey: 'desc',
       header: () => (
         <div className="items-center gap-1.5 hidden lg:flex">
           <span className="text-sm font-medium text-muted-foreground tracking-tight">
@@ -51,51 +51,51 @@ export function createColumns(): ColumnDef<Repository>[] {
       ),
       cell: ({ row }) => (
         <p className="hidden lg:block max-w-md text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 leading-relaxed truncate whitespace-nowrap overflow-hidden text-ellipsis">
-          {row.getValue("desc") || "No description available"}
+          {row.getValue('desc') || 'No description available'}
         </p>
       ),
       enableSorting: false,
     },
     {
-      accessorKey: "stars",
+      accessorKey: 'stars',
       header: ({ column }) => (
         <SortableHeader column={column} label="stars" type="number" />
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {formatNumber(row.getValue("stars"))}
+          {formatNumber(row.getValue('stars'))}
         </span>
       ),
       enableSorting: true,
       size: 100,
     },
     {
-      accessorKey: "forks",
+      accessorKey: 'forks',
       header: ({ column }) => (
         <SortableHeader column={column} label="forks" type="number" />
       ),
       cell: ({ row }) => (
         <span className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 tracking-tight">
-          {formatNumber(row.getValue("forks"))}
+          {formatNumber(row.getValue('forks'))}
         </span>
       ),
       enableSorting: true,
       size: 100,
     },
     {
-      accessorKey: "today",
+      accessorKey: 'today',
       header: ({ column }) => (
         <SortableHeader column={column} label="today" type="number" />
       ),
       cell: ({ row }) => {
-        const today = getNumberValue(row.getValue("today"));
+        const today = getNumberValue(row.getValue('today'));
         return (
           <div className="flex items-center gap-2">
             <span
               className={`font-mono text-sm transition-colors duration-200 tracking-tight ${
                 today > 0
-                  ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? 'text-emerald-600 dark:text-emerald-400 font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {today > 0 ? `+${formatNumber(today)}` : formatNumber(today)}
@@ -129,7 +129,7 @@ function SortableHeader({
         if (column.toggleSorting) {
           if (!sortDirection) {
             column.toggleSorting(false);
-          } else if (sortDirection === "asc") {
+          } else if (sortDirection === 'asc') {
             column.toggleSorting(true);
           } else {
             column.clearSorting();
@@ -148,10 +148,10 @@ function SortableHeader({
       </div>
 
       <div className="size-4 flex items-center justify-center">
-        {sortDirection === "asc" && (
+        {sortDirection === 'asc' && (
           <ChevronUp className="size-3 text-primary" />
         )}
-        {sortDirection === "desc" && (
+        {sortDirection === 'desc' && (
           <ChevronDown className="size-3 text-primary" />
         )}
         {!sortDirection && (
