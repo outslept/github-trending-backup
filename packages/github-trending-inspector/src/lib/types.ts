@@ -28,10 +28,9 @@ export interface TrendingMonthResponse extends TrendingResponse {
   };
 }
 
-export interface MetadataResponse {
-  month: string;
-  availableDates: string[];
-  totalDays: number;
+export interface MetadataFile {
+  lastUpdated: string;
+  years: Record<string, Record<string, string[]> | undefined>;
 }
 
 export interface GitHubFile {

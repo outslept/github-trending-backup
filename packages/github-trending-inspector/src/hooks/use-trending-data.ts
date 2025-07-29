@@ -1,11 +1,10 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { API_BASE_URL } from '../lib/constants';
 import type {
   LanguageGroup,
   TrendingResponse,
-  MetadataResponse,
   CachedTrendingData,
+  MetadataFile,
 } from '../lib/types';
 
 const CACHE_KEY = 'trending-data';
@@ -55,7 +54,11 @@ export function useTrendingData(date: string) {
         return cachedData;
       }
 
-      const res = await fetch(`${API_BASE_URL}/trending/${date}`);
+      const apiUrl = import.meta.env.PROD
+        ? `/api/trending/${date}`
+        : `http://localhost:3001/api/trending/${date}`;
+
+      const res = await fetch(apiUrl);
       if (!res.ok) {
         if (res.status === 404) {
           throw new Error('DATE_NOT_FOUND');
@@ -76,15 +79,15 @@ export function useTrendingData(date: string) {
   });
 }
 
-export function useMonthData(month: string) {
+export function useMetadata() {
   return useSuspenseQuery({
-    queryKey: ['month-dates', month],
-    queryFn: async (): Promise<MetadataResponse> => {
+    queryKey: ['metadata'],
+    queryFn: async (): Promise<MetadataFile> => {
       const res = await fetch(
-        `${API_BASE_URL}/trending/metadata?month=${month}`,
+        'https://raw.githubusercontent.com/outslept/github-trending-backup/master/data/metadata.json',
       );
-      if (!res.ok) throw new Error('Failed to fetch dates');
-      return res.json() as Promise<MetadataResponse>;
+      if (!res.ok) throw new Error('Failed to fetch metadata');
+      return res.json() as Promise<MetadataFile>;
     },
     staleTime: 1000 * 60 * 60,
   });

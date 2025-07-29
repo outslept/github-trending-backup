@@ -11,11 +11,6 @@ export interface FetchMonthDataResult {
   totalPages: number;
 }
 
-export interface FetchMetadataResult {
-  availableDates: string[];
-  totalDays: number;
-}
-
 export async function fetchMonthData(
   month: string,
   page = 1,
@@ -60,34 +55,6 @@ export async function fetchMonthData(
     currentPage: page,
     totalPages: Math.ceil(files.length / limit),
   };
-}
-
-export async function fetchMetadata(
-  month: string,
-): Promise<FetchMetadataResult> {
-  const [year, monthNum] = month.split('-');
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
-    );
-
-    if (!response.ok) {
-      return { availableDates: [], totalDays: 0 };
-    }
-
-    const allFiles = (await response.json()) as GitHubFile[];
-    const files = allFiles.filter((file) => file.name.endsWith('.md'));
-
-    return {
-      availableDates: files
-        .map((file) => file.name.replace('.md', '').split('-')[2])
-        .sort(),
-      totalDays: files.length,
-    };
-  } catch {
-    return { availableDates: [], totalDays: 0 };
-  }
 }
 
 const parseMdToLanguageGroups = (mdContent: string): LanguageGroup[] => {

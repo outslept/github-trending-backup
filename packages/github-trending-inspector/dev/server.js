@@ -127,53 +127,6 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    if (pathname === '/api/trending/metadata') {
-      const month = searchParams.get('month');
-      if (!month) {
-        sendError(res, 'Month parameter is required', 400);
-        log(
-          'warn',
-          `${req.method} ${pathname} ${styleText('gray', `400 ${Date.now() - startTime}ms`)} - missing month param`,
-        );
-        return;
-      }
-
-      try {
-        const [year, monthNum] = month.split('-');
-        const response = await fetch(
-          `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
-        );
-
-        let metadata;
-        if (!response.ok) {
-          metadata = { availableDates: [], totalDays: 0 };
-        } else {
-          const allFiles = await response.json();
-          const files = allFiles.filter((file) => file.name.endsWith('.md'));
-          metadata = {
-            availableDates: files
-              .map((file) => file.name.replace('.md', '').split('-')[2])
-              .sort(),
-            totalDays: files.length,
-          };
-        }
-
-        sendJSON(res, { month, ...metadata });
-        log(
-          'ok',
-          `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - ${metadata.totalDays} days`,
-        );
-      } catch (error) {
-        log('error', `Error fetching metadata: ${error.message}`);
-        sendJSON(res, { month, availableDates: [], totalDays: 0 });
-        log(
-          'warn',
-          `${req.method} ${pathname} ${styleText('gray', `200 ${Date.now() - startTime}ms`)} - fallback response`,
-        );
-      }
-      return;
-    }
-
     const trendingMatch = pathname.match(/^\/api\/trending\/(.+)$/);
     if (trendingMatch) {
       const slug = trendingMatch[1];
@@ -284,11 +237,7 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      sendError(
-        res,
-        'Invalid endpoint. Use: metadata, YYYY-MM, or YYYY-MM-DD',
-        404,
-      );
+      sendError(res, 'Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD', 404);
       log(
         'warn',
         `${req.method} ${pathname} ${styleText('gray', `404 ${Date.now() - startTime}ms`)} - invalid format: ${slug}`,
