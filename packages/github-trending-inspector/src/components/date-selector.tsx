@@ -11,9 +11,11 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
 
   const handleDateSelect = useCallback(
     (date: Date | undefined) => {
-      if (date == null) return;
-      const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      void navigate({ to: '/$date', params: { date: dateStr } });
+      if (!date) return;
+      void navigate({
+        to: '/$date',
+        params: { date: date.toLocaleDateString('sv-SE') }
+      });
     },
     [navigate],
   );
@@ -33,15 +35,20 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
     [metadata],
   );
 
+  const displaySelectedDate = isDateAvailable(selectedDate) ? selectedDate : undefined;
+
   return (
     <Calendar
       mode="single"
-      selected={selectedDate}
+      selected={displaySelectedDate}
       onSelect={handleDateSelect}
       month={currentMonth}
       onMonthChange={handleMonthChange}
       disabled={(date) => !isDateAvailable(date)}
       className="w-full"
+      classNames={{
+        today: "text-accent-foreground [&:not([aria-selected])]:bg-transparent [&:not([aria-selected])]:text-muted-foreground"
+      }}
     />
   );
 }
