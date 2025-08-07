@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 
 import type {
   MetadataFile,
-  TrendingMonthResponse,
+  TrendingResponse,
 } from '../lib/types';
 
 const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
@@ -46,7 +46,7 @@ function useMonthData(month: string) {
       const res = await fetchWithTimeout(getApiUrl(month));
       if (!res.ok) throw new Error(`Failed to fetch data: ${res.status}`);
 
-      const data = await res.json() as TrendingMonthResponse;
+      const data = await res.json() as TrendingResponse;
       return data;
     },
     staleTime: STALE_TIME,

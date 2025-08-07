@@ -1,13 +1,6 @@
 import type { LanguageGroup, Repository, GitHubFile } from '../../src/lib/types';
 
-export interface FetchResult {
-  repositories: Record<string, LanguageGroup[]>;
-  totalFiles: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-export async function fetchMonthData(month: string, page = 1, limit = 5): Promise<FetchResult> {
+export async function fetchMonthData(month: string): Promise<Record<string, LanguageGroup[]>> {
   const [year, monthNum] = month.split('-');
   const response = await fetch(
     `https://api.github.com/repos/outslept/github-trending-backup/contents/data/${year}/${monthNum}`,
@@ -19,16 +12,8 @@ export async function fetchMonthData(month: string, page = 1, limit = 5): Promis
 
   const allFiles = (await response.json()) as GitHubFile[];
   const files = allFiles.filter(file => file.name.endsWith('.md'));
-  const mdFiles = files.slice((page - 1) * limit, page * limit);
 
-  const repositories = await processFiles(mdFiles);
-
-  return {
-    repositories,
-    totalFiles: files.length,
-    currentPage: page,
-    totalPages: Math.ceil(files.length / limit),
-  };
+  return processFiles(files);
 }
 
 export async function fetchDateData(month: string, date: string): Promise<Record<string, LanguageGroup[]>> {
@@ -73,7 +58,7 @@ async function processFiles(files: GitHubFile[]): Promise<Record<string, Languag
 }
 
 function parseNumber(str: string): number {
-  const match = str.match(/[\d,]+/);
+  const match = /[\d,]+/.exec(str);
   return match ? parseInt(match[0].replace(/,/g, '')) : 0;
 }
 
@@ -81,10 +66,10 @@ function parseTableRow(line: string): Repository | null {
   const columns = line.split('|').map(col => col.trim()).filter(Boolean);
   if (columns.length < 6) return null;
 
-  const repoMatch = columns[1].match(/\[([^\]]+)\]\(([^)]+)\)/);
+  const repoMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(columns[1]);
   if (!repoMatch) return null;
 
-  const todayMatch = columns[5].match(/(\d+)\s+stars?\s+today/i);
+  const todayMatch = /(\d+)\s+stars?\s+today/i.exec(columns[5]);
 
   return {
     rank: parseInt(columns[0]) || 0,

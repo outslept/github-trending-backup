@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     }
 
     if (MONTH_FORMAT_REGEX.test(slug)) {
-      return await handleMonthRequest(slug, url.searchParams, logger, startTime);
+      return await handleMonthRequest(slug, logger, startTime);
     }
 
     throw new Error('Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD');
@@ -62,23 +62,18 @@ async function handleDateRequest(date: string, logger: Logger, startTime: number
   return jsonResponse(response);
 }
 
-async function handleMonthRequest(month: string, searchParams: URLSearchParams, logger: Logger, startTime: number) {
-  const page = parseInt(searchParams.get('page') ?? '1');
-  const limit = parseInt(searchParams.get('limit') ?? '5');
+async function handleMonthRequest(month: string, logger: Logger, startTime: number) {
+  logger.info('Fetching monthly data', { month });
 
-  logger.info('Fetching monthly data', { month, page, limit });
-
-  const data = await fetchMonthData(month, page, limit);
+  const repositories = await fetchMonthData(month);
   const response: TrendingResponse = {
     month,
-    repositories: data.repositories,
-    pagination: { page: data.currentPage, totalPages: data.totalPages },
+    repositories,
   };
 
   logger.response(startTime, 200, {
     type: 'monthly',
-    count: Object.keys(data.repositories).length,
-    totalPages: data.totalPages
+    count: Object.keys(repositories).length,
   });
 
   return jsonResponse(response);

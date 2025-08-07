@@ -4,8 +4,6 @@ import { styleText } from 'node:util';
 
 const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH_FORMAT_REGEX = /^\d{4}-\d{2}$/;
-const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 5;
 const PORT = 3001;
 
 const LEVEL_COLORS = {
@@ -149,17 +147,16 @@ async function handleDateRequest(req, res, date, startTime) {
   }
 }
 
-async function handleMonthRequest(req, res, month, page, limit, startTime) {
+async function handleMonthRequest(req, res, month, startTime) {
   const pathname = new URL(req.url, `http://localhost:${PORT}`).pathname;
 
   try {
     const [year, monthNum] = month.split('-');
     const allFiles = await fetchGitHubContent(year, monthNum);
     const files = allFiles.filter((file) => file.name.endsWith('.md'));
-    const mdFiles = files.slice((page - 1) * limit, page * limit);
 
     const repositories = {};
-    for (const file of mdFiles) {
+    for (const file of files) {
       const content = await fetch(file.download_url).then((res) => res.text());
       const languageGroups = parseMdToLanguageGroups(content);
       if (languageGroups.length > 0) {
@@ -167,12 +164,8 @@ async function handleMonthRequest(req, res, month, page, limit, startTime) {
       }
     }
 
-    sendJSON(res, {
-      month,
-      repositories,
-      pagination: { page, totalPages: Math.ceil(files.length / limit) },
-    });
-    logResponse(req, pathname, startTime, 200, `month ${month}, page ${page}`);
+    sendJSON(res, { month, repositories });
+    logResponse(req, pathname, startTime, 200, `month ${month}`);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch data';
     sendError(res, message, 500);
@@ -183,7 +176,7 @@ async function handleMonthRequest(req, res, month, page, limit, startTime) {
 const server = http.createServer(async (req, res) => {
   const startTime = Date.now();
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  const { pathname, searchParams } = url;
+  const { pathname } = url;
 
   log('info', `${req.method} ${pathname}`);
 
@@ -204,8 +197,6 @@ const server = http.createServer(async (req, res) => {
     const trendingMatch = pathname.match(/^\/api\/trending\/(.+)$/);
     if (trendingMatch) {
       const slug = trendingMatch[1];
-      const page = parseInt(searchParams.get('page') || String(DEFAULT_PAGE));
-      const limit = parseInt(searchParams.get('limit') || String(DEFAULT_LIMIT));
 
       if (DATE_FORMAT_REGEX.test(slug)) {
         await handleDateRequest(req, res, slug, startTime);
@@ -213,7 +204,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (MONTH_FORMAT_REGEX.test(slug)) {
-        await handleMonthRequest(req, res, slug, page, limit, startTime);
+        await handleMonthRequest(req, res, slug, startTime);
         return;
       }
 
