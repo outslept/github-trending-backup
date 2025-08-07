@@ -1,4 +1,5 @@
-import { Search, X } from 'lucide-react';
+import { Search, X, Code } from 'lucide-react';
+import { useState } from 'react';
 
 import { languageIcons } from '../lib/constants';
 import { formatNumber } from '../lib/format';
@@ -18,7 +19,10 @@ export function TableHeader({
   globalFilter,
   onFilterChange,
 }: TableHeaderProps) {
+  const [imageError, setImageError] = useState(false);
+
   const languageId = language.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const iconSrc = languageIcons[language.toLowerCase()];
 
   return (
     <div
@@ -28,13 +32,17 @@ export function TableHeader({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-background border border-border/60 shadow-sm">
-            <img
-              src={languageIcons[language.toLowerCase()]}
-              alt={language}
-              width={20}
-              height={20}
-              className="size-5"
-            />
+            {iconSrc && !imageError ? (
+              <img
+                src={iconSrc}
+                alt={language}
+                width={20}
+                height={20}
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <Code className="size-5" />
+            )}
           </div>
           <div>
             <div className="flex items-center gap-2">
