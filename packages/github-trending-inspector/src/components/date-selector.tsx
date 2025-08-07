@@ -20,10 +20,6 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
     [navigate],
   );
 
-  const handleMonthChange = useCallback((month: Date) => {
-    setCurrentMonth(month);
-  }, []);
-
   const isDateAvailable = useCallback(
     (date: Date) => {
       const year = date.getFullYear().toString();
@@ -43,11 +39,11 @@ export function DateSelector({ selectedDate }: { selectedDate: Date }) {
       selected={displaySelectedDate}
       onSelect={handleDateSelect}
       month={currentMonth}
-      onMonthChange={handleMonthChange}
+      onMonthChange={setCurrentMonth}
       disabled={(date) => !isDateAvailable(date)}
       className="w-full"
       classNames={{
-        today: "text-accent-foreground [&:not([aria-selected])]:bg-transparent [&:not([aria-selected])]:text-muted-foreground"
+        today: "text-accent-foreground"
       }}
     />
   );
