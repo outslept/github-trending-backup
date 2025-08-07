@@ -1,127 +1,89 @@
 import type { TrendingResponse } from '../../src/lib/types';
-import { fetchMonthData } from '../lib/github';
+import { fetchMonthData, fetchDateData } from '../lib/github';
 import { Logger } from '../lib/logger';
 
 const DATE_FORMAT_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH_FORMAT_REGEX = /^\d{4}-\d{2}$/;
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 5;
-
-const corsHeaders = {
+const responseHeaders = {
+  'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+function jsonResponse(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), { status, headers: responseHeaders });
+}
+
 export async function GET(request: Request) {
   const startTime = Date.now();
   const logger = new Logger(request);
 
-  logger.request();
+  try {
+    const url = new URL(request.url);
+    const slug = url.pathname.split('/').filter(Boolean).at(-1);
 
-  const url = new URL(request.url);
-  const pathParts = url.pathname.split('/').filter(Boolean);
-  const slug = pathParts.at(-1);
-
-  if (slug == null || slug.length === 0) {
-    logger.warn('Invalid endpoint - missing slug');
-    logger.response(startTime, 404);
-    return new Response(JSON.stringify({ error: 'Invalid endpoint' }), {
-      status: 404,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
-    });
-  }
-
-  // GET /api/trending/YYYY-MM-DD
-  if (DATE_FORMAT_REGEX.test(slug)) {
-    const date = slug;
-    const month = date.split('-').slice(0, 2).join('-');
-
-    try {
-      logger.info('Fetching daily data', { date, month });
-
-      const data = await fetchMonthData(month, DEFAULT_PAGE, DEFAULT_LIMIT, date);
-      const response: TrendingResponse = {
-        month,
-        repositories: data.repositories,
-      };
-
-      logger.info('Daily data fetched successfully', {
-        repositoryCount: Object.keys(data.repositories).length,
-      });
-      logger.response(startTime, 200, { type: 'daily', date });
-
-      return new Response(JSON.stringify(response), {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch data';
-      const status = message === 'Date not found' ? 404 : 500;
-
-      logger.error('Failed to fetch daily data', error as Error, { date, month });
-      logger.response(startTime, status);
-
-      return new Response(JSON.stringify({ error: message }), {
-        status,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
+    if (slug == null || slug.length === 0) {
+      throw new Error('Invalid endpoint');
     }
-  }
 
-  // GET /api/trending/YYYY-MM?page=1&limit=5
-  if (MONTH_FORMAT_REGEX.test(slug)) {
-    const month = slug;
-    const page = Number.parseInt(url.searchParams.get('page') ?? String(DEFAULT_PAGE));
-    const limit = Number.parseInt(url.searchParams.get('limit') ?? String(DEFAULT_LIMIT));
-
-    try {
-      logger.info('Fetching monthly data', { month, page, limit });
-
-      const data = await fetchMonthData(month, page, limit);
-      const response: TrendingResponse = {
-        month,
-        repositories: data.repositories,
-        pagination: { page: data.currentPage, totalPages: data.totalPages },
-      };
-
-      logger.info('Monthly data fetched successfully', {
-        repositoryCount: Object.keys(data.repositories).length,
-        totalPages: data.totalPages,
-      });
-      logger.response(startTime, 200, { type: 'monthly', month, page });
-
-      return new Response(JSON.stringify(response), {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch data';
-
-      logger.error('Failed to fetch monthly data', error as Error, { month, page, limit });
-      logger.response(startTime, 500);
-
-      return new Response(JSON.stringify({ error: message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
+    if (DATE_FORMAT_REGEX.test(slug)) {
+      return await handleDateRequest(slug, logger, startTime);
     }
+
+    if (MONTH_FORMAT_REGEX.test(slug)) {
+      return await handleMonthRequest(slug, url.searchParams, logger, startTime);
+    }
+
+    throw new Error('Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD');
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch data';
+    const status = message.includes('not found') || message.includes('Invalid') ? 404 : 500;
+
+    logger.error('Request failed', error as Error);
+    logger.response(startTime, status);
+
+    return jsonResponse({ error: message }, status);
   }
-
-  logger.warn('Invalid endpoint format', { slug });
-  logger.response(startTime, 404);
-
-  return new Response(
-    JSON.stringify({ error: 'Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD' }),
-    {
-      status: 404,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
-    },
-  );
 }
 
-export function OPTIONS(request: Request) {
-  const logger = new Logger(request);
-  logger.info('CORS preflight request');
+async function handleDateRequest(date: string, logger: Logger, startTime: number) {
+  const month = date.split('-').slice(0, 2).join('-');
 
-  return new Response(null, { status: 200, headers: corsHeaders });
+  logger.info('Fetching daily data', { date });
+
+  const repositories = await fetchDateData(month, date);
+  const response: TrendingResponse = { month, repositories };
+
+  logger.response(startTime, 200, { type: 'daily', count: Object.keys(repositories).length });
+
+  return jsonResponse(response);
+}
+
+async function handleMonthRequest(month: string, searchParams: URLSearchParams, logger: Logger, startTime: number) {
+  const page = parseInt(searchParams.get('page') ?? '1');
+  const limit = parseInt(searchParams.get('limit') ?? '5');
+
+  logger.info('Fetching monthly data', { month, page, limit });
+
+  const data = await fetchMonthData(month, page, limit);
+  const response: TrendingResponse = {
+    month,
+    repositories: data.repositories,
+    pagination: { page: data.currentPage, totalPages: data.totalPages },
+  };
+
+  logger.response(startTime, 200, {
+    type: 'monthly',
+    count: Object.keys(data.repositories).length,
+    totalPages: data.totalPages
+  });
+
+  return jsonResponse(response);
+}
+
+export function OPTIONS() {
+  return new Response(null, { status: 200, headers: responseHeaders });
 }
