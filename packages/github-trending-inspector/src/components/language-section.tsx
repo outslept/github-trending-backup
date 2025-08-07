@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useMediaQuery } from '../hooks/use-media-query';
 import { useTable } from '../hooks/use-table';
 import type { LanguageGroup } from '../lib/types';
@@ -45,7 +43,7 @@ export function LanguageSection({ group }: { group: LanguageGroup }) {
         ) : (
           <ScrollArea className="w-full">
             <div style={{ minWidth: `${MIN_TABLE_WIDTH}px` }}>
-              <DesktopView table={table} columns={columns} />
+              <DesktopView table={table} />
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
