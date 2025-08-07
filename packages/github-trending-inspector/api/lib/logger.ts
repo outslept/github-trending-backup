@@ -2,7 +2,6 @@ interface LogEntry {
   requestId: string;
   method: string;
   path: string;
-  userAgent?: string;
   timestamp: string;
   level: 'info' | 'warn' | 'error';
   message: string;
@@ -13,57 +12,50 @@ interface LogEntry {
 }
 
 export class Logger {
-  private context: Pick<
-    LogEntry,
-    'requestId' | 'method' | 'path' | 'userAgent' | 'timestamp'
-  >;
+  private context: {
+    requestId: string;
+    method: string;
+    path: string;
+    timestamp: string;
+  };
 
   constructor(request: Request) {
-    const userAgent = request.headers.get('user-agent');
-
     this.context = {
-      requestId: Math.random().toString(36).substring(2, 15),
+      requestId: Math.random().toString(36).slice(2, 9),
       method: request.method,
       path: new URL(request.url).pathname,
-      userAgent:
-        userAgent != null && userAgent.length > 0 ? userAgent : undefined,
       timestamp: new Date().toISOString(),
     };
+
+    this.info('Request started');
   }
 
-  private log(entry: Omit<LogEntry, keyof typeof this.context>): void {
-    console.log(JSON.stringify({ ...this.context, ...entry }));
+  private log(level: LogEntry['level'], message: string, extra: Partial<LogEntry> = {}): void {
+    console.log(JSON.stringify({
+      ...this.context,
+      level,
+      message,
+      ...extra
+    }));
   }
 
   info(message: string, data?: Record<string, unknown>): void {
-    this.log({ level: 'info', message, data });
+    this.log('info', message, { data });
   }
 
   warn(message: string, data?: Record<string, unknown>): void {
-    this.log({ level: 'warn', message, data });
+    this.log('warn', message, { data });
   }
 
   error(message: string, error?: Error, data?: Record<string, unknown>): void {
-    this.log({
-      level: 'error',
-      message,
-      error: error?.stack ?? error?.message ?? undefined,
-      data,
+    this.log('error', message, {
+      error: error?.stack || error?.message,
+      data
     });
   }
 
-  request(): void {
-    this.log({ level: 'info', message: 'Request started' });
-  }
-
-  response(
-    startTime: number,
-    status: number,
-    data?: Record<string, unknown>,
-  ): void {
-    this.log({
-      level: 'info',
-      message: 'Request completed',
+  response(startTime: number, status: number, data?: Record<string, unknown>): void {
+    this.log('info', 'Request completed', {
       duration: Date.now() - startTime,
       status,
       data,
