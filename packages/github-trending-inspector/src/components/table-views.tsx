@@ -1,12 +1,13 @@
 import {
   flexRender,
-  type ColumnDef,
   type Row,
   type Table,
 } from '@tanstack/react-table';
 import { ExternalLink, GitFork, Search, Star, TrendingUp } from 'lucide-react';
 
+import { formatNumber } from '../lib/format';
 import type { Repository } from '../lib/types';
+import { cn } from '../lib/utils';
 
 import {
   TableBody,
@@ -17,23 +18,60 @@ import {
   TableRow,
 } from './ui/table';
 
+const GITHUB_BASE_URL = 'https://github.com';
+
+function StatItem({ icon: Icon, value, isPositive }: {
+  icon: React.ComponentType<{ className?: string }>;
+  value: number;
+  isPositive?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <Icon className={cn(
+        'size-3',
+        isPositive === true ? 'text-emerald-500' : 'text-muted-foreground'
+      )} />
+      <span className={cn(
+        'text-sm font-mono tracking-tight',
+        isPositive === true
+          ? 'text-emerald-600 dark:text-emerald-400 font-medium'
+          : 'text-muted-foreground'
+      )}>
+        {isPositive === true && value > 0 ? `+${formatNumber(value)}` : formatNumber(value)}
+      </span>
+    </div>
+  );
+}
+
+function RankBadge({ rank }: { rank: number }) {
+  return (
+    <div className="inline-flex items-center justify-center min-w-[2rem] h-5 px-1.5 bg-muted/60 text-[10px] font-mono text-muted-foreground rounded">
+      #{rank}
+    </div>
+  );
+}
+
+function RepoLink({ repo }: { repo: string }) {
+  return (
+    <a
+      href={`${GITHUB_BASE_URL}/${repo}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex items-center gap-2 text-base font-medium text-foreground hover:text-primary min-w-0 transition-colors duration-200"
+    >
+      <span className="truncate tracking-tight">{repo}</span>
+      <ExternalLink className="size-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity duration-200" />
+    </a>
+  );
+}
+
 function MobileCard({ repo }: { repo: Repository }) {
   return (
     <div className="p-4 border-b border-border/40 last:border-b-0 hover:bg-muted/30 transition-colors duration-200">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <div className="inline-flex items-center justify-center min-w-[2rem] h-5 px-1.5 bg-muted/60 text-[10px] font-mono text-muted-foreground rounded">
-            #{repo.rank}
-          </div>
-          <a
-            href={`https://github.com/${repo.repo}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2 text-base font-medium text-foreground hover:text-primary min-w-0 transition-colors duration-200"
-          >
-            <span className="truncate tracking-tight">{repo.repo}</span>
-            <ExternalLink className="size-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity duration-200" />
-          </a>
+          <RankBadge rank={repo.rank} />
+          <RepoLink repo={repo.repo} />
         </div>
       </div>
 
@@ -45,36 +83,10 @@ function MobileCard({ repo }: { repo: Repository }) {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <Star className="size-3 text-muted-foreground" />
-            <span className="text-sm font-mono text-muted-foreground tracking-tight">
-              {repo.stars.toLocaleString()}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <GitFork className="size-3 text-muted-foreground" />
-            <span className="text-sm font-mono text-muted-foreground tracking-tight">
-              {repo.forks.toLocaleString()}
-            </span>
-          </div>
+          <StatItem icon={Star} value={repo.stars} />
+          <StatItem icon={GitFork} value={repo.forks} />
         </div>
-
-        <div className="flex items-center gap-1.5">
-          <TrendingUp
-            className={`size-3 ${repo.today > 0 ? 'text-emerald-500' : 'text-muted-foreground'}`}
-          />
-          <span
-            className={`text-sm font-mono tracking-tight ${
-              repo.today > 0
-                ? 'text-emerald-600 dark:text-emerald-400 font-medium'
-                : 'text-muted-foreground'
-            }`}
-          >
-            {repo.today > 0
-              ? `+${repo.today.toLocaleString()}`
-              : repo.today.toLocaleString()}
-          </span>
-        </div>
+        <StatItem icon={TrendingUp} value={repo.today} isPositive />
       </div>
     </div>
   );
@@ -118,12 +130,12 @@ export function MobileView({ rows }: MobileViewProps) {
 
 interface DesktopViewProps {
   table: Table<Repository>;
-  columns: ColumnDef<Repository>[];
 }
 
-export function DesktopView({ table, columns }: DesktopViewProps) {
+export function DesktopView({ table }: DesktopViewProps) {
   const rows = table.getRowModel().rows;
   const headerGroups = table.getHeaderGroups();
+  const visibleColumnCount = table.getVisibleFlatColumns().length;
 
   return (
     <div className="hidden md:block">
@@ -139,9 +151,9 @@ export function DesktopView({ table, columns }: DesktopViewProps) {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                 </TableHead>
               ))}
             </TableRow>
@@ -152,10 +164,10 @@ export function DesktopView({ table, columns }: DesktopViewProps) {
             rows.map((row, index) => (
               <TableRow
                 key={row.id}
-                className={`
-                  hover:bg-muted/30 transition-colors duration-200 border-border/40
-                  ${index % 2 === 0 ? 'bg-background' : 'bg-muted/10'}
-                `}
+                className={cn(
+                  'hover:bg-muted/30 transition-colors duration-200 border-border/40',
+                  index % 2 === 0 ? 'bg-background' : 'bg-muted/10'
+                )}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-3 px-4">
@@ -166,7 +178,7 @@ export function DesktopView({ table, columns }: DesktopViewProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-32 text-center">
+              <TableCell colSpan={visibleColumnCount} className="h-32 text-center">
                 <EmptyState />
               </TableCell>
             </TableRow>
