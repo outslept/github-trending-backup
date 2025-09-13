@@ -31,7 +31,7 @@ const RETRY_LIMIT = 5;
 const BACKOFF_BETWEEN_RETRIES_MS = 5_000;
 const PAUSE_BETWEEN_LANGUAGES_MS = 5_000;
 
-export async function scrapeTrendingForLanguage(
+async function scrapeTrendingForLanguage(
  language: GitHubLanguage,
 ): Promise<LanguageReport> {
  console.log(`info: scraping ${language}`);

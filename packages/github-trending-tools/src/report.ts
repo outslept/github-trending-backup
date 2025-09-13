@@ -44,7 +44,7 @@ export function renderMarkdownReport(reports: LanguageReport[], date: string): s
   return `# GitHub Trending - ${date}\n\n## Table of Contents\n\n${toc}\n\n${reports.map(formatSection).join('\n')}`;
 }
 
-export function locateProjectRoot(start: string = process.cwd()): string {
+function locateProjectRoot(start: string = process.cwd()): string {
   let current = start;
   while (true) {
     if (existsSync(join(current, '.git'))) return current;
