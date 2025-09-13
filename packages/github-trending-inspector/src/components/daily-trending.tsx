@@ -26,40 +26,36 @@ function EmptyState() {
 }
 
 export function DailyTrending({ date }: { date: string }) {
-  const { data: groups } = useTrendingData(date);
+  const { data: languageGroups } = useTrendingData(date);
 
   const virtualizer = useWindowVirtualizer({
-    count: groups.length,
+    count: languageGroups.length,
     estimateSize: () => ESTIMATED_ITEM_HEIGHT,
     overscan: 2,
-    measureElement: (element) => {
-      return element.getBoundingClientRect().height;
-    },
+    measureElement: (element) => element.getBoundingClientRect().height,
   });
 
-  if (groups.length === 0) {
+  if (languageGroups.length === 0) {
     return <EmptyState />;
   }
+
+  const items = virtualizer.getVirtualItems();
 
   return (
     <div
       className="w-full relative"
-      style={{
-        height: `${virtualizer.getTotalSize()}px`,
-      }}
+      style={{ height: `${virtualizer.getTotalSize()}px` }}
     >
-      {virtualizer.getVirtualItems().map((virtualItem) => {
-        const group = groups[virtualItem.index];
+      {items.map((item) => {
+        const group = languageGroups[item.index];
 
         return (
           <div
-            key={virtualItem.key}
-            data-index={virtualItem.index}
+            key={item.key}
+            data-index={item.index}
             ref={virtualizer.measureElement}
             className="absolute top-0 left-0 w-full"
-            style={{
-              transform: `translateY(${virtualItem.start}px)`,
-            }}
+            style={{ transform: `translateY(${item.start}px)` }}
           >
             <div className="mb-6">
               <LanguageSection group={group} />

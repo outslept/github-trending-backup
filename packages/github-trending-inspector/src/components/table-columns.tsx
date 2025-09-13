@@ -2,10 +2,9 @@ import type { ColumnDef, Column } from '@tanstack/react-table';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import { formatNumber } from '../lib/format';
+import { GITHUB_BASE_URL } from '../lib/urls';
 import { cn } from '../lib/utils';
 import type { Repository } from '../lib/types';
-
-const GITHUB_BASE_URL = 'https://github.com';
 
 function TypeBadge({ type }: { type: string }) {
   return (
@@ -85,6 +84,12 @@ function SortableHeader({
   type: string;
 }) {
   const sortDirection = column.getIsSorted();
+  const ariaSort =
+    sortDirection === 'asc'
+      ? 'ascending'
+      : sortDirection === 'desc'
+        ? 'descending'
+        : 'none';
 
   const handleSort = () => {
     switch (sortDirection) {
@@ -103,6 +108,8 @@ function SortableHeader({
     <button
       type="button"
       onClick={handleSort}
+      aria-label={`Sort by ${label}`}
+      aria-sort={ariaSort as React.AriaAttributes['aria-sort']}
       className="group flex items-center gap-2 hover:text-foreground transition-colors duration-200 -ml-2 pl-2 pr-1 py-1 rounded-md hover:bg-muted/50"
     >
       <div className="flex items-center gap-1.5">
@@ -141,7 +148,7 @@ function StaticHeader({ label }: { label: string }) {
   );
 }
 
-export function createColumns(): ColumnDef<Repository>[] {
+export function buildRepoColumns(): ColumnDef<Repository>[] {
   return [
     {
       accessorKey: 'rank',

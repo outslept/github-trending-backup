@@ -1,7 +1,8 @@
 import { Search, X, Code } from 'lucide-react';
 import { useState } from 'react';
 
-import { languageIcons } from '../lib/constants';
+import { languageIcons } from '../lib/language-icons';
+import { slugify } from '../lib/slug';
 import { formatNumber } from '../lib/format';
 
 import { Input } from './ui/input';
@@ -21,7 +22,7 @@ export function TableHeader({
 }: TableHeaderProps) {
   const [imageError, setImageError] = useState(false);
 
-  const languageId = language.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const languageId = slugify(language);
   const iconSrc = languageIcons[language.toLowerCase()];
 
   return (

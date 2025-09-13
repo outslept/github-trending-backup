@@ -6,6 +6,7 @@ import {
 import { ExternalLink, GitFork, Search, Star, TrendingUp } from 'lucide-react';
 
 import { formatNumber } from '../lib/format';
+import { GITHUB_BASE_URL } from '../lib/urls';
 import type { Repository } from '../lib/types';
 import { cn } from '../lib/utils';
 
@@ -17,8 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-
-const GITHUB_BASE_URL = 'https://github.com';
 
 function StatItem({ icon: Icon, value, isPositive }: {
   icon: React.ComponentType<{ className?: string }>;

@@ -1,8 +1,9 @@
 import { useMediaQuery } from '../hooks/use-media-query';
 import { useTable } from '../hooks/use-table';
 import type { LanguageGroup } from '../lib/types';
+import { slugify } from '../lib/slug';
 
-import { createColumns } from './table-columns';
+import { buildRepoColumns } from './table-columns';
 import { TableHeader } from './table-header';
 import { TablePagination } from './table-pagination';
 import { DesktopView, MobileView } from './table-views';
@@ -11,18 +12,14 @@ import { ScrollArea, ScrollBar } from './ui/scroll-area';
 const MOBILE_BREAKPOINT = '(max-width: 767px)';
 const MIN_TABLE_WIDTH = 767;
 
-const columns = createColumns();
-
-function generateSectionId(language: string): string {
-  return language.toLowerCase().replace(/[^a-z0-9]/g, '');
-}
+const columns = buildRepoColumns();
 
 export function LanguageSection({ group }: { group: LanguageGroup }) {
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT);
   const { table, state, paginationStats, pagination, updateGlobalFilter } =
     useTable(group.repos, columns);
 
-  const sectionId = generateSectionId(group.language);
+  const sectionId = slugify(group.language);
   const tableRows = table.getRowModel().rows;
 
   return (

@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LatestRouteImport } from './routes/latest'
 import { Route as DateRouteImport } from './routes/$date'
 import { Route as IndexRouteImport } from './routes/index'
 
+const LatestRoute = LatestRouteImport.update({
+  id: '/latest',
+  path: '/latest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DateRoute = DateRouteImport.update({
   id: '/$date',
   path: '/$date',
@@ -26,31 +32,42 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$date': typeof DateRoute
+  '/latest': typeof LatestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$date': typeof DateRoute
+  '/latest': typeof LatestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$date': typeof DateRoute
+  '/latest': typeof LatestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$date'
+  fullPaths: '/' | '/$date' | '/latest'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$date'
-  id: '__root__' | '/' | '/$date'
+  to: '/' | '/$date' | '/latest'
+  id: '__root__' | '/' | '/$date' | '/latest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DateRoute: typeof DateRoute
+  LatestRoute: typeof LatestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/latest': {
+      id: '/latest'
+      path: '/latest'
+      fullPath: '/latest'
+      preLoaderRoute: typeof LatestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$date': {
       id: '/$date'
       path: '/$date'
@@ -71,6 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DateRoute: DateRoute,
+  LatestRoute: LatestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
