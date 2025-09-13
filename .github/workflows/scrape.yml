@@ -1,3 +1,5 @@
+name: trending
+
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -23,7 +25,61 @@ jobs:
       - name: scrape-trending
         run: pnpm --filter github-trending-tools start
       - name: generate-metadata
-        run: node scripts/get-metadata.mjs
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { readdir, writeFile, stat } = require('fs').promises;
+            const { join } = require('path');
+
+            const dataRoot = join(process.cwd(), 'packages', 'github-trending-data', 'data');
+
+            async function safeReaddir(path) {
+              try {
+                const s = await stat(path);
+                if (!s.isDirectory()) return [];
+                return await readdir(path);
+              } catch {
+                return [];
+              }
+            }
+
+            const years = {};
+            for (const yearName of await safeReaddir(dataRoot)) {
+              if (!/^\d{4}$/.test(yearName)) continue;
+              years[yearName] = {};
+
+              const yearDir = join(dataRoot, yearName);
+              for (const monthName of await safeReaddir(yearDir)) {
+                if (!/^\d{2}$/.test(monthName)) continue;
+
+                const monthDir = join(yearDir, monthName);
+                const files = await safeReaddir(monthDir);
+                const days = files
+                  .filter((file) => file.endsWith('.md'))
+                  .map((file) => file.replace('.md', '').split('-')[2])
+                  .sort();
+
+                if (days.length > 0) {
+                  years[yearName][monthName] = days;
+                }
+              }
+
+              if (Object.keys(years[yearName]).length === 0) {
+                delete years[yearName];
+              }
+            }
+
+            const metadata = {
+              lastUpdated: new Date().toISOString(),
+              years,
+            };
+
+            await writeFile(
+              join(dataRoot, 'metadata.json'),
+              JSON.stringify(metadata, null, 2)
+            );
+
+            console.log('Metadata generated successfully at', join(dataRoot, 'metadata.json'));
       - name: commit-changes
         run: |
           git add .
