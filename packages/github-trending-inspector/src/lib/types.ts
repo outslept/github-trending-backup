@@ -26,8 +26,3 @@ export interface GitHubFile {
   name: string;
   download_url: string;
 }
-
-export interface CachedTrendingData {
-  data: LanguageGroup[];
-  timestamp: number;
-}

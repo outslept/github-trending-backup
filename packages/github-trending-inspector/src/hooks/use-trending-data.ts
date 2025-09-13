@@ -6,7 +6,7 @@ import { fetchTrendingMetadata } from '../lib/trending-metadata';
 const REQUEST_TIMEOUT = 30_000;
 const STALE_TIME = 1000 * 60 * 60 * 12;
 
-export function trendingApiUrlFor(endpoint: string): string {
+function trendingApiUrlFor(endpoint: string): string {
   const baseUrl = import.meta.env.PROD
     ? '/api/trending'
     : 'http://localhost:3001/api/trending';
@@ -54,5 +54,3 @@ export function useMetadata() {
     staleTime: 1000 * 60 * 60,
   });
 }
-
-export { useTrendingByDate as useTrendingData };

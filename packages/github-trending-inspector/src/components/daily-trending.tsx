@@ -1,7 +1,7 @@
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { Database } from 'lucide-react';
 
-import { useTrendingData } from '../hooks/use-trending-data';
+import { useTrendingByDate } from '../hooks/use-trending-data';
 
 import { LanguageSection } from './language-section';
 
@@ -26,7 +26,7 @@ function EmptyState() {
 }
 
 export function DailyTrending({ date }: { date: string }) {
-  const { data: languageGroups } = useTrendingData(date);
+  const { data: languageGroups } = useTrendingByDate(date);
 
   const virtualizer = useWindowVirtualizer({
     count: languageGroups.length,

@@ -1,7 +1,12 @@
 import type { TrendingResponse } from '../../src/lib/types';
 import { fetchMonthData, fetchDateData } from '../lib/github';
-import { Logger } from '../lib/logger';
-import { ISO_DATE_REGEX, ISO_MONTH_REGEX, monthFrom } from '../lib/date';
+import { makeLog } from '../lib/logger';
+import { ISO_DATE_REGEX, ISO_MONTH_REGEX } from '../../src/lib/date';
+
+function monthFrom(date: string): string {
+  // "YYYY-MM-DD" -> "YYYY-MM"
+  return date.slice(0, 7);
+}
 
 const responseHeaders = {
   'Content-Type': 'application/json',
@@ -15,8 +20,7 @@ function jsonResponse(data: unknown, status = 200) {
 }
 
 export async function GET(request: Request) {
-  const startTime = Date.now();
-  const logger = new Logger(request);
+  const log = makeLog(request);
 
   try {
     const { pathname } = new URL(request.url);
@@ -27,53 +31,44 @@ export async function GET(request: Request) {
     }
 
     if (ISO_DATE_REGEX.test(slug)) {
-      return await handleDateRequest(slug, logger, startTime);
+      return await handleDate(slug, log);
     }
 
     if (ISO_MONTH_REGEX.test(slug)) {
-      return await handleMonthRequest(slug, logger, startTime);
+      return await handleMonth(slug, log);
     }
 
     throw new Error('Invalid endpoint. Use: YYYY-MM or YYYY-MM-DD');
   } catch (error) {
-    const message =
-      (error as { message?: unknown })?.message?.toString() ?? 'Failed to fetch data';
+    const message = (error as { message?: unknown })?.message?.toString() ?? 'Failed to fetch data';
     const status = /not found|invalid/i.test(message) ? 404 : 500;
 
-    logger.error('Request failed', error instanceof Error ? error : undefined);
-    logger.response(startTime, status);
+    log.error('request failed', error);
+    log.done(status);
 
     return jsonResponse({ error: message }, status);
   }
 }
 
-async function handleDateRequest(date: string, logger: Logger, startTime: number) {
+async function handleDate(date: string, log: ReturnType<typeof makeLog>) {
   const month = monthFrom(date);
 
-  logger.info('Fetching daily data', { date });
+  log.info('fetching daily data', { date });
 
   const repositories = await fetchDateData(month, date);
   const response: TrendingResponse = { month, repositories };
 
-  logger.response(startTime, 200, {
-    type: 'daily',
-    count: Object.keys(repositories).length,
-  });
-
+  log.done(200, { type: 'daily', count: Object.keys(repositories).length });
   return jsonResponse(response);
 }
 
-async function handleMonthRequest(month: string, logger: Logger, startTime: number) {
-  logger.info('Fetching monthly data', { month });
+async function handleMonth(month: string, log: ReturnType<typeof makeLog>) {
+  log.info('fetching monthly data', { month });
 
   const repositories = await fetchMonthData(month);
   const response: TrendingResponse = { month, repositories };
 
-  logger.response(startTime, 200, {
-    type: 'monthly',
-    count: Object.keys(repositories).length,
-  });
-
+  log.done(200, { type: 'monthly', count: Object.keys(repositories).length });
   return jsonResponse(response);
 }
 

@@ -14,7 +14,7 @@ export async function fetchTrendingMetadata(): Promise<MetadataFile> {
   return res.json() as Promise<MetadataFile>;
 }
 
-export function lastAvailableDateFromMetadata(meta: MetadataFile): string | null {
+function lastAvailableDateFromMetadata(meta: MetadataFile): string | null {
   const years = meta.years ?? {};
   const y = Object.keys(years).sort().reverse();
   for (const year of y) {

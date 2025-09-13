@@ -1,64 +1,48 @@
-interface LogEntry {
-  requestId: string;
-  method: string;
-  path: string;
-  timestamp: string;
-  level: 'info' | 'warn' | 'error';
-  message: string;
-  duration?: number;
-  status?: number;
-  error?: string;
-  data?: Record<string, unknown>;
-}
+export type LogLevel = 'info' | 'warn' | 'error';
 
-export class Logger {
-  private context: {
-    requestId: string;
-    method: string;
-    path: string;
-    timestamp: string;
+export function makeLog(request: Request) {
+  const ctx = {
+    id: Math.random().toString(36).slice(2, 9),
+    method: request.method,
+    path: new URL(request.url).pathname,
+    at: new Date().toISOString(),
+    start: Date.now(),
   };
 
-  constructor(request: Request) {
-    this.context = {
-      requestId: Math.random().toString(36).slice(2, 9),
-      method: request.method,
-      path: new URL(request.url).pathname,
-      timestamp: new Date().toISOString(),
-    };
-
-    this.info('Request started');
-  }
-
-  private log(level: LogEntry['level'], message: string, extra: Partial<LogEntry> = {}): void {
-    console.log(JSON.stringify({
-      ...this.context,
+  const write = (level: LogLevel, message: string, extra?: Record<string, unknown>) => {
+    const payload = {
+      id: ctx.id,
+      method: ctx.method,
+      path: ctx.path,
+      at: ctx.at,
       level,
       message,
-      ...extra
-    }));
-  }
+      ...(extra ?? {}),
+    };
 
-  info(message: string, data?: Record<string, unknown>): void {
-    this.log('info', message, { data });
-  }
+    if (level === 'error') {
+      console.error(JSON.stringify(payload));
+    } else if (level === 'warn') {
+      console.warn(JSON.stringify(payload));
+    } else {
+      console.log(JSON.stringify(payload));
+    }
+  };
 
-  warn(message: string, data?: Record<string, unknown>): void {
-    this.log('warn', message, { data });
-  }
-
-  error(message: string, error?: Error, data?: Record<string, unknown>): void {
-    this.log('error', message, {
-      error: error?.stack || error?.message,
-      data
-    });
-  }
-
-  response(startTime: number, status: number, data?: Record<string, unknown>): void {
-    this.log('info', 'Request completed', {
-      duration: Date.now() - startTime,
-      status,
-      data,
-    });
-  }
+  return {
+    info: (message: string, data?: Record<string, unknown>) =>
+      write('info', message, data ? { data } : undefined),
+    warn: (message: string, data?: Record<string, unknown>) =>
+      write('warn', message, data ? { data } : undefined),
+    error: (message: string, err?: unknown, data?: Record<string, unknown>) =>
+      write('error', message, {
+        error:
+          (err as { stack?: unknown })?.stack?.toString() ??
+          (err as { message?: unknown })?.message?.toString() ??
+          (err != null ? String(err) : undefined),
+        ...(data ? { data } : {}),
+      }),
+    done: (status: number, data?: Record<string, unknown>) =>
+      write('info', 'done', { status, duration: Date.now() - ctx.start, ...(data ? { data } : {}) }),
+  };
 }
