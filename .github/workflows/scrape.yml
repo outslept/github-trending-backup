@@ -31,7 +31,7 @@ jobs:
             const { readdir, writeFile, stat } = require('fs').promises;
             const { join } = require('path');
 
-            const dataRoot = join(process.cwd(), 'packages', 'github-trending-data', 'data');
+            const dataRoot = join(process.cwd(), 'packages', 'github-trending-data');
 
             async function safeReaddir(path) {
               try {
