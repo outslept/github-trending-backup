@@ -1,4 +1,4 @@
-export const GitHubLanguages = {
+export const LanguageSlugs = {
   Unknown: 'unknown',
   '1C Enterprise': '1c-enterprise',
   '2-Dimensional Array': '2-dimensional-array',
