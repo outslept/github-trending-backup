@@ -1,6 +1,6 @@
 import type { LanguageGroup, GitHubFile } from '../../src/lib/types'
 import { parseMdToLanguageGroups, dayFromFileName } from '../../src/shared/markdown'
-import { GITHUB_CONTENTS_BASE } from '../../src/shared/github.js'
+import { GITHUB_CONTENTS_BASE } from '../../src/shared/github'
 
 const GH_HEADERS = {
   'User-Agent': 'trending-inspector',

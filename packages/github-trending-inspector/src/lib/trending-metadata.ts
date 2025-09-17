@@ -1,7 +1,7 @@
 import { todayIso } from './date'
 import type { MetadataFile } from './types'
-import { lastAvailableDateFromMetadata } from '../shared/metadata.js'
-import { METADATA_URL } from '../shared/github.js'
+import { lastAvailableDateFromMetadata } from '../shared/metadata'
+import { METADATA_URL } from '../shared/github'
 
 export async function fetchTrendingMetadata (): Promise<MetadataFile> {
   const res = await fetch(METADATA_URL)
