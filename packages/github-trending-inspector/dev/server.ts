@@ -8,14 +8,14 @@ import {
   MONTH_FORMAT_REGEX,
   CORS_ORIGIN,
   DEBUG,
-} from './config.js'
+} from './config'
 import {
   fetchTrendingDate,
   fetchTrendingMonth,
   fetchTrendingMetadata,
   lastAvailableDateFromMetadata,
   toIsoToday,
-} from './sources.js'
+} from './sources'
 
 const LEVEL_COLORS = { info: 'blue', ok: 'green', warn: 'yellow', error: 'red' }
 
@@ -119,7 +119,7 @@ function handleRoot (req, res, pathname, start) {
 
 const server = http.createServer(async (req, res) => {
   const start = Date.now()
-  const url = new URL(req.url, `http://localhost:${PORT}`)
+  const url = new URL(req.url!, `http://localhost:${PORT}`)
   const { pathname } = url
 
   log('info', `${req.method} ${pathname}`)

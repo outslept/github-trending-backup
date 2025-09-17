@@ -1,12 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/trending/(.*)",
-      "destination": "/api/trending/[...slug]"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/api/trending/(.*)", "dest": "/api/trending/[...slug]" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

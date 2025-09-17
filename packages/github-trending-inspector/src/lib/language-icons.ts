@@ -19,4 +19,4 @@ export const languageIcons: Record<string, string> = {
   typescript: '/icons/typescript.svg',
   vue: '/icons/vue.svg',
   zig: '/icons/zig.svg',
-};
+}

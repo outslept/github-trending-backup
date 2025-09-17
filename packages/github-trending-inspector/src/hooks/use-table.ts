@@ -6,79 +6,80 @@ import {
   type ColumnDef,
   type SortingState,
   type VisibilityState,
-} from '@tanstack/react-table';
-import { useEffect, useMemo, useState } from 'react';
+} from '@tanstack/react-table'
+import { useEffect, useMemo, useState } from 'react'
 
-import type { Repository } from '../lib/types';
+import type { Repository } from '../lib/types'
 
-import { useMediaQuery } from './use-media-query';
+import { useMediaQuery } from './use-media-query'
 
-function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
-  if (!searchTerm) return repos;
+function filterRepos (repos: Repository[], searchTerm: string): Repository[] {
+  if (!searchTerm) return repos
 
-  const term = searchTerm.toLowerCase();
+  const term = searchTerm.toLowerCase()
   return repos.filter(
     (repo) =>
       repo.repo.toLowerCase().includes(term) ||
-      repo.desc.toLowerCase().includes(term),
-  );
+      repo.desc.toLowerCase().includes(term)
+  )
 }
 
-function calculatePaginationStats(
+function calculatePaginationStats (
   totalItems: number,
   pageIndex: number,
-  pageSize: number,
+  pageSize: number
 ) {
-  const pageCount = Math.ceil(totalItems / pageSize);
-  const firstItemOnPage = totalItems === 0 ? 0 : pageIndex * pageSize + 1;
+  const pageCount = Math.ceil(totalItems / pageSize)
+  const firstItemOnPage = totalItems === 0 ? 0 : pageIndex * pageSize + 1
   const lastItemOnPage =
-    totalItems === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, totalItems);
+    totalItems === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, totalItems)
 
   return {
     totalFilteredRows: totalItems,
     pageCount,
     firstItemOnPage,
     lastItemOnPage,
-  };
+  }
 }
 
-export function useTable(
+export function useTable (
   repos: Repository[],
-  columns: ColumnDef<Repository>[],
+  columns: ColumnDef<Repository>[]
 ) {
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  const pageSize = isMobile ? 5 : 10;
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  const pageSize = isMobile ? 5 : 10
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'rank', desc: false },
-  ]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [pageIndex, setPageIndex] = useState(0);
+  ])
+  const [columnVisibility, setColumnVisibility] =
+    useState<VisibilityState>({})
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [pageIndex, setPageIndex] = useState(0)
 
   const filteredRepos = useMemo(
     () => filterRepos(repos, globalFilter),
-    [repos, globalFilter],
-  );
+    [repos, globalFilter]
+  )
 
   const paginationStats = useMemo(
     () => calculatePaginationStats(filteredRepos.length, pageIndex, pageSize),
-    [filteredRepos.length, pageIndex, pageSize],
-  );
+    [filteredRepos.length, pageIndex, pageSize]
+  )
 
   const updateGlobalFilter = (value: string) => {
-    setGlobalFilter(value);
-    setPageIndex(0);
-  };
+    setGlobalFilter(value)
+    setPageIndex(0)
+  }
 
   useEffect(() => {
     if (
       pageIndex >= paginationStats.pageCount &&
       paginationStats.pageCount > 0
     ) {
-      setPageIndex(0);
+      setPageIndex(0)
     }
-  }, [pageIndex, paginationStats.pageCount]);
+  }, [pageIndex, paginationStats.pageCount])
 
   const pagination = {
     pageIndex,
@@ -87,7 +88,7 @@ export function useTable(
     canNextPage: pageIndex < paginationStats.pageCount - 1,
     previousPage: () => setPageIndex((prev) => prev - 1),
     nextPage: () => setPageIndex((prev) => prev + 1),
-  };
+  }
 
   const table = useReactTable({
     data: filteredRepos,
@@ -101,16 +102,15 @@ export function useTable(
       const newPagination =
         typeof updater === 'function'
           ? updater({ pageIndex, pageSize })
-          : updater;
-      setPageIndex(newPagination.pageIndex);
+          : updater
+      setPageIndex(newPagination.pageIndex)
     },
     state: {
       sorting,
       columnVisibility,
-      globalFilter: '',
       pagination: { pageIndex, pageSize },
     },
-  });
+  })
 
   return {
     table,
@@ -124,5 +124,5 @@ export function useTable(
     pagination,
     updateGlobalFilter,
     isMobile,
-  };
+  }
 }

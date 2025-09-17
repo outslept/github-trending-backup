@@ -1,13 +1,13 @@
-export type LogLevel = 'info' | 'warn' | 'error';
+export type LogLevel = 'info' | 'warn' | 'error'
 
-export function makeLog(request: Request) {
+export function makeLog (request: Request) {
   const ctx = {
     id: Math.random().toString(36).slice(2, 9),
     method: request.method,
     path: new URL(request.url).pathname,
     at: new Date().toISOString(),
     start: Date.now(),
-  };
+  }
 
   const write = (level: LogLevel, message: string, extra?: Record<string, unknown>) => {
     const payload = {
@@ -18,16 +18,16 @@ export function makeLog(request: Request) {
       level,
       message,
       ...(extra ?? {}),
-    };
+    }
 
     if (level === 'error') {
-      console.error(JSON.stringify(payload));
+      console.error(JSON.stringify(payload))
     } else if (level === 'warn') {
-      console.warn(JSON.stringify(payload));
+      console.warn(JSON.stringify(payload))
     } else {
-      console.log(JSON.stringify(payload));
+      console.log(JSON.stringify(payload))
     }
-  };
+  }
 
   return {
     info: (message: string, data?: Record<string, unknown>) =>
@@ -44,5 +44,5 @@ export function makeLog(request: Request) {
       }),
     done: (status: number, data?: Record<string, unknown>) =>
       write('info', 'done', { status, duration: Date.now() - ctx.start, ...(data ? { data } : {}) }),
-  };
+  }
 }

@@ -1,12 +1,12 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 
-import { TooltipProvider } from '../components/ui/tooltip';
+import { TooltipProvider } from '../components/ui/tooltip'
 
-import { ErrorProvider } from './error';
-import { QueryProvider } from './query';
-import { ThemeProvider } from './theme';
+import { ErrorProvider } from './error'
+import { QueryProvider } from './query'
+import { ThemeProvider } from './theme'
 
-export function DesignSystemProvider({ children }: { children: ReactNode }) {
+export function DesignSystemProvider ({ children }: { children: ReactNode }) {
   return (
     <ErrorProvider>
       <QueryProvider>
@@ -15,5 +15,5 @@ export function DesignSystemProvider({ children }: { children: ReactNode }) {
         </ThemeProvider>
       </QueryProvider>
     </ErrorProvider>
-  );
+  )
 }
