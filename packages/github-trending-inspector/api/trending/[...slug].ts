@@ -1,7 +1,7 @@
-import type { TrendingResponse } from '../../src/lib/types'
-import { fetchMonthData, fetchDateData } from '../lib/github'
-import { makeLog } from '../lib/logger'
-import { ISO_DATE_REGEX, ISO_MONTH_REGEX } from '../../src/lib/date'
+import type { TrendingResponse } from '../../src/lib/types.js'
+import { fetchMonthData, fetchDateData } from '../lib/github.js'
+import { makeLog } from '../lib/logger.js'
+import { ISO_DATE_REGEX, ISO_MONTH_REGEX } from '../../src/lib/date.js'
 
 function monthFrom (date: string): string {
   // "YYYY-MM-DD" -> "YYYY-MM"
