@@ -1,0 +1,67 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    "group:monorepos"
+  ],
+  "dependencyDashboard": true,
+  "prConcurrentLimit": 8,
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "groupName": "dev deps (minor/patch)"
+    },
+    {
+      "matchPackageNames": [
+        "@tanstack/react-query",
+        "@tanstack/react-query-devtools",
+        "@tanstack/react-router",
+        "@tanstack/react-table",
+        "@tanstack/react-virtual",
+        "@tanstack/router-plugin"
+      ],
+      "groupName": "tanstack suite"
+    },
+    {
+      "matchPackageNames": ["vite", "@vitejs/plugin-react-swc"],
+      "groupName": "vite"
+    },
+    {
+      "matchPackageNames": ["eslint", "neostandard", "@types/node", "typescript"],
+      "groupName": "tooling (ts/eslint)"
+    },
+    {
+      "matchPackageNames": [
+        "tailwindcss",
+        "@tailwindcss/vite",
+        "tailwind-merge",
+        "tw-animate-css",
+        "radix-ui"
+      ],
+      "groupName": "ui stack"
+    },
+    {
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom",
+        "react-error-boundary",
+        "react-day-picker",
+        "lucide-react",
+        "clsx",
+        "class-variance-authority",
+        "next-themes"
+      ],
+      "groupName": "react ecosystem"
+    }
+  ]
+}
