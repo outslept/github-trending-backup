@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.18.0",
   "type": "module",
   "scripts": {
     "lint:check": "eslint .",
