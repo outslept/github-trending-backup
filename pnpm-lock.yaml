@@ -18,7 +18,7 @@ importers:
         specifier: ^0.12.2
         version: 0.12.2(@typescript-eslint/utils@8.38.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       typescript:
-        specifier: ^5.8.2
+        specifier: ^5.8.3
         version: 5.8.3
 
   packages/github-trending-inspector:
@@ -94,7 +94,7 @@ importers:
         specifier: ^1.2.9
         version: 1.3.4
       typescript:
-        specifier: ^5.8.2
+        specifier: ^5.8.3
         version: 5.8.3
       vite:
         specifier: ^6.3.5
