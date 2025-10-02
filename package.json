@@ -9,7 +9,7 @@
     "format:fix": "prettier --write ."
   },
   "devDependencies": {
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.35",
     "eslint": "^9.22.0",
     "neostandard": "^0.12.2",
     "typescript": "^5.8.2"
