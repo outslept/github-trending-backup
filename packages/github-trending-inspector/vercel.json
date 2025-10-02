@@ -1,7 +1,6 @@
 {
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/api/trending/(.*)", "dest": "/api/trending/[...slug]" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/api/trending/(.*)", "dest": "/api/trending/[...slug]" }
   ]
 }
