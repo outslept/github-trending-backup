@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
-    "@tanstack/react-query": "^5.76.1",
-    "@tanstack/react-query-devtools": "^5.76.1",
-    "@tanstack/react-router": "^1.120.18",
+    "@tanstack/react-query": "^5.90.2",
+    "@tanstack/react-query-devtools": "^5.90.2",
+    "@tanstack/react-router": "^1.132.31",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.9",
     "class-variance-authority": "^0.7.1",
@@ -29,7 +29,7 @@
     "tailwindcss": "^4"
   },
   "devDependencies": {
-    "@tanstack/router-plugin": "^1.120.18",
+    "@tanstack/router-plugin": "^1.132.31",
     "@types/react": "^19.0.14",
     "@types/react-dom": "^19.0.6",
     "@vitejs/plugin-react-swc": "^3.9.0",
