@@ -1,57 +1,43 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Suspense } from 'react'
-
 import { AppSidebar } from '../components/app-sidebar'
 import { DailyTrending } from '../components/daily-trending'
 import { TrendingSkeleton } from '../components/skeletons'
 import { SidebarInset, SidebarProvider } from '../components/ui/sidebar'
 import { isValidIsoDate } from '../lib/date'
-import {
-  fetchLatestAvailableDate,
-  fetchTrendingMetadata,
-  isDateAvailableInMetadata,
-} from '../lib/trending-metadata'
+import { fetchTrendingMetadata, isDateAvailableInMetadata } from '../lib/trending-metadata'
+import { lastAvailableDateFromMetadata } from '../shared/metadata'
 
 export const Route = createFileRoute('/$date')({
   validateSearch: (search) => search,
   beforeLoad: async ({ params }) => {
     const { date } = params
-
     if (!isValidIsoDate(date)) {
-      throw redirect({
-        to: '/$date',
-        params: { date: await fetchLatestAvailableDate() },
-      })
+      return
     }
-
     try {
       const meta = await fetchTrendingMetadata()
-      const ok = isDateAvailableInMetadata(meta, date)
-      if (!ok) {
-        throw redirect({
-          to: '/$date',
-          params: { date: await fetchLatestAvailableDate() },
-        })
+      if (!isDateAvailableInMetadata(meta, date)) {
+        const latest = lastAvailableDateFromMetadata(meta)
+        if (latest && latest !== date) {
+          throw redirect({
+            to: '/$date',
+            params: { date: latest },
+            replace: true,
+          })
+        }
       }
-    } catch {
-      throw redirect({
-        to: '/$date',
-        params: { date: await fetchLatestAvailableDate() },
-      })
-    }
+    } catch {}
   },
   component: DatePage,
 })
 
-function DatePage () {
+function DatePage() {
   const { date } = Route.useParams()
-
   return (
     <SidebarProvider
       defaultOpen
-      style={
-        { '--sidebar-width': '18rem', '--sidebar-width-mobile': '18rem' } as React.CSSProperties
-      }
+      style={{ '--sidebar-width': '18rem', '--sidebar-width-mobile': '18rem' } as React.CSSProperties}
     >
       <AppSidebar selectedDate={new Date(date)} />
       <SidebarInset>
