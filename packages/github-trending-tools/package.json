@@ -1,7 +1,7 @@
 {
   "name": "github-trending-tools",
   "version": "0.0.1",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.18.0",
   "description": "GitHub trending repositories scraper",
   "type": "module",
   "keywords": [
