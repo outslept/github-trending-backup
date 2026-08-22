@@ -763,3 +763,5 @@ export const LanguageSlugs = {
   ZIL: 'zil',
   Zimpl: 'zimpl',
 };
+
+export type GitHubLanguage = keyof typeof LanguageSlugs;

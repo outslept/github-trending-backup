@@ -1,6 +1,7 @@
 import process from 'node:process';
+import { scrapeTrendingForAll } from './scrape.js';
 import { renderMarkdownReport, resolveOutputPath, saveReport } from './report.js';
-import { scrapeTrendingForAll, type GitHubLanguage } from './scrape.js';
+import type { GitHubLanguage } from './github-languages.js';
 
 const WATCHLIST: GitHubLanguage[] = [
   'C',
@@ -24,7 +25,7 @@ const WATCHLIST: GitHubLanguage[] = [
   'Zig',
 ];
 
-async function run() {
+async function main() {
   const today = new Date().toISOString().slice(0, 10);
   console.log(`info: starting github trending scraper for ${today}`);
 
@@ -35,17 +36,17 @@ async function run() {
   saveReport(markdown, outputPath);
   console.log(`info: saved report to ${outputPath}`);
 
-  const successful = reports.filter((r) => r.success);
-  const failed = reports.filter((r) => !r.success);
+  const successful = reports.filter((report) => report.success);
+  const failed = reports.filter((report) => !report.success);
   console.log(`info: completed ${successful.length}/${reports.length} languages`);
 
-  if (failed.length) {
-    console.error(`error: failed languages: ${failed.map((r) => r.language).join(', ')}`);
-    process.exit(1);
+  if (failed.length > 0) {
+    console.error(`error: failed languages: ${failed.map((report) => report.language).join(', ')}`);
+    process.exitCode = 1;
   }
 }
 
-run().catch((error) => {
+main().catch((error) => {
   console.error(`error: ${error instanceof Error ? error.message : String(error)}`);
-  process.exit(1);
+  process.exitCode = 1;
 });

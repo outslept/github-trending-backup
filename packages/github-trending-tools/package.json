@@ -1,30 +1,33 @@
 {
   "name": "github-trending-tools",
   "version": "0.0.1",
-  "packageManager": "pnpm@10.18.0",
   "description": "GitHub trending repositories scraper",
-  "type": "module",
   "keywords": [
     "github",
-    "trending",
+    "repositories",
     "scraper",
-    "repositories"
+    "trending"
   ],
   "files": [
     "dist"
   ],
+  "type": "module",
   "scripts": {
-    "prebuild": "rm -rf dist",
-    "build": "tsc",
+    "build": "tsdown src/index.ts",
+    "dev": "tsdown src/index.ts --watch",
+    "typecheck": "tsc --noEmit",
+    "prestart": "nr build",
     "start": "node dist/index.js"
   },
   "dependencies": {
     "node-html-parser": "^7.0.1"
   },
   "devDependencies": {
-    "@types/node": "^22.15.35"
+    "@types/node": "^22.15.35",
+    "tsdown": "^0.22.14"
   },
   "engines": {
     "node": ">=22.20.0"
-  }
+  },
+  "packageManager": "pnpm@10.18.0"
 }

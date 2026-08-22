@@ -40,15 +40,7 @@ const languages: GitHubLanguage[] = [
 ];
 ```
 
-700+ languages supported. Full list in `constant.ts`.
-
-## Development
-
-```bash
-cd github-trending-tools
-npm install
-npm start
-```
+700+ languages supported. Full list in [src/github-languages.ts](./src/github-languages.ts).
 
 ## Disclaimer
 
