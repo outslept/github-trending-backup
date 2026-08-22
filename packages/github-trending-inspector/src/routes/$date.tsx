@@ -1,6 +1,6 @@
 import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
 import { Suspense, useMemo, useState } from 'react'
-import { CalendarDays, ChevronLeft, ChevronRight, Search } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { Container } from '../components/container'
