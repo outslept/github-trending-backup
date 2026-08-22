@@ -20,7 +20,7 @@ export interface LanguageReport {
 }
 
 export interface TrendingMonthData {
-  month: string;  // "YYYY-MM"
+  month: string; // "YYYY-MM"
   days: Record<string, LanguageGroup[]>; // key: "DD"
 }
 
