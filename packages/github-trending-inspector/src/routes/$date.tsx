@@ -158,37 +158,20 @@ function DatePageContent({ date }: { date: string }) {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Container className="pt-6">
-        <div className="flex flex-col gap-4 pb-4 border-b border-border/40 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2.5">
-            <img src="/daily.png" alt="trending inspector" className="size-12" />
+        <div className="flex items-start gap-4">
+          <img src="/daily.png" alt="trending inspector" className="size-40 shrink-0" />
+
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col items-start">
+              <p className="text-sm font-semibold leading-tight">Github Daily Trending</p>
+              <p className="text-xs text-muted-foreground">Showing results for {formatHumanDate(date)}</p>
+            </div>
+
+            <div className="flex flex-col items-start gap-1">
+              <p className="text-xs text-muted-foreground">Pick a date</p>
+              <DatePicker date={date} onDateChange={navigateWithScroll} />
+            </div>
           </div>
-
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="search repositories..."
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              className="h-9 w-full pl-10 pr-4 text-sm"
-            />
-          </div>
-
-          <DatePicker date={date} onDateChange={navigateWithScroll} />
-        </div>
-
-        <div className="flex flex-col gap-2 pt-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">
-            {totalRepos} repos · {totalLanguages} langs
-          </p>
-          {latestDate && date !== latestDate && (
-            <Button
-              variant="link"
-              className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground"
-              onClick={() => navigateWithScroll(latestDate)}
-            >
-              show latest data →
-            </Button>
-          )}
         </div>
       </Container>
 
