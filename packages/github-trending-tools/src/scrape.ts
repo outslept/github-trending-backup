@@ -13,14 +13,6 @@ const RETRY_LIMIT = 5;
 const BACKOFF_BETWEEN_RETRIES_MS = 5_000;
 const PAUSE_BETWEEN_LANGUAGES_MS = 5_000;
 
-class HttpError extends Error {
-  retryable: boolean;
-  constructor(message: string, retryable: boolean) {
-    super(message);
-    this.retryable = retryable;
-  }
-}
-
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -73,7 +65,7 @@ function parseRepositoryRow(row: HTMLElement): Repository | null {
   const forksElement = row.querySelector('a[href*="/network/members"]');
 
   return {
-    rank: 0, // будет присвоено позже
+    rank: 0,
     repo: href.replace(/^\//, '').replace(/\s+/g, ''),
     desc:
       row.querySelector('p')?.text.trim().replace(/\s+/g, ' ') ??
@@ -96,11 +88,7 @@ function extractRepositoriesFrom(html: string): Repository[] {
 }
 
 async function fetchHtmlWithRetry(url: string): Promise<string> {
-  let lastError: unknown;
-
-  for (let attempt = 0; attempt < RETRY_LIMIT; attempt++) {
-    if (attempt > 0) await delay(BACKOFF_BETWEEN_RETRIES_MS);
-
+  for (let attempt = 1; attempt <= RETRY_LIMIT; attempt++) {
     try {
       const response = await fetch(url, {
         headers: DEFAULT_HEADERS,
@@ -108,23 +96,20 @@ async function fetchHtmlWithRetry(url: string): Promise<string> {
       });
 
       if (!response.ok) {
-        const retryable = response.status === 429 || response.status >= 500;
-        throw new HttpError(`HTTP ${response.status} ${response.statusText}`, retryable);
+        throw new Error(`HTTP ${response.status} ${response.statusText}`);
       }
 
       return await response.text();
     } catch (error) {
-      if (error instanceof HttpError && !error.retryable) throw error;
-      lastError = error;
-      console.warn(
-        `warn: attempt ${attempt + 1}/${RETRY_LIMIT} failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      console.warn(`warn: attempt ${attempt}/${RETRY_LIMIT} failed}`);
+
+      if (attempt === RETRY_LIMIT) throw error;
+
+      await delay(BACKOFF_BETWEEN_RETRIES_MS);
     }
   }
 
-  const detail =
-    lastError instanceof Error ? lastError.message : String(lastError ?? 'Unknown error');
-  throw new Error(`Failed to fetch ${url} after ${RETRY_LIMIT} attempts. Last error: ${detail}`);
+  throw new Error(`failed to fetch ${url}`);
 }
 
 async function scrapeTrendingForLanguage(language: GitHubLanguage) {
@@ -136,7 +121,7 @@ async function scrapeTrendingForLanguage(language: GitHubLanguage) {
     const repositories = extractRepositoriesFrom(html);
 
     if (repositories.length === 0) {
-      throw new Error('No repository rows found in HTML');
+      throw new Error('no repository rows found in HTML');
     }
 
     console.log(`info: found ${repositories.length} repositories for ${language}`);
