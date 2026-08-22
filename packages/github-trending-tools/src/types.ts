@@ -12,12 +12,19 @@ export interface LanguageGroup {
   repos: Repository[];
 }
 
+export interface LanguageReport {
+  language: string;
+  repositories: Repository[];
+  success: boolean;
+  error?: string;
+}
+
 export interface TrendingMonthData {
-  month: string;           // "YYYY-MM"
-  days: Record<string, LanguageGroup[]>; // "DD" -> группы
+  month: string;  // "YYYY-MM"
+  days: Record<string, LanguageGroup[]>; // key: "DD"
 }
 
 export interface MetadataFile {
-  lastUpdated: string;     // "YYYY-MM-DD"
+  lastUpdated: string; // "YYYY-MM-DD"
   years: Record<string, Record<string, string[]>>; // year -> month -> days
 }

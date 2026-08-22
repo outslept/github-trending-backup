@@ -21,14 +21,17 @@ function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
   )
 }
 
-export function useTable(repos: Repository[], columns: ColumnDef<Repository>[]) {
+export function useTable(
+  repos: Repository[],
+  columns: ColumnDef<Repository>[],
+  globalFilter: string
+) {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const pageSize = isMobile ? 5 : 10
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'rank', desc: false },
   ])
-  const [globalFilter, setGlobalFilter] = useState('')
 
   const filteredRepos = useMemo(
     () => filterRepos(repos, globalFilter),
@@ -38,10 +41,11 @@ export function useTable(repos: Repository[], columns: ColumnDef<Repository>[]) 
   const table = useReactTable({
     data: filteredRepos,
     columns,
+    state: { sorting },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
     initialState: { pagination: { pageSize } },
   })
 
@@ -54,14 +58,8 @@ export function useTable(repos: Repository[], columns: ColumnDef<Repository>[]) 
 
   return {
     table,
-    state: {
-      globalFilter,
-      sorting,
-      pagination: table.getState().pagination,
-    },
     paginationStats: {
       totalFilteredRows: rowCount,
-      pageCount,
       firstItemOnPage,
       lastItemOnPage,
     },
@@ -73,9 +71,5 @@ export function useTable(repos: Repository[], columns: ColumnDef<Repository>[]) 
       previousPage: () => table.previousPage(),
       nextPage: () => table.nextPage(),
     },
-    updateGlobalFilter: (value: string) => {
-      setGlobalFilter(value)
-    },
-    isMobile,
   }
 }

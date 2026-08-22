@@ -1,7 +1,7 @@
 import process from 'node:process';
+import { type GitHubLanguage } from './github-languages.js';
 import { scrapeTrendingForAll } from './scrape.js';
-import { renderMarkdownReport, resolveOutputPath, saveReport } from './report.js';
-import type { GitHubLanguage } from './github-languages.js';
+import { saveMonthData, updateMetadata } from './storage.js';
 
 const WATCHLIST: GitHubLanguage[] = [
   'C',
@@ -25,28 +25,25 @@ const WATCHLIST: GitHubLanguage[] = [
   'Zig',
 ];
 
-async function main() {
+async function main(): Promise<void> {
   const today = new Date().toISOString().slice(0, 10);
+  const month = today.slice(0, 7);
+  const day = today.slice(8);
+
   console.log(`info: starting github trending scraper for ${today}`);
 
-  const reports = await scrapeTrendingForAll(WATCHLIST);
+  const groups = await scrapeTrendingForAll(WATCHLIST);
 
-  const outputPath = resolveOutputPath(today);
-  const markdown = renderMarkdownReport(reports, today);
-  saveReport(markdown, outputPath);
-  console.log(`info: saved report to ${outputPath}`);
+  saveMonthData(month, groups);
+  updateMetadata(month, day);
 
-  const successful = reports.filter((report) => report.success);
-  const failed = reports.filter((report) => !report.success);
-  console.log(`info: completed ${successful.length}/${reports.length} languages`);
+  console.log(`info: saved data for ${month}/${day} (${groups.length} languages)`);
+  console.log(`info: completed`);
 
-  if (failed.length > 0) {
-    console.error(`error: failed languages: ${failed.map((report) => report.language).join(', ')}`);
+  if (groups.length < WATCHLIST.length) {
+    console.error(`error: failed to scrape ${WATCHLIST.length - groups.length} languages`);
     process.exitCode = 1;
   }
 }
 
-main().catch((error) => {
-  console.error(`error: ${error instanceof Error ? error.message : String(error)}`);
-  process.exitCode = 1;
-});
+main()

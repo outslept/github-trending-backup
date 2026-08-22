@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import { Button } from '../components/ui/button'
 
-export function ErrorProvider ({ children }: { children: ReactNode }) {
+export function ErrorProvider({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary
       FallbackComponent={({ error, resetErrorBoundary }) => {

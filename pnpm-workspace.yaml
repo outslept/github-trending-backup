@@ -1,2 +1,12 @@
 packages:
   - packages/*
+
+dedupePeers: true
+
+ignoreDepScripts: true
+
+ignoreWorkspaceRootCheck: true
+
+minimumReleaseAgeExcludePrune: true
+
+shellEmulator: true

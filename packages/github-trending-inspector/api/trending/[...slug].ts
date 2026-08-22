@@ -1,9 +1,8 @@
-import type { TrendingResponse } from '../../src/lib/types.js'
 import { fetchMonthData, fetchDateData } from '../lib/github.js'
 import { makeLog } from '../lib/logger.js'
 import { ISO_DATE_REGEX, ISO_MONTH_REGEX } from '../../src/lib/date.js'
 
-function monthFrom (date: string): string {
+function monthFrom(date: string): string {
   // "YYYY-MM-DD" -> "YYYY-MM"
   return date.slice(0, 7)
 }
@@ -16,11 +15,11 @@ const responseHeaders = {
   'Cache-Control': 'public, max-age=300, s-maxage=600',
 }
 
-function jsonResponse (data: unknown, status = 200) {
+function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: responseHeaders })
 }
 
-export async function GET (request: Request) {
+export async function GET(request: Request) {
   const log = makeLog(request)
 
   try {
@@ -51,28 +50,28 @@ export async function GET (request: Request) {
   }
 }
 
-async function handleDate (date: string, log: ReturnType<typeof makeLog>) {
+async function handleDate(date: string, log: ReturnType<typeof makeLog>) {
   const month = monthFrom(date)
 
   log.info('fetching daily data', { date })
 
   const repositories = await fetchDateData(month, date)
-  const response: TrendingResponse = { month, repositories }
+  const response = { month, repositories }
 
   log.done(200, { type: 'daily', count: Object.keys(repositories).length })
   return jsonResponse(response)
 }
 
-async function handleMonth (month: string, log: ReturnType<typeof makeLog>) {
+async function handleMonth(month: string, log: ReturnType<typeof makeLog>) {
   log.info('fetching monthly data', { month })
 
   const repositories = await fetchMonthData(month)
-  const response: TrendingResponse = { month, repositories }
+  const response = { month, repositories }
 
   log.done(200, { type: 'monthly', count: Object.keys(repositories).length })
   return jsonResponse(response)
 }
 
-export function OPTIONS () {
+export function OPTIONS() {
   return new Response(null, { status: 200, headers: responseHeaders })
 }

@@ -1,29 +1,28 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { formatNumber } from '../lib/format'
-import { cn } from '../lib/utils'
 
 interface PaginationStats {
-  totalFilteredRows: number;
-  firstItemOnPage: number;
-  lastItemOnPage: number;
+  totalFilteredRows: number
+  firstItemOnPage: number
+  lastItemOnPage: number
 }
 
 interface PaginationControls {
-  pageIndex: number;
-  pageCount: number;
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  previousPage: () => void;
-  nextPage: () => void;
+  pageIndex: number
+  pageCount: number
+  canPreviousPage: boolean
+  canNextPage: boolean
+  previousPage: () => void
+  nextPage: () => void
 }
 
 interface TablePaginationProps {
-  stats: PaginationStats;
-  pagination: PaginationControls;
+  stats: PaginationStats
+  pagination: PaginationControls
 }
 
-export function TablePagination ({ stats, pagination }: TablePaginationProps) {
+export function TablePagination({ stats, pagination }: TablePaginationProps) {
   const { totalFilteredRows, firstItemOnPage, lastItemOnPage } = stats
   const {
     pageIndex,
@@ -35,57 +34,47 @@ export function TablePagination ({ stats, pagination }: TablePaginationProps) {
   } = pagination
 
   return (
-    <div className='flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-border/40 bg-muted/10'>
-      <div className='text-sm text-muted-foreground tracking-tight'>
+    <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
+      <div className="text-sm tracking-tight text-muted-foreground">
         {totalFilteredRows === 0
-          ? 'No repositories found'
+          ? 'no repositories found'
           : (
             <>
-              Showing <span className='font-medium text-foreground'>{formatNumber(firstItemOnPage)}</span> to{' '}
-              <span className='font-medium text-foreground'>{formatNumber(lastItemOnPage)}</span> of{' '}
-              <span className='font-medium text-foreground'>{formatNumber(totalFilteredRows)}</span> repositories
+              showing <span className="font-medium text-foreground">{formatNumber(firstItemOnPage)}</span> to{' '}
+              <span className="font-medium text-foreground">{formatNumber(lastItemOnPage)}</span> of{' '}
+              <span className="font-medium text-foreground">{formatNumber(totalFilteredRows)}</span> repositories
             </>
-            )}
+          )}
       </div>
 
       {pageCount > 1 && (
-        <div className='flex items-center gap-2'>
-          <div className='flex items-center gap-1 text-sm text-muted-foreground tracking-tight'>
-            <span>Page</span>
-            <span className='font-medium text-foreground'>{pageIndex + 1}</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 text-sm tracking-tight text-muted-foreground">
+            <span>page</span>
+            <span className="font-medium text-foreground">{pageIndex + 1}</span>
             <span>of</span>
-            <span className='font-medium text-foreground'>{pageCount}</span>
+            <span className="font-medium text-foreground">{pageCount}</span>
           </div>
 
-          <div className='flex items-center gap-1 ml-2'>
+          <div className="ml-2 flex items-center gap-1">
             <button
-              type='button'
-              aria-label='Previous page'
+              type="button"
+              aria-label="previous page"
               onClick={previousPage}
               disabled={!canPreviousPage}
-              className={cn(
-                'size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out',
-                !canPreviousPage
-                  ? 'text-muted-foreground/30 cursor-not-allowed'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'
-              )}
+              className="flex items-center justify-center size-8 text-muted-foreground border border-border/60 rounded-lg transition-colors hover:bg-muted/60 hover:text-foreground disabled:cursor-not-allowed disabled:text-muted-foreground/30 disabled:hover:bg-transparent"
             >
-              <ChevronLeft className='size-4' />
+              <ChevronLeft className="size-4" />
             </button>
 
             <button
-              type='button'
-              aria-label='Next page'
+              type="button"
+              aria-label="next page"
               onClick={nextPage}
               disabled={!canNextPage}
-              className={cn(
-                'size-8 flex items-center justify-center rounded-lg border border-border/60 transition-all duration-200 ease-out',
-                !canNextPage
-                  ? 'text-muted-foreground/30 cursor-not-allowed'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 hover:border-border hover:scale-105 active:scale-95'
-              )}
+              className="flex items-center justify-center size-8 text-muted-foreground border border-border/60 rounded-lg transition-colors hover:bg-muted/60 hover:text-foreground disabled:cursor-not-allowed disabled:text-muted-foreground/30 disabled:hover:bg-transparent"
             >
-              <ChevronRight className='size-4' />
+              <ChevronRight className="size-4" />
             </button>
           </div>
         </div>

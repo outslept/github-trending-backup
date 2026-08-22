@@ -5,7 +5,9 @@ import { createRoot } from 'react-dom/client'
 import { DesignSystemProvider } from './providers'
 import { routeTree } from './routeTree.gen'
 import './styles.css'
-import './fonts.css'
+
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
 
 const router = createRouter({ routeTree })
 

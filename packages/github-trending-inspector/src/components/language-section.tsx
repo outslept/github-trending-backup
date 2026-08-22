@@ -7,17 +7,23 @@ import { buildRepoColumns } from './table-columns'
 import { TableHeader } from './table-header'
 import { TablePagination } from './table-pagination'
 import { DesktopView, MobileView } from './table-views'
-import { ScrollArea, ScrollBar } from './ui/scroll-area'
 
 const MOBILE_BREAKPOINT = '(max-width: 767px)'
-const MIN_TABLE_WIDTH = 767
 
 const columns = buildRepoColumns()
 
-export function LanguageSection ({ group }: { group: LanguageGroup }) {
+interface LanguageSectionProps {
+  group: LanguageGroup
+  globalFilter: string
+}
+
+export function LanguageSection({ group, globalFilter }: LanguageSectionProps) {
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT)
-  const { table, state, paginationStats, pagination, updateGlobalFilter } =
-    useTable(group.repos, columns)
+  const { table, paginationStats, pagination } = useTable(
+    group.repos,
+    columns,
+    globalFilter
+  )
 
   const sectionId = slugify(group.language)
   const tableRows = table.getRowModel().rows
@@ -25,29 +31,15 @@ export function LanguageSection ({ group }: { group: LanguageGroup }) {
   return (
     <section
       id={sectionId}
-      className='border border-border/60 rounded-xl bg-background shadow-sm hover:shadow-md transition-shadow duration-300'
+      className="mb-6 pb-6 border-b border-border/40 last:mb-0 last:pb-0 last:border-b-0"
     >
-      <TableHeader
-        language={group.language}
-        repoCount={group.repos.length}
-        globalFilter={state.globalFilter}
-        onFilterChange={updateGlobalFilter}
-      />
+      <TableHeader language={group.language} repoCount={group.repos.length} />
 
-      <div className='overflow-hidden'>
-        {isMobile
-          ? (
-            <MobileView rows={tableRows} />
-            )
-          : (
-            <ScrollArea className='w-full'>
-              <div style={{ minWidth: `${MIN_TABLE_WIDTH}px` }}>
-                <DesktopView table={table} />
-              </div>
-              <ScrollBar orientation='horizontal' />
-            </ScrollArea>
-            )}
-      </div>
+      {isMobile ? (
+        <MobileView rows={tableRows} />
+      ) : (
+        <DesktopView table={table} />
+      )}
 
       <TablePagination stats={paginationStats} pagination={pagination} />
     </section>

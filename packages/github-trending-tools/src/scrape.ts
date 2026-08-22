@@ -1,22 +1,6 @@
 import { parse, type HTMLElement } from 'node-html-parser';
 import { LanguageSlugs, type GitHubLanguage } from './github-languages.js';
-
-export interface TrendingRepo {
-  rank: number;
-  title: string;
-  url: string;
-  description: string;
-  stars: number | null;
-  forks: number | null;
-  todayStars: number | null;
-}
-
-export interface LanguageReport {
-  language: GitHubLanguage;
-  repositories: TrendingRepo[];
-  success: boolean;
-  error?: string;
-}
+import type { LanguageGroup, Repository } from './types.js';
 
 const ROW_SELECTOR = 'article.Box-row, .Box-row';
 const DEFAULT_HEADERS = {
@@ -31,22 +15,21 @@ const PAUSE_BETWEEN_LANGUAGES_MS = 5_000;
 
 class HttpError extends Error {
   retryable: boolean;
-
   constructor(message: string, retryable: boolean) {
     super(message);
     this.retryable = retryable;
   }
 }
 
-function delay(ms: number) {
+function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function buildTrendingUrl(language: GitHubLanguage) {
+function buildTrendingUrl(language: GitHubLanguage): string {
   return `https://github.com/trending/${LanguageSlugs[language]}`;
-} 
+}
 
-function parseNumber(value: string | null | undefined) {
+function parseNumber(value: string | null | undefined): number | null {
   if (!value) return null;
   const trimmed = value.trim();
   if (!trimmed || trimmed === '—' || trimmed === '-') return null;
@@ -70,7 +53,7 @@ function parseNumber(value: string | null | undefined) {
   return Math.round(number * multiplier);
 }
 
-function parseTodayStars(row: HTMLElement) {
+function parseTodayStars(row: HTMLElement): number | null {
   const starText = Array.from(row.querySelectorAll('span'))
     .map((span) => span.text.trim())
     .find((text) => /stars?\s+today/i.test(text));
@@ -81,42 +64,38 @@ function parseTodayStars(row: HTMLElement) {
   return match ? parseNumber(match[1]) : null;
 }
 
-function parseRepositoryRow(row: HTMLElement) {
+function parseRepositoryRow(row: HTMLElement): Repository | null {
   const link = row.querySelector('h2 a');
   const href = link?.getAttribute('href');
   if (!href) return null;
 
-  const description =
-    row.querySelector('p')?.text.trim().replace(/\s+/g, ' ') ?? 'No description';
-
   const starsElement = row.querySelector('a[href*="/stargazers"]');
   const forksElement = row.querySelector('a[href*="/network/members"]');
 
-  const stars = parseNumber(starsElement?.text.trim());
-  const forks = parseNumber(forksElement?.text.trim());
-
   return {
-    title: href.replace(/^\//, '').replace(/\s+/g, ''),
-    url: `https://github.com${href}`,
-    description,
-    stars,
-    forks,
-    todayStars: parseTodayStars(row),
+    rank: 0, // будет присвоено позже
+    repo: href.replace(/^\//, '').replace(/\s+/g, ''),
+    desc:
+      row.querySelector('p')?.text.trim().replace(/\s+/g, ' ') ??
+      'No description',
+    stars: parseNumber(starsElement?.text.trim()),
+    forks: parseNumber(forksElement?.text.trim()),
+    today: parseTodayStars(row),
   };
 }
 
-function extractRepositoriesFrom(html: string) {
+function extractRepositoriesFrom(html: string): Repository[] {
   const root = parse(html);
   const rows = root.querySelectorAll(ROW_SELECTOR);
 
   const parsedRows = rows
     .map(parseRepositoryRow)
-    .filter((row): row is Omit<TrendingRepo, 'rank'> => row !== null);
+    .filter((row): row is Repository => row !== null);
 
   return parsedRows.map((row, index) => ({ ...row, rank: index + 1 }));
 }
 
-async function fetchHtmlWithRetry(url: string) {
+async function fetchHtmlWithRetry(url: string): Promise<string> {
   let lastError: unknown;
 
   for (let attempt = 0; attempt < RETRY_LIMIT; attempt++) {
@@ -136,7 +115,6 @@ async function fetchHtmlWithRetry(url: string) {
       return await response.text();
     } catch (error) {
       if (error instanceof HttpError && !error.retryable) throw error;
-
       lastError = error;
       console.warn(
         `warn: attempt ${attempt + 1}/${RETRY_LIMIT} failed: ${error instanceof Error ? error.message : String(error)}`,
@@ -162,26 +140,26 @@ async function scrapeTrendingForLanguage(language: GitHubLanguage) {
     }
 
     console.log(`info: found ${repositories.length} repositories for ${language}`);
-
-    return { language, repositories, success: true };
+    return { language: language as string, repositories, success: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`error: failed to scrape ${language}: ${message}`);
-    return { language, repositories: [], success: false, error: message };
+    return { language: language as string, repositories: [], success: false, error: message };
   } finally {
     await delay(PAUSE_BETWEEN_LANGUAGES_MS);
   }
 }
 
-export async function scrapeTrendingForAll(languages: GitHubLanguage[]) {
+export async function scrapeTrendingForAll(languages: GitHubLanguage[]): Promise<LanguageGroup[]> {
   console.log(`info: starting scraper for ${languages.length} languages`);
-  const reports: LanguageReport[] = [];
+  const groups: LanguageGroup[] = [];
 
-  for (const [index, language] of languages.entries()) {
+  for (const language of languages) {
     const report = await scrapeTrendingForLanguage(language);
-    reports.push(report);
-    console.log(`info: progress ${index + 1}/${languages.length}`);
+    if (report.success) {
+      groups.push({ language: report.language, repos: report.repositories });
+    }
   }
 
-  return reports;
+  return groups;
 }

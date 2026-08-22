@@ -11,22 +11,40 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          router: ['@tanstack/react-router'],
-          query: ['@tanstack/react-query'],
-          table: ['@tanstack/react-table', '@tanstack/react-virtual'],
-          calendar: ['react-day-picker'],
-          radix: ['radix-ui'],
-          ui: ['class-variance-authority', 'clsx', 'tailwind-merge'],
-          icons: ['lucide-react'],
-          themes: ['next-themes'],
-          utils: ['react-error-boundary'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+              return 'react';
+            }
+            if (id.includes('@tanstack')) {
+              return 'tanstack';
+            }
+            if (id.includes('@base-ui') || id.includes('base-ui')) {
+              return 'base-ui';
+            }
+            if (id.includes('react-day-picker') || id.includes('date-fns')) {
+              return 'date-picker';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            return 'vendor';
+          }
+          return undefined;
         },
       },
     },
   },
-})
+});
