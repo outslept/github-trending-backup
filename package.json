@@ -1,17 +1,17 @@
 {
   "name": "root",
-  "packageManager": "pnpm@10.18.0",
   "type": "module",
   "scripts": {
-    "lint:check": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "devDependencies": {
     "@types/node": "^22.15.35",
-    "eslint": "^9.22.0",
-    "neostandard": "^0.12.2",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0",
     "typescript": "^5.8.3"
-  }
+  },
+  "packageManager": "pnpm@10.18.0"
 }
