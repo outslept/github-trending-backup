@@ -5,18 +5,15 @@ import {
   useReactTable,
   type ColumnDef,
   type SortingState,
-  type VisibilityState,
 } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import type { Repository } from '../lib/types'
-
 import { useMediaQuery } from './use-media-query'
 
-function filterRepos (repos: Repository[], searchTerm: string): Repository[] {
-  if (!searchTerm) return repos
-
-  const term = searchTerm.toLowerCase()
+function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
+  const term = searchTerm.trim().toLowerCase()
+  if (!term) return repos
   return repos.filter(
     (repo) =>
       repo.repo.toLowerCase().includes(term) ||
@@ -24,71 +21,19 @@ function filterRepos (repos: Repository[], searchTerm: string): Repository[] {
   )
 }
 
-function calculatePaginationStats (
-  totalItems: number,
-  pageIndex: number,
-  pageSize: number
-) {
-  const pageCount = Math.ceil(totalItems / pageSize)
-  const firstItemOnPage = totalItems === 0 ? 0 : pageIndex * pageSize + 1
-  const lastItemOnPage =
-    totalItems === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, totalItems)
-
-  return {
-    totalFilteredRows: totalItems,
-    pageCount,
-    firstItemOnPage,
-    lastItemOnPage,
-  }
-}
-
-export function useTable (
-  repos: Repository[],
-  columns: ColumnDef<Repository>[]
-) {
+export function useTable(repos: Repository[], columns: ColumnDef<Repository>[]) {
   const isMobile = useMediaQuery('(max-width: 767px)')
   const pageSize = isMobile ? 5 : 10
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'rank', desc: false },
   ])
-  const [columnVisibility, setColumnVisibility] =
-    useState<VisibilityState>({})
   const [globalFilter, setGlobalFilter] = useState('')
-  const [pageIndex, setPageIndex] = useState(0)
 
   const filteredRepos = useMemo(
     () => filterRepos(repos, globalFilter),
     [repos, globalFilter]
   )
-
-  const paginationStats = useMemo(
-    () => calculatePaginationStats(filteredRepos.length, pageIndex, pageSize),
-    [filteredRepos.length, pageIndex, pageSize]
-  )
-
-  const updateGlobalFilter = (value: string) => {
-    setGlobalFilter(value)
-    setPageIndex(0)
-  }
-
-  useEffect(() => {
-    if (
-      pageIndex >= paginationStats.pageCount &&
-      paginationStats.pageCount > 0
-    ) {
-      setPageIndex(0)
-    }
-  }, [pageIndex, paginationStats.pageCount])
-
-  const pagination = {
-    pageIndex,
-    pageCount: paginationStats.pageCount,
-    canPreviousPage: pageIndex > 0,
-    canNextPage: pageIndex < paginationStats.pageCount - 1,
-    previousPage: () => setPageIndex((prev) => prev - 1),
-    nextPage: () => setPageIndex((prev) => prev + 1),
-  }
 
   const table = useReactTable({
     data: filteredRepos,
@@ -97,32 +42,40 @@ export function useTable (
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange: (updater) => {
-      const newPagination =
-        typeof updater === 'function'
-          ? updater({ pageIndex, pageSize })
-          : updater
-      setPageIndex(newPagination.pageIndex)
-    },
-    state: {
-      sorting,
-      columnVisibility,
-      pagination: { pageIndex, pageSize },
-    },
+    initialState: { pagination: { pageSize } },
   })
+
+  const rowCount = table.getFilteredRowModel().rows.length
+  const pageIndex = table.getState().pagination.pageIndex
+  const pageCount = table.getPageCount()
+  const firstItemOnPage = rowCount === 0 ? 0 : pageIndex * pageSize + 1
+  const lastItemOnPage =
+    rowCount === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, rowCount)
 
   return {
     table,
     state: {
-      sorting,
-      columnVisibility,
       globalFilter,
-      pagination: { pageIndex, pageSize },
+      sorting,
+      pagination: table.getState().pagination,
     },
-    paginationStats,
-    pagination,
-    updateGlobalFilter,
+    paginationStats: {
+      totalFilteredRows: rowCount,
+      pageCount,
+      firstItemOnPage,
+      lastItemOnPage,
+    },
+    pagination: {
+      pageIndex,
+      pageCount,
+      canPreviousPage: table.getCanPreviousPage(),
+      canNextPage: table.getCanNextPage(),
+      previousPage: () => table.previousPage(),
+      nextPage: () => table.nextPage(),
+    },
+    updateGlobalFilter: (value: string) => {
+      setGlobalFilter(value)
+    },
     isMobile,
   }
 }
