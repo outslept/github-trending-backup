@@ -1,12 +1,11 @@
-import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { Suspense, useState } from 'react'
 import { CalendarDays } from 'lucide-react'
-import { ErrorBoundary } from 'react-error-boundary'
 
 import { Container } from '../components/container'
 import { DailyTrending } from '../components/daily-trending'
 import { TrendingSkeleton } from '../components/skeletons'
-import { Button, buttonVariants } from '../components/ui/button'
+import { Button } from '../components/ui/button'
 import { Calendar } from '../components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover'
 
@@ -194,24 +193,7 @@ function DatePage() {
 
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <ErrorBoundary
-        fallback={
-          <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-4">
-            <p className="text-lg font-semibold">
-              failed to load data for this date
-            </p>
-
-            <Link
-              to="/latest"
-              className={buttonVariants({ variant: 'outline' })}
-            >
-              go to latest data
-            </Link>
-          </div>
-        }
-      >
-        <DatePageContent key={date} date={date} />
-      </ErrorBoundary>
+      <DatePageContent key={date} date={date} />
     </Suspense>
   )
 }
