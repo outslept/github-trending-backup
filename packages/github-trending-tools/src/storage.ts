@@ -4,80 +4,48 @@ import { fileURLToPath } from 'node:url';
 import type { LanguageGroup, MetadataFile, TrendingMonthData } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = join(__dirname, '..', '..');
-const DEFAULT_DATA_ROOT = join(repoRoot, 'packages', 'github-trending-data');
-export const DATA_ROOT = process.env.GITHUB_TRENDING_DATA_DIR ?? DEFAULT_DATA_ROOT;
+const DATA_ROOT = join(__dirname, '..', '..', 'packages', 'github-trending-data');
 
-export function resolveMonthFilePath(month: string, dataRoot: string = DATA_ROOT): string {
-  const year = month.slice(0, 4);
-  return join(dataRoot, year, `${month}.json`);
-}
+const monthPath = (month: string) => join(DATA_ROOT, month.slice(0, 4), `${month}.json`);
+const metadataPath = () => join(DATA_ROOT, 'metadata.json');
 
-export function resolveMetadataPath(dataRoot: string = DATA_ROOT): string {
-  return join(dataRoot, 'metadata.json');
-}
-
-function readJsonFile<T>(filePath: string, fallback: T): T {
-  if (!existsSync(filePath)) return fallback;
+function readJson<T>(path: string, fallback: T): T {
+  if (!existsSync(path)) return fallback;
   try {
-    return JSON.parse(readFileSync(filePath, 'utf8')) as T;
+    return JSON.parse(readFileSync(path, 'utf8')) as T;
   } catch {
-    console.warn(`warn: invalid JSON in ${filePath}, using fallback`);
+    console.warn(`warn: invalid JSON in ${path}`);
     return fallback;
   }
 }
 
-function writeJsonFile(filePath: string, data: unknown): void {
-  const outputDir = dirname(filePath);
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
-  }
-  writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n', 'utf8');
+function writeJson(path: string, data: unknown) {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, JSON.stringify(data, null, 2) + '\n', 'utf8');
 }
 
-export function loadMonthData(month: string): TrendingMonthData {
-  const filePath = resolveMonthFilePath(month);
-  return readJsonFile<TrendingMonthData>(filePath, { month, days: {} });
-}
-
-export function saveMonthData(month: string, groups: LanguageGroup[]): void {
-  const filePath = resolveMonthFilePath(month);
-  const data = loadMonthData(month);
-
-  const day = new Date().toISOString().slice(8, 10);
-  data.month = month;
+export function saveMonthData(month: string, day: string, groups: LanguageGroup[]) {
+  const path = monthPath(month);
+  const data = readJson<TrendingMonthData>(path, { month, days: {} });
   data.days[day] = groups;
-
-  writeJsonFile(filePath, data);
+  writeJson(path, data);
 }
 
-export function loadMetadata(): MetadataFile {
-  return readJsonFile<MetadataFile>(resolveMetadataPath(), {
-    lastUpdated: new Date().toISOString().slice(0, 10),
-    years: {},
-  });
-}
+export function updateMetadata(month: string, day: string) {
+  const path = metadataPath();
+  const meta = readJson<MetadataFile>(path, { lastUpdated: '', years: {} });
 
-export function saveMetadata(metadata: MetadataFile): void {
-  writeJsonFile(resolveMetadataPath(), metadata);
-}
-
-export function updateMetadata(month: string, day: string): void {
-  const metadata = loadMetadata();
   const year = month.slice(0, 4);
-  const monthKey = month.slice(5);
+  const monthKey = month.slice(5, 7);
 
-  const yearData = metadata.years[year] ?? {};
-  metadata.years[year] = yearData;
-
-  const monthData = yearData[monthKey] ?? [];
-  yearData[monthKey] = monthData;
+  const yearData = (meta.years[year] ??= {});
+  const monthData = (yearData[monthKey] ??= []);
 
   if (!monthData.includes(day)) {
     monthData.push(day);
     monthData.sort();
   }
 
-  metadata.lastUpdated = `${month}-${day}`;
-  saveMetadata(metadata);
+  meta.lastUpdated = `${month}-${day}`;
+  writeJson(path, meta);
 }

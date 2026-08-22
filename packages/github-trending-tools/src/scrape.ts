@@ -4,33 +4,20 @@ import type { LanguageGroup, Repository } from './types.js';
 
 const ROW_SELECTOR = 'article.Box-row, .Box-row';
 const DEFAULT_HEADERS = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   Accept: '*/*',
 };
 const REQUEST_TIMEOUT_MS = 30_000;
 const RETRY_LIMIT = 5;
-const BACKOFF_BETWEEN_RETRIES_MS = 5_000;
-const PAUSE_BETWEEN_LANGUAGES_MS = 5_000;
+const BACKOFF_MS = 5_000;
+const PAUSE_MS = 5_000;
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-function buildTrendingUrl(language: GitHubLanguage): string {
-  return `https://github.com/trending/${LanguageSlugs[language]}`;
-}
-
-function parseNumber(value: string | null | undefined): number | null {
+function parseNumber(value: string | null | undefined) {
   if (!value) return null;
   const trimmed = value.trim();
   if (!trimmed || trimmed === '—' || trimmed === '-') return null;
-
-  const multipliers: Record<string, number> = {
-    k: 1_000,
-    m: 1_000_000,
-    b: 1_000_000_000,
-  };
 
   const match = /^([\d.,]+)\s*([kmb]?)$/i.exec(trimmed);
   if (!match) return null;
@@ -39,55 +26,58 @@ function parseNumber(value: string | null | undefined): number | null {
   const number = Number(raw);
   if (!Number.isFinite(number)) return null;
 
-  const multiplier = match[2] ? multipliers[match[2].toLowerCase()] : 1;
-  if (!multiplier) return null;
+  let multiplier = 1;
+  if (match[2]) {
+    const suffix = match[2].toLowerCase();
+    if (suffix === 'k') multiplier = 1_000;
+    else if (suffix === 'm') multiplier = 1_000_000;
+    else if (suffix === 'b') multiplier = 1_000_000_000;
+    else return null;
+  }
 
   return Math.round(number * multiplier);
 }
 
-function parseTodayStars(row: HTMLElement): number | null {
-  const starText = Array.from(row.querySelectorAll('span'))
-    .map((span) => span.text.trim())
-    .find((text) => /stars?\s+today/i.test(text));
+function parseTodayStars(row: HTMLElement) {
+  const starText = row.querySelectorAll('span')
+    .map((s) => s.textContent.trim())
+    .find((t) => /stars?\s+today/i.test(t));
 
   if (!starText) return null;
-
   const match = /([\d.,]+)\s+stars?\s+today/i.exec(starText);
   return match ? parseNumber(match[1]) : null;
 }
 
-function parseRepositoryRow(row: HTMLElement): Repository | null {
+function parseRepositoryRow(row: HTMLElement) {
   const link = row.querySelector('h2 a');
   const href = link?.getAttribute('href');
   if (!href) return null;
 
-  const starsElement = row.querySelector('a[href*="/stargazers"]');
-  const forksElement = row.querySelector('a[href*="/network/members"]');
+  const starsEl = row.querySelector('a[href*="/stargazers"]');
+  const forksEl = row.querySelector('a[href*="/network/members"]');
 
   return {
     rank: 0,
-    repo: href.replace(/^\//, '').replace(/\s+/g, ''),
-    desc:
-      row.querySelector('p')?.text.trim().replace(/\s+/g, ' ') ??
-      'No description',
-    stars: parseNumber(starsElement?.text.trim()),
-    forks: parseNumber(forksElement?.text.trim()),
+    repo: href.replace(/^\//, ''),
+    desc: row.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ') ?? 'No description',
+    stars: parseNumber(starsEl?.textContent.trim()),
+    forks: parseNumber(forksEl?.textContent.trim()),
     today: parseTodayStars(row),
   };
 }
 
-function extractRepositoriesFrom(html: string): Repository[] {
+function extractRepositories(html: string) {
   const root = parse(html);
   const rows = root.querySelectorAll(ROW_SELECTOR);
 
-  const parsedRows = rows
-    .map(parseRepositoryRow)
-    .filter((row): row is Repository => row !== null);
-
-  return parsedRows.map((row, index) => ({ ...row, rank: index + 1 }));
+  return rows.reduce<Repository[]>((acc, row) => {
+    const parsed = parseRepositoryRow(row);
+    if (parsed) acc.push({ ...parsed, rank: acc.length + 1 });
+    return acc;
+  }, []);
 }
 
-async function fetchHtmlWithRetry(url: string): Promise<string> {
+async function fetchWithRetry(url: string) {
   for (let attempt = 1; attempt <= RETRY_LIMIT; attempt++) {
     try {
       const response = await fetch(url, {
@@ -95,54 +85,44 @@ async function fetchHtmlWithRetry(url: string): Promise<string> {
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status} ${response.statusText}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return await response.text();
     } catch (error) {
-      console.warn(`warn: attempt ${attempt}/${RETRY_LIMIT} failed}`);
-
+      console.warn(`warn: attempt ${attempt}/${RETRY_LIMIT} failed`);
       if (attempt === RETRY_LIMIT) throw error;
-
-      await delay(BACKOFF_BETWEEN_RETRIES_MS);
+      await delay(BACKOFF_MS);
     }
   }
-
-  throw new Error(`failed to fetch ${url}`);
+  throw new Error('unreachable');
 }
 
-async function scrapeTrendingForLanguage(language: GitHubLanguage) {
+async function scrapeTrending(language: GitHubLanguage) {
   console.log(`info: scraping ${language}`);
 
   try {
-    const url = buildTrendingUrl(language);
-    const html = await fetchHtmlWithRetry(url);
-    const repositories = extractRepositoriesFrom(html);
+    const url = `https://github.com/trending/${LanguageSlugs[language]}`;
+    const html = await fetchWithRetry(url);
+    const repositories = extractRepositories(html);
 
-    if (repositories.length === 0) {
-      throw new Error('no repository rows found in HTML');
-    }
+    if (repositories.length === 0) throw new Error('no rows found');
 
-    console.log(`info: found ${repositories.length} repositories for ${language}`);
-    return { language: language as string, repositories, success: true };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`error: failed to scrape ${language}: ${message}`);
-    return { language: language as string, repositories: [], success: false, error: message };
+    console.log(`info: found ${repositories.length} repos for ${language}`);
+    return { language, repos: repositories };
   } finally {
-    await delay(PAUSE_BETWEEN_LANGUAGES_MS);
+    await delay(PAUSE_MS);
   }
 }
 
-export async function scrapeTrendingForAll(languages: GitHubLanguage[]): Promise<LanguageGroup[]> {
-  console.log(`info: starting scraper for ${languages.length} languages`);
+export async function scrapeTrendingForAll(languages: GitHubLanguage[]) {
+  console.log(`info: scraping ${languages.length} languages`);
   const groups: LanguageGroup[] = [];
 
-  for (const language of languages) {
-    const report = await scrapeTrendingForLanguage(language);
-    if (report.success) {
-      groups.push({ language: report.language, repos: report.repositories });
+  for (const lang of languages) {
+    try {
+      groups.push(await scrapeTrending(lang));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`error: ${lang}: ${message}`);
     }
   }
 

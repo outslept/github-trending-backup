@@ -26,22 +26,21 @@ const WATCHLIST: GitHubLanguage[] = [
 ];
 
 async function main(): Promise<void> {
-  const today = new Date().toISOString().slice(0, 10);
-  const month = today.slice(0, 7);
-  const day = today.slice(8);
+  const iso = new Date().toISOString();
+  const month = iso.slice(0, 7);
+  const day = iso.slice(8, 10);
 
-  console.log(`info: starting github trending scraper for ${today}`);
+  console.log(`info: starting scraper for ${month}-${day}`);
 
   const groups = await scrapeTrendingForAll(WATCHLIST);
 
-  saveMonthData(month, groups);
+  saveMonthData(month, day, groups);
   updateMetadata(month, day);
 
-  console.log(`info: saved data for ${month}/${day} (${groups.length} languages)`);
-  console.log(`info: completed`);
+  console.log(`info: saved ${groups.length}/${WATCHLIST.length} languages`);
 
   if (groups.length < WATCHLIST.length) {
-    console.error(`error: failed to scrape ${WATCHLIST.length - groups.length} languages`);
+    console.error(`error: ${WATCHLIST.length - groups.length} failed`);
     process.exitCode = 1;
   }
 }
