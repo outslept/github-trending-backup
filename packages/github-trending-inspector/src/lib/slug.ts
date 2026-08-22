@@ -1,4 +1,6 @@
-export function slugify (text: string): string {
+export function slugify(text: string): string {
+  if (text.toLowerCase().trim() === 'c++') return 'cpp'
+
   return text
     .toLowerCase()
     .trim()
