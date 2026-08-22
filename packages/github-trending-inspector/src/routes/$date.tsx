@@ -56,72 +56,67 @@ function getAllAvailableDates(metadata: ReturnType<typeof useMetadata>['data']):
   return dates.sort()
 }
 
-function DatePicker({ date, onDateChange }: { date: string; onDateChange: (iso: string) => void }) {
+function DatePicker({
+  date,
+  onDateChange,
+}: {
+  date: string
+  onDateChange: (iso: string) => void
+}) {
   const [open, setOpen] = useState(false)
   const [month, setMonth] = useState<Date>(() => {
     const [y, m] = date.split('-').map(Number)
     return new Date(y, m - 1, 1)
   })
-  const { data: metadata } = useMetadata()
 
-  const availableDates = useMemo(() => getAllAvailableDates(metadata), [metadata])
+  const { data: metadata } = useMetadata()
   const selectedDate = new Date(date + 'T00:00:00')
 
   const isAvailable = (d: Date) => {
     const y = String(d.getFullYear())
     const m = String(d.getMonth() + 1).padStart(2, '0')
     const day = String(d.getDate()).padStart(2, '0')
+
     return metadata.years[y]?.[m]?.includes(day) ?? false
   }
 
-  const goToDay = (offset: number) => {
-    const currentIndex = availableDates.indexOf(date)
-    if (currentIndex === -1) return
-    const nextIndex = currentIndex + offset
-    if (nextIndex >= 0 && nextIndex < availableDates.length) {
-      onDateChange(availableDates[nextIndex])
-    }
-  }
-
   return (
-    <div className="flex items-center gap-1">
-      <Button variant="ghost" size="icon" className="size-8" onClick={() => goToDay(-1)} aria-label="previous day">
-        <ChevronLeft className="size-4" />
-      </Button>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="outline"
+            className="w-full sm:w-[220px] justify-start gap-2 px-3 text-xs sm:text-sm font-normal"
+          >
+            <CalendarDays className="size-4 shrink-0 text-muted-foreground" />
+            <span className="truncate">
+              {date}
+            </span>
+          </Button>
+        }
+      />
 
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger
-          render={
-            <Button variant="outline" className="justify-start gap-2 w-[160px] sm:w-[220px] text-sm font-normal">
-              <CalendarDays className="size-4 text-muted-foreground" />
-              <span>{formatHumanDate(date)}</span>
-            </Button>
-          }
+      <PopoverContent className="w-auto p-2" align="start">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={(d) => {
+            if (!d) return
+
+            const iso = d.toLocaleDateString('sv-SE')
+
+            if (isAvailable(d)) {
+              onDateChange(iso)
+              setOpen(false)
+            }
+          }}
+          month={month}
+          onMonthChange={setMonth}
+          disabled={(d) => !isAvailable(d)}
+          autoFocus
         />
-        <PopoverContent className="p-2 w-auto" align="center">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={(d) => {
-              if (!d) return
-              const iso = d.toLocaleDateString('sv-SE')
-              if (isAvailable(d)) {
-                onDateChange(iso)
-                setOpen(false)
-              }
-            }}
-            month={month}
-            onMonthChange={setMonth}
-            disabled={(d) => !isAvailable(d)}
-            autoFocus
-          />
-        </PopoverContent>
-      </Popover>
-
-      <Button variant="ghost" size="icon" className="size-8" onClick={() => goToDay(1)} aria-label="next day">
-        <ChevronRight className="size-4" />
-      </Button>
-    </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -157,23 +152,34 @@ function DatePageContent({ date }: { date: string }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Container className="pt-6">
-        <div className="flex items-start gap-4">
-          <img src="/daily.png" alt="trending inspector" className="size-40 shrink-0" />
+      <div className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+        <Container className="py-3 sm:py-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <img
+              src="/daily.png"
+              alt="trending inspector"
+              className="size-16 sm:size-24 lg:size-28 shrink-0 object-contain"
+            />
 
-          <div className="flex flex-col gap-3 w-full">
-            <div className="flex flex-col items-start">
-              <p className="text-sm font-semibold leading-tight">Github Daily Trending</p>
-              <p className="text-xs text-muted-foreground">Showing results for {formatHumanDate(date)}</p>
-            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-2 sm:gap-3">
+              <div className="min-w-0">
+                <p className="text-sm sm:text-base font-semibold leading-tight">
+                  Github Daily Trending
+                </p>
 
-            <div className="flex flex-col items-start gap-1">
-              <p className="text-xs text-muted-foreground">Pick a date</p>
-              <DatePicker date={date} onDateChange={navigateWithScroll} />
+                <p className="truncate text-xs text-muted-foreground">
+                  Showing results for {formatHumanDate(date)}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-start gap-1">
+                <p className="text-xs text-muted-foreground">Pick a date</p>
+                <DatePicker date={date} onDateChange={navigateWithScroll} />
+              </div>
             </div>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
 
       <main className="flex-1">
         <Container className="pb-6">
