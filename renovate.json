@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    "group:allNonMajor"
+  ],
+  "labels": ["dependencies"],
+  "prCreation": "immediate",
+  "minimumReleaseAge": "3 days",
+  "prConcurrentLimit": 3,
+  "branchConcurrentLimit": 3,
+  "dependencyDashboard": true,
+  "dependencyDashboardAutoclose": true
+}
