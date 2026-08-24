@@ -54,7 +54,7 @@ function parseRepositoryRow(row: HTMLElement) {
   if (!href) return null;
 
   const starsEl = row.querySelector('a[href*="/stargazers"]');
-  const forksEl = row.querySelector('a[href*="/network/members"]');
+  const forksEl = row.querySelector('a[href*="/forks"]');
 
   return {
     rank: 0,
