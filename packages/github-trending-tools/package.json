@@ -13,11 +13,11 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "tsdown src/index.ts",
-    "dev": "tsdown src/index.ts --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
-    "prestart": "nr build",
-    "start": "node dist/index.js"
+    "start": "node src/index.ts",
+    "update:languages": "node update-languages.ts"
   },
   "dependencies": {
     "node-html-parser": "^7.0.1"
