@@ -20,11 +20,11 @@ export interface LanguageReport {
 }
 
 export interface TrendingMonthData {
-  month: string; // "YYYY-MM"
-  days: Record<string, LanguageGroup[]>; // key: "DD"
+  month: string;
+  days: Record<string, LanguageGroup[]>;
 }
 
 export interface MetadataFile {
-  lastUpdated: string; // "YYYY-MM-DD"
-  years: Record<string, Record<string, string[]>>; // year -> month -> days
+  lastUpdated: string;
+  years: Record<string, Record<string, string[]>>;
 }

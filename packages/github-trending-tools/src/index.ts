@@ -30,8 +30,6 @@ async function main(): Promise<void> {
   const month = iso.slice(0, 7);
   const day = iso.slice(8, 10);
 
-  console.log(`info: starting scraper for ${month}-${day}`);
-
   const groups = await scrapeTrendingForAll(WATCHLIST);
 
   saveMonthData(month, day, groups);

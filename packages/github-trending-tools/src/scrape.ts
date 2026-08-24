@@ -97,8 +97,6 @@ async function fetchWithRetry(url: string) {
 }
 
 async function scrapeTrending(language: GitHubLanguage) {
-  console.log(`info: scraping ${language}`);
-
   try {
     const url = `https://github.com/trending/${LanguageSlugs[language]}`;
     const html = await fetchWithRetry(url);
@@ -106,7 +104,6 @@ async function scrapeTrending(language: GitHubLanguage) {
 
     if (repositories.length === 0) throw new Error('no rows found');
 
-    console.log(`info: found ${repositories.length} repos for ${language}`);
     return { language, repos: repositories };
   } finally {
     await delay(PAUSE_MS);
@@ -114,7 +111,6 @@ async function scrapeTrending(language: GitHubLanguage) {
 }
 
 export async function scrapeTrendingForAll(languages: GitHubLanguage[]) {
-  console.log(`info: scraping ${languages.length} languages`);
   const groups: LanguageGroup[] = [];
 
   for (const lang of languages) {

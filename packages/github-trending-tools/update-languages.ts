@@ -93,9 +93,8 @@ async function fetchLanguages(): Promise<Language[]> {
   }
 
   console.log(
-    `info: found ${links.length} entries, ` +
-    `${languages.size} unique languages, ` +
-    `${duplicates} duplicates`,
+    `info: parsed ${languages.size} languages` +
+    (duplicates > 0 ? ` (${duplicates} duplicates skipped)` : ''),
   );
 
   return [...languages.values()];
@@ -121,7 +120,6 @@ async function main(): Promise<void> {
 
   writeFileSync(OUTPUT_PATH, source, 'utf8');
 
-  console.log(`info: wrote ${languages.length} languages`);
   console.log(`info: updated ${OUTPUT_PATH}`);
 }
 
