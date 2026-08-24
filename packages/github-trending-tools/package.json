@@ -16,8 +16,9 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
-    "start": "node src/index.ts",
-    "update:languages": "node update-languages.ts"
+    "scrape:trending": "tsx src/index.ts",
+    "sync:languages": "tsx update-languages.ts",
+    "publint": "pnpm dlx publint"
   },
   "dependencies": {
     "node-html-parser": "^7.0.1"
