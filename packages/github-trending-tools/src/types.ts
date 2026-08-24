@@ -12,13 +12,6 @@ export interface LanguageGroup {
   repos: Repository[];
 }
 
-export interface LanguageReport {
-  language: string;
-  repositories: Repository[];
-  success: boolean;
-  error?: string;
-}
-
 export interface TrendingMonthData {
   month: string;
   days: Record<string, LanguageGroup[]>;
