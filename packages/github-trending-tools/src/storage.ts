@@ -3,8 +3,19 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { LanguageGroup, MetadataFile, TrendingMonthData } from './types.js';
 
+function findProjectRoot(startDir: string): string {
+  let currentDir = startDir;
+  while (currentDir !== dirname(currentDir)) {
+    if (existsSync(join(currentDir, 'pnpm-workspace.yaml'))) {
+      return currentDir;
+    }
+    currentDir = dirname(currentDir);
+  }
+  return startDir;
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_ROOT = join(__dirname, '..', '..', 'packages', 'github-trending-data');
+const DATA_ROOT = join(findProjectRoot(__dirname), 'data');
 
 const monthPath = (month: string) => join(DATA_ROOT, month.slice(0, 4), `${month}.json`);
 const metadataPath = () => join(DATA_ROOT, 'metadata.json');
