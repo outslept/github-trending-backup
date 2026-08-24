@@ -21,7 +21,7 @@ interface Language {
   slug: string;
 }
 
-async function fetchLanguages(): Promise<Language[]> {
+async function fetchLanguages() {
   console.log('info: fetching languages');
 
   const response = await fetch(TRENDING_URL, {
@@ -100,7 +100,7 @@ async function fetchLanguages(): Promise<Language[]> {
   return [...languages.values()];
 }
 
-function generateSource(languages: Language[]): string {
+function generateSource(languages: Language[]) {
   const entries = languages.map(
     ({ name, slug }) =>
       `  ${JSON.stringify(name)}: ${JSON.stringify(slug)},`,
@@ -114,7 +114,7 @@ export type GitHubLanguage = keyof typeof LanguageSlugs;
 `;
 }
 
-async function main(): Promise<void> {
+async function main() {
   const languages = await fetchLanguages();
   const source = generateSource(languages);
 
