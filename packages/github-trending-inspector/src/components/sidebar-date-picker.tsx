@@ -7,8 +7,8 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 import { useMetadata } from '../hooks/use-trending-data'
-import { formatHumanDate } from '../lib/date'
-import { cn } from '../lib/utils'
+import { getDateBoundsFromMetadata } from '../lib/trending-metadata'
+import { cn, formatHumanDate } from '../lib/utils'
 
 interface SidebarDatePickerProps {
   date: string
@@ -34,23 +34,7 @@ export function SidebarDatePicker({ date, onDateChange, isIcon = false, classNam
     return metadata?.years[year]?.[month]?.includes(day) ?? false
   }
 
-  const bounds = useMemo(() => {
-    if (!metadata) return { fromDate: undefined, toDate: undefined }
-    const years = Object.keys(metadata.years).sort()
-    if (years.length === 0) return { fromDate: undefined, toDate: undefined }
-
-    const minY = years[0]
-    const minM = Object.keys(metadata.years[minY]).sort()[0]
-    const minD = metadata.years[minY][minM].sort()[0]
-    const fromDate = new Date(`${minY}-${minM}-${minD}T00:00:00`)
-
-    const maxY = years[years.length - 1]
-    const maxM = Object.keys(metadata.years[maxY]).sort().reverse()[0]
-    const maxD = metadata.years[maxY][maxM].sort().reverse()[0]
-    const toDate = new Date(`${maxY}-${maxM}-${maxD}T00:00:00`)
-
-    return { fromDate, toDate }
-  }, [metadata])
+  const bounds = useMemo(() => getDateBoundsFromMetadata(metadata), [metadata])
 
   const triggerButton = (
     <Button
@@ -86,8 +70,8 @@ export function SidebarDatePicker({ date, onDateChange, isIcon = false, classNam
           month={month}
           onMonthChange={setMonth}
           disabled={(d) => !isAvailable(d)}
-          fromDate={bounds.fromDate}
-          toDate={bounds.toDate}
+          startMonth={bounds.startMonth}
+          endMonth={bounds.endMonth}
           onSelect={(d) => {
             if (!d || !isAvailable(d)) return
 

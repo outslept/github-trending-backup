@@ -5,13 +5,9 @@ import { Star, TrendingUp } from 'lucide-react'
 import { Button } from './ui/button'
 import { Skeleton } from './ui/skeleton'
 import { useMetadata, useTrendingByDate } from '../hooks/use-trending-data'
-import { lastAvailableDateFromMetadata } from '../shared/metadata'
+import { GITHUB_BASE_URL, lastAvailableDateFromMetadata } from '../lib/trending-metadata'
 import { languageIcons } from '../lib/language-icons'
-import { formatNumber } from '../lib/format'
-import { GITHUB_BASE_URL } from '../lib/urls'
-import type { Repository } from '../lib/types'
-
-type RepoWithLang = Repository & { language: string }
+import { formatNumber } from '../lib/utils'
 
 export function TopReposSkeleton() {
   return (
@@ -55,7 +51,7 @@ export function TopReposBlock() {
     return groups
       .flatMap((g) => g.repos.map((r) => ({ ...r, language: g.language })))
       .sort((a, b) => (b.today ?? 0) - (a.today ?? 0))
-      .slice(0, 4) as RepoWithLang[]
+      .slice(0, 4)
   }, [groups])
 
   return (
@@ -108,10 +104,11 @@ export function TopReposBlock() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
-          <Button variant="outline" size="sm" asChild className="bg-background shadow-sm">
-            <Link to="/$date" params={{ date: latestDate }}>
+          <Button variant="outline" size="sm"
+            render={<Link to="/$date" params={{ date: latestDate }}>
               View full day →
-            </Link>
+            </Link>}
+            className="bg-background shadow-sm">
           </Button>
         </div>
       </div>

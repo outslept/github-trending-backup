@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { CalendarDays } from 'lucide-react'
 import { Calendar } from './ui/calendar'
 import { Input } from './ui/input'
-import { isValidIsoDate } from '../lib/date'
-import { cn } from '../lib/utils'
+import { cn, isValidIsoDate } from '../lib/utils'
 import type { MetadataFile } from '../lib/types'
 
 interface DatePickerDropdownProps {
-  bounds: { fromDate?: Date; toDate?: Date }
+  bounds: { startMonth?: Date; endMonth?: Date }
   metadata?: MetadataFile
   onNavigate: (iso: string) => void
 }
@@ -86,8 +85,8 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
             selected={selectedDate}
             onSelect={handleSelect}
             disabled={(date) => !isAvailable(date)}
-            fromDate={bounds.fromDate}
-            toDate={bounds.toDate}
+            startMonth={bounds.startMonth}
+            endMonth={bounds.endMonth}
             autoFocus
           />
         </div>

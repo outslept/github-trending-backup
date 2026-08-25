@@ -8,7 +8,7 @@ import {
 } from '../components/ui/sidebar'
 import type { LanguageGroup } from '../lib/types'
 import { languageIcons } from '../lib/language-icons'
-import { slugify } from '../lib/slug'
+import { slugify } from '../lib/utils'
 
 interface TableOfContentsProps {
   groups: LanguageGroup[]

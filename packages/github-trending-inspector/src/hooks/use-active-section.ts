@@ -4,9 +4,6 @@ export function useActiveSection(ids: string[]) {
   const [activeId, setActiveId] = useState<string | null>(null)
 
   useEffect(() => {
-    // Проверка на наличие window для SSR совместимости (хоть тут и CSR)
-    if (typeof window === 'undefined') return
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -15,7 +12,6 @@ export function useActiveSection(ids: string[]) {
           }
         })
       },
-      // Создаем "зону триггера" в верхней четверти экрана
       { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
     )
 
@@ -30,7 +26,7 @@ export function useActiveSection(ids: string[]) {
         if (el) observer.unobserve(el)
       })
     }
-  }, [ids.join(',')]) // Перезапускаем наблюдатель, если список языков изменился (например, при поиске)
+  }, [ids.join(',')])
 
   return activeId
 }
