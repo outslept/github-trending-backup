@@ -2,7 +2,7 @@ import { todayIso } from './utils'
 import type { MetadataFile } from './types'
 
 export const GITHUB_BASE_URL = 'https://github.com'
-export const DATA_BASE_URL = 'https://raw.githubusercontent.com/outslept/github-trending-backup/master/packages/github-trending-data'
+export const DATA_BASE_URL = 'https://raw.githubusercontent.com/outslept/github-trending-backup/master/data'
 export const METADATA_URL = `${DATA_BASE_URL}/metadata.json`
 
 export async function fetchTrendingMetadata(): Promise<MetadataFile> {
