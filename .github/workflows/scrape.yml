@@ -31,8 +31,6 @@ jobs:
         run: pnpm --filter github-trending-tools build
       - name: scrape-trending
         run: pnpm --filter github-trending-tools start
-        env:
-          GITHUB_TRENDING_DATA_DIR: ${{ github.workspace }}/packages/github-trending-data
       - name: commit-changes
         run: |
           git add .
