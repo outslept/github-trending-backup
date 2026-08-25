@@ -9,9 +9,8 @@ import {
 import { useMemo, useState } from 'react'
 
 import type { Repository } from '../lib/types'
-import { useMediaQuery } from './use-media-query'
 
-function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
+export function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
   const term = searchTerm.trim().toLowerCase()
   if (!term) return repos
   return repos.filter(
@@ -24,9 +23,10 @@ function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
 export function useTable(
   repos: Repository[],
   columns: ColumnDef<Repository>[],
-  globalFilter: string
+  globalFilter: string,
+  isMobile: boolean,
+  onPageChange?: () => void
 ) {
-  const isMobile = useMediaQuery('(max-width: 767px)')
   const pageSize = isMobile ? 5 : 10
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -56,6 +56,12 @@ export function useTable(
   const lastItemOnPage =
     rowCount === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, rowCount)
 
+  const handlePageChange = (direction: 'next' | 'prev') => {
+    if (direction === 'next') table.nextPage()
+    else table.previousPage()
+    onPageChange?.()
+  }
+
   return {
     table,
     paginationStats: {
@@ -68,8 +74,8 @@ export function useTable(
       pageCount,
       canPreviousPage: table.getCanPreviousPage(),
       canNextPage: table.getCanNextPage(),
-      previousPage: () => table.previousPage(),
-      nextPage: () => table.nextPage(),
+      previousPage: () => handlePageChange('prev'),
+      nextPage: () => handlePageChange('next'),
     },
   }
 }

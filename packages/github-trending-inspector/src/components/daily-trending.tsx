@@ -10,15 +10,15 @@ interface DailyTrendingProps {
 
 function EmptyState() {
   return (
-    <div className="w-full bg-background border border-dashed">
+    <div className="w-full bg-background ring-1 ring-border rounded-md">
       <div className="flex flex-col items-center justify-center gap-4 p-8 min-h-[300px]">
-        <div className="p-3 bg-muted/50">
-          <Database className="size-8" />
+        <div className="p-3 ring-1 ring-border rounded-md bg-muted/50">
+          <Database className="size-8 text-muted-foreground" />
         </div>
         <div className="space-y-2 text-center">
-          <h3 className="text-lg font-semibold">no data available</h3>
-          <p className="max-w-md text-sm text-muted-foreground">
-            no trending repositories found for this date. try selecting a different date from the calendar.
+          <h3 className="font-mono text-base uppercase tracking-widest text-foreground">no data available</h3>
+          <p className="max-w-md font-mono text-xs text-muted-foreground">
+            no trending repositories found for this date or search query. try selecting a different date or clearing the search.
           </p>
         </div>
       </div>
@@ -32,7 +32,11 @@ export function DailyTrending({ groups, globalFilter }: DailyTrendingProps) {
   return (
     <div className="space-y-6">
       {groups.map((group) => (
-        <LanguageSection key={group.language} group={group} globalFilter={globalFilter} />
+        <LanguageSection
+          key={group.language}
+          group={group}
+          globalFilter={globalFilter}
+        />
       ))}
     </div>
   )

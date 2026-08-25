@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-
-import { formatNumber } from '../lib/format'
+import { formatNumber } from '../lib/utils'
 
 interface PaginationStats {
   totalFilteredRows: number

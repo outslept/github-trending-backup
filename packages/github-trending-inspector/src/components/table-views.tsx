@@ -1,10 +1,8 @@
 import { flexRender, type Row, type Table } from '@tanstack/react-table'
-import { GitFork, Search, Star, TrendingUp } from 'lucide-react'
+import { ExternalLink, GitFork, Search, Star, TrendingUp } from 'lucide-react'
 
-import { formatNumber } from '../lib/format'
-import { GITHUB_BASE_URL } from '../lib/urls'
 import type { Repository } from '../lib/types'
-import { cn } from '../lib/utils'
+import { cn, formatNumber } from '../lib/utils'
 
 import {
   TableBody,
@@ -14,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table'
+import { GITHUB_BASE_URL } from '../lib/trending-metadata'
 
 function StatItem({ icon: Icon, value }: {
   icon: typeof Star
@@ -42,27 +41,22 @@ function StatItem({ icon: Icon, value }: {
   )
 }
 
-function RepoLink({ repo }: { repo: string }) {
-  return (
-    <a
-      href={`${GITHUB_BASE_URL}/${repo}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
-    >
-      {repo}
-    </a>
-  )
-}
-
 function MobileCard({ repo }: { repo: Repository }) {
   return (
-    <div className="py-3 border-b border-border/40 last:border-b-0">
+    <a
+      href={`${GITHUB_BASE_URL}/${repo.repo}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block py-3 border-b border-border/40 last:border-b-0 hover:bg-muted/40 transition-colors -mx-1 px-1 rounded-md"
+    >
       <div className="flex min-w-0 items-center gap-3">
         <span className="font-mono text-sm tabular-nums text-muted-foreground">
           #{repo.rank}
         </span>
-        <RepoLink repo={repo.repo} />
+        <span className="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 group-hover:underline">
+          {repo.repo}
+          <ExternalLink className="size-3 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+        </span>
       </div>
       {repo.desc && (
         <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
@@ -74,7 +68,7 @@ function MobileCard({ repo }: { repo: Repository }) {
         <StatItem icon={GitFork} value={repo.forks} />
         <StatItem icon={TrendingUp} value={repo.today} />
       </div>
-    </div>
+    </a>
   )
 }
 

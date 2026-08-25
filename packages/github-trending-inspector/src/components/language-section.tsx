@@ -1,7 +1,8 @@
+import { useRef } from 'react'
 import { useMediaQuery } from '../hooks/use-media-query'
 import { useTable } from '../hooks/use-table'
 import type { LanguageGroup } from '../lib/types'
-import { slugify } from '../lib/slug'
+import { cn, slugify } from '../lib/utils'
 
 import { buildRepoColumns } from './table-columns'
 import { TableHeader } from './table-header'
@@ -19,10 +20,18 @@ interface LanguageSectionProps {
 
 export function LanguageSection({ group, globalFilter }: LanguageSectionProps) {
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  const handlePageChange = () => {
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   const { table, paginationStats, pagination } = useTable(
     group.repos,
     columns,
-    globalFilter
+    globalFilter,
+    isMobile,
+    handlePageChange
   )
 
   const sectionId = slugify(group.language)
@@ -30,10 +39,18 @@ export function LanguageSection({ group, globalFilter }: LanguageSectionProps) {
 
   return (
     <section
+      ref={sectionRef}
       id={sectionId}
-      className="mb-6 pb-6 border-b border-border/40 last:mb-0 last:pb-0 last:border-b-0"
+      className={cn(
+        "mb-6 scroll-mt-6 rounded-md p-3 transition-all duration-300",
+        "bg-background border border-border",
+      )}
     >
-      <TableHeader language={group.language} repoCount={group.repos.length} />
+      <TableHeader
+        language={group.language}
+        repoCount={group.repos.length}
+        isFiltered={globalFilter !== ''}
+      />
 
       {isMobile ? (
         <MobileView rows={tableRows} />

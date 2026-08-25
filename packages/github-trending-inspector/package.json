@@ -2,11 +2,6 @@
   "name": "github-trending-inspector",
   "version": "0.0.0",
   "private": true,
-  "imports": {
-    "#components/*": "./src/components/*.tsx",
-    "#lib/*": "./src/lib/*.ts",
-    "#hooks/*": "./src/hooks/*.ts"
-  },
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",

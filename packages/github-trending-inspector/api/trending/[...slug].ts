@@ -1,6 +1,8 @@
 import { fetchMonthData, fetchDateData } from '../lib/github.js'
 import { makeLog } from '../lib/logger.js'
-import { ISO_DATE_REGEX, ISO_MONTH_REGEX } from '../../src/lib/date.js'
+
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
+const ISO_MONTH_REGEX = /^\d{4}-\d{2}$/
 
 function monthFrom(date: string): string {
   // "YYYY-MM-DD" -> "YYYY-MM"

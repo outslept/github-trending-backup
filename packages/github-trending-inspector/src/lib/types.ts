@@ -13,11 +13,11 @@ export interface LanguageGroup {
 }
 
 export interface TrendingMonthData {
-  month: string; // "YYYY-MM"
-  days: Record<string, LanguageGroup[]>; // "DD" -> группы
+  month: string;
+  days: Record<string, LanguageGroup[]>;
 }
 
 export interface MetadataFile {
   lastUpdated: string; // "YYYY-MM-DD"
-  years: Record<string, Record<string, string[]>>; // year -> month -> days
+  years: Record<string, Record<string, string[]>>;
 }

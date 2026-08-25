@@ -1,11 +1,10 @@
 import type { AriaAttributes } from 'react'
 import type { ColumnDef, Column } from '@tanstack/react-table'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
 
-import { formatNumber } from '../lib/format'
-import { GITHUB_BASE_URL } from '../lib/urls'
-import { cn } from '../lib/utils'
+import { cn, formatNumber } from '../lib/utils'
 import type { Repository } from '../lib/types'
+import { GITHUB_BASE_URL } from '../lib/trending-metadata'
 
 function RankCell({ rank }: { rank: number }) {
   return (
@@ -21,9 +20,10 @@ function RepoCell({ repo }: { repo: string }) {
       href={`${GITHUB_BASE_URL}/${repo}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-sm font-medium text-foreground underline-offset-4 hover:underline"
+      className="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline"
     >
       {repo}
+      <ExternalLink className="size-3 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
     </a>
   )
 }
@@ -38,7 +38,7 @@ function DescriptionCell({ description }: { description: string }) {
 
 function NumberCell({ value }: { value: number | null }) {
   return (
-    <span className="font-mono text-sm tabular-nums text-muted-foreground">
+    <span className="block text-right font-mono text-sm tabular-nums text-muted-foreground">
       {formatNumber(value)}
     </span>
   )
@@ -50,7 +50,7 @@ function TodayCell({ value }: { value: number | null }) {
   return (
     <span
       className={cn(
-        'font-mono text-sm tabular-nums',
+        'block text-right font-mono text-sm tabular-nums',
         isPositive
           ? 'font-medium text-emerald-600 dark:text-emerald-400'
           : 'text-muted-foreground'
@@ -64,9 +64,11 @@ function TodayCell({ value }: { value: number | null }) {
 function SortableHeader({
   column,
   label,
+  align = 'left',
 }: {
   column: Column<Repository>
   label: string
+  align?: 'left' | 'right'
 }) {
   const sortDirection = column.getIsSorted()
   const ariaSort =
@@ -95,7 +97,10 @@ function SortableHeader({
       onClick={handleSort}
       aria-label={`sort by ${label}`}
       aria-sort={ariaSort as AriaAttributes['aria-sort']}
-      className="group flex items-center gap-1"
+      className={cn(
+        'group flex items-center gap-1',
+        align === 'right' && 'flex-row-reverse'
+      )}
     >
       <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">
         {label}
@@ -140,21 +145,21 @@ export function buildRepoColumns(): ColumnDef<Repository>[] {
     },
     {
       accessorKey: 'stars',
-      header: ({ column }) => <SortableHeader column={column} label="stars" />,
+      header: ({ column }) => <SortableHeader column={column} label="stars" align="right" />,
       cell: ({ row }) => <NumberCell value={row.original.stars} />,
       enableSorting: true,
       size: 100,
     },
     {
       accessorKey: 'forks',
-      header: ({ column }) => <SortableHeader column={column} label="forks" />,
+      header: ({ column }) => <SortableHeader column={column} label="forks" align="right" />,
       cell: ({ row }) => <NumberCell value={row.original.forks} />,
       enableSorting: true,
       size: 100,
     },
     {
       accessorKey: 'today',
-      header: ({ column }) => <SortableHeader column={column} label="today" />,
+      header: ({ column }) => <SortableHeader column={column} label="today" align="right" />,
       cell: ({ row }) => <TodayCell value={row.original.today} />,
       enableSorting: true,
       size: 120,
