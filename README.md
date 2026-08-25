@@ -4,7 +4,7 @@
 
 <p>
   <a href="https://github.com/outslept/github-trending-backup">
-    <img width="200" src="https://raw.githubusercontent.com/outslept/github-trending-backup/refs/heads/master/.github/workflows/preview.png" alt="Github Trending Inspector preview">
+    <img src="https://raw.githubusercontent.com/outslept/github-trending-backup/refs/heads/master/.github/preview.jpg" alt="Github Trending Inspector preview">
   </a>
 </p>
 
