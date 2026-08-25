@@ -39,7 +39,8 @@ function parseNumber(value: string | null | undefined) {
 }
 
 function parseTodayStars(row: HTMLElement) {
-  const starText = row.querySelectorAll('span')
+  const starText = row
+    .querySelectorAll('span')
     .map((s) => s.textContent.trim())
     .find((t) => /stars?\s+today/i.test(t));
 

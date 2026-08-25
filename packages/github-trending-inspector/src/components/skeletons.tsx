@@ -1,4 +1,4 @@
-import { Skeleton } from './ui/skeleton'
+import { Skeleton } from './ui/skeleton';
 
 function LanguageSectionSkeleton() {
   return (
@@ -16,23 +16,47 @@ function LanguageSectionSkeleton() {
           <thead>
             <tr className="border-b border-border/40">
               {/* rank, repo, description, stars, forks, today */}
-              <th className="px-3 py-2"><Skeleton className="h-4 w-8" /></th>
-              <th className="px-3 py-2"><Skeleton className="h-4 w-20" /></th>
-              <th className="px-3 py-2 hidden lg:table-cell"><Skeleton className="h-4 w-24" /></th>
-              <th className="px-3 py-2"><Skeleton className="h-4 w-10" /></th>
-              <th className="px-3 py-2"><Skeleton className="h-4 w-10" /></th>
-              <th className="px-3 py-2"><Skeleton className="h-4 w-12" /></th>
+              <th className="px-3 py-2">
+                <Skeleton className="h-4 w-8" />
+              </th>
+              <th className="px-3 py-2">
+                <Skeleton className="h-4 w-20" />
+              </th>
+              <th className="px-3 py-2 hidden lg:table-cell">
+                <Skeleton className="h-4 w-24" />
+              </th>
+              <th className="px-3 py-2">
+                <Skeleton className="h-4 w-10" />
+              </th>
+              <th className="px-3 py-2">
+                <Skeleton className="h-4 w-10" />
+              </th>
+              <th className="px-3 py-2">
+                <Skeleton className="h-4 w-12" />
+              </th>
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: 5 }, (_, i) => (
               <tr key={i} className="border-b border-border/40">
-                <td className="px-3 py-2.5"><Skeleton className="h-4 w-8" /></td>
-                <td className="px-3 py-2.5"><Skeleton className="h-4 w-40" /></td>
-                <td className="px-3 py-2.5 hidden lg:table-cell"><Skeleton className="h-4 w-64" /></td>
-                <td className="px-3 py-2.5"><Skeleton className="h-4 w-12" /></td>
-                <td className="px-3 py-2.5"><Skeleton className="h-4 w-12" /></td>
-                <td className="px-3 py-2.5"><Skeleton className="h-4 w-14" /></td>
+                <td className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-8" />
+                </td>
+                <td className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-40" />
+                </td>
+                <td className="px-3 py-2.5 hidden lg:table-cell">
+                  <Skeleton className="h-4 w-64" />
+                </td>
+                <td className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-12" />
+                </td>
+                <td className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-12" />
+                </td>
+                <td className="px-3 py-2.5">
+                  <Skeleton className="h-4 w-14" />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -60,7 +84,7 @@ function LanguageSectionSkeleton() {
         <Skeleton className="h-4 w-48" />
       </div>
     </div>
-  )
+  );
 }
 
 export function TrendingSkeleton() {
@@ -70,5 +94,5 @@ export function TrendingSkeleton() {
         <LanguageSectionSkeleton key={i} />
       ))}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { TrendingSkeleton } from './skeletons'
+import { TrendingSkeleton } from './skeletons';
 
 export function DatePageSkeleton() {
   return (
@@ -7,5 +7,5 @@ export function DatePageSkeleton() {
         <TrendingSkeleton />
       </main>
     </div>
-  )
+  );
 }

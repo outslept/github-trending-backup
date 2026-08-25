@@ -5,19 +5,17 @@ import {
   useReactTable,
   type ColumnDef,
   type SortingState,
-} from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+} from '@tanstack/react-table';
+import { useMemo, useState } from 'react';
 
-import type { Repository } from '../lib/types'
+import type { Repository } from '../lib/types';
 
 export function filterRepos(repos: Repository[], searchTerm: string): Repository[] {
-  const term = searchTerm.trim().toLowerCase()
-  if (!term) return repos
+  const term = searchTerm.trim().toLowerCase();
+  if (!term) return repos;
   return repos.filter(
-    (repo) =>
-      repo.repo.toLowerCase().includes(term) ||
-      repo.desc.toLowerCase().includes(term)
-  )
+    (repo) => repo.repo.toLowerCase().includes(term) || repo.desc.toLowerCase().includes(term),
+  );
 }
 
 export function useTable(
@@ -25,18 +23,13 @@ export function useTable(
   columns: ColumnDef<Repository>[],
   globalFilter: string,
   isMobile: boolean,
-  onPageChange?: () => void
+  onPageChange?: () => void,
 ) {
-  const pageSize = isMobile ? 5 : 10
+  const pageSize = isMobile ? 5 : 10;
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'rank', desc: false },
-  ])
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'rank', desc: false }]);
 
-  const filteredRepos = useMemo(
-    () => filterRepos(repos, globalFilter),
-    [repos, globalFilter]
-  )
+  const filteredRepos = useMemo(() => filterRepos(repos, globalFilter), [repos, globalFilter]);
 
   const table = useReactTable({
     data: filteredRepos,
@@ -47,20 +40,19 @@ export function useTable(
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: { pagination: { pageSize } },
-  })
+  });
 
-  const rowCount = table.getFilteredRowModel().rows.length
-  const pageIndex = table.getState().pagination.pageIndex
-  const pageCount = table.getPageCount()
-  const firstItemOnPage = rowCount === 0 ? 0 : pageIndex * pageSize + 1
-  const lastItemOnPage =
-    rowCount === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, rowCount)
+  const rowCount = table.getFilteredRowModel().rows.length;
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageCount = table.getPageCount();
+  const firstItemOnPage = rowCount === 0 ? 0 : pageIndex * pageSize + 1;
+  const lastItemOnPage = rowCount === 0 ? 0 : Math.min(firstItemOnPage + pageSize - 1, rowCount);
 
   const handlePageChange = (direction: 'next' | 'prev') => {
-    if (direction === 'next') table.nextPage()
-    else table.previousPage()
-    onPageChange?.()
-  }
+    if (direction === 'next') table.nextPage();
+    else table.previousPage();
+    onPageChange?.();
+  };
 
   return {
     table,
@@ -77,5 +69,5 @@ export function useTable(
       previousPage: () => handlePageChange('prev'),
       nextPage: () => handlePageChange('next'),
     },
-  }
+  };
 }

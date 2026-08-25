@@ -18,20 +18,20 @@ reviews:
 
   slop_detection:
     enabled: true
-    label: "007"
+    label: '007'
 
   auto_review:
     auto_pause_after_reviewed_commits: 5
     labels:
-      - "!release"
+      - '!release'
     ignore_title_keywords:
-      - "WIP"
-      - "[skip-review]"
-      - "chore(release)"
+      - 'WIP'
+      - '[skip-review]'
+      - 'chore(release)'
     ignore_usernames:
-      - "renovate[bot]"
-      - "dependabot[bot]"
-      - "github-actions[bot]"
+      - 'renovate[bot]'
+      - 'dependabot[bot]'
+      - 'github-actions[bot]'
 
   pre_merge_checks:
     docstrings:

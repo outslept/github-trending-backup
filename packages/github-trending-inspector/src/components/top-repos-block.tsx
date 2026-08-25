@@ -1,13 +1,13 @@
-import { useMemo } from 'react'
-import { Link } from '@tanstack/react-router'
-import { Star, TrendingUp } from 'lucide-react'
+import { useMemo } from 'react';
+import { Link } from '@tanstack/react-router';
+import { Star, TrendingUp } from 'lucide-react';
 
-import { Button } from './ui/button'
-import { Skeleton } from './ui/skeleton'
-import { useMetadata, useTrendingByDate } from '../hooks/use-trending-data'
-import { GITHUB_BASE_URL, lastAvailableDateFromMetadata } from '../lib/trending-metadata'
-import { languageIcons } from '../lib/language-icons'
-import { formatNumber } from '../lib/utils'
+import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
+import { useMetadata, useTrendingByDate } from '../hooks/use-trending-data';
+import { GITHUB_BASE_URL, lastAvailableDateFromMetadata } from '../lib/trending-metadata';
+import { languageIcons } from '../lib/language-icons';
+import { formatNumber } from '../lib/utils';
 
 export function TopReposSkeleton() {
   return (
@@ -36,29 +36,29 @@ export function TopReposSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function TopReposBlock() {
-  const { data: metadata } = useMetadata()
-  const latestDate = useMemo(() => lastAvailableDateFromMetadata(metadata), [metadata])
+  const { data: metadata } = useMetadata();
+  const latestDate = useMemo(() => lastAvailableDateFromMetadata(metadata), [metadata]);
 
-  if (!latestDate) return null
+  if (!latestDate) return null;
 
-  const { data: groups } = useTrendingByDate(latestDate)
+  const { data: groups } = useTrendingByDate(latestDate);
 
   const topRepos = useMemo(() => {
     return groups
       .flatMap((g) => g.repos.map((r) => ({ ...r, language: g.language })))
       .sort((a, b) => (b.today ?? 0) - (a.today ?? 0))
-      .slice(0, 4)
-  }, [groups])
+      .slice(0, 4);
+  }, [groups]);
 
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="relative flex flex-col gap-2 w-full pb-12">
         {topRepos.map((repo) => {
-          const iconSrc = languageIcons[repo.language.toLowerCase()]
+          const iconSrc = languageIcons[repo.language.toLowerCase()];
           return (
             <a
               key={repo.repo}
@@ -72,14 +72,18 @@ export function TopReposBlock() {
                   #{repo.rank}
                 </span>
                 {iconSrc ? (
-                  <img src={iconSrc} alt={repo.language} width={16} height={16} className="shrink-0" />
+                  <img
+                    src={iconSrc}
+                    alt={repo.language}
+                    width={16}
+                    height={16}
+                    className="shrink-0"
+                  />
                 ) : (
                   <div className="size-4 shrink-0" />
                 )}
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-medium text-foreground truncate">
-                    {repo.repo}
-                  </span>
+                  <span className="text-sm font-medium text-foreground truncate">{repo.repo}</span>
                   <span className="text-xs text-muted-foreground truncate">
                     {repo.desc || 'no description available'}
                   </span>
@@ -98,20 +102,24 @@ export function TopReposBlock() {
                 )}
               </div>
             </a>
-          )
+          );
         })}
 
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
-          <Button variant="outline" size="sm"
-            render={<Link to="/$date" params={{ date: latestDate }}>
-              View full day →
-            </Link>}
-            className="bg-background shadow-sm">
-          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            render={
+              <Link to="/$date" params={{ date: latestDate }}>
+                View full day →
+              </Link>
+            }
+            className="bg-background shadow-sm"
+          ></Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

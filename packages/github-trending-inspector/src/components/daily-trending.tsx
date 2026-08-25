@@ -1,11 +1,11 @@
-import { Database } from 'lucide-react'
+import { Database } from 'lucide-react';
 
-import type { LanguageGroup } from '../lib/types'
-import { LanguageSection } from './language-section'
+import type { LanguageGroup } from '../lib/types';
+import { LanguageSection } from './language-section';
 
 interface DailyTrendingProps {
-  groups: LanguageGroup[]
-  globalFilter: string
+  groups: LanguageGroup[];
+  globalFilter: string;
 }
 
 function EmptyState() {
@@ -16,28 +16,27 @@ function EmptyState() {
           <Database className="size-8 text-muted-foreground" />
         </div>
         <div className="space-y-2 text-center">
-          <h3 className="font-mono text-base uppercase tracking-widest text-foreground">no data available</h3>
+          <h3 className="font-mono text-base uppercase tracking-widest text-foreground">
+            no data available
+          </h3>
           <p className="max-w-md font-mono text-xs text-muted-foreground">
-            no trending repositories found for this date or search query. try selecting a different date or clearing the search.
+            no trending repositories found for this date or search query. try selecting a different
+            date or clearing the search.
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function DailyTrending({ groups, globalFilter }: DailyTrendingProps) {
-  if (groups.length === 0) return <EmptyState />
+  if (groups.length === 0) return <EmptyState />;
 
   return (
     <div className="space-y-6">
       {groups.map((group) => (
-        <LanguageSection
-          key={group.language}
-          group={group}
-          globalFilter={globalFilter}
-        />
+        <LanguageSection key={group.language} group={group} globalFilter={globalFilter} />
       ))}
     </div>
-  )
+  );
 }

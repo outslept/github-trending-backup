@@ -1,49 +1,44 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { formatNumber } from '../lib/utils'
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatNumber } from '../lib/utils';
 
 interface PaginationStats {
-  totalFilteredRows: number
-  firstItemOnPage: number
-  lastItemOnPage: number
+  totalFilteredRows: number;
+  firstItemOnPage: number;
+  lastItemOnPage: number;
 }
 
 interface PaginationControls {
-  pageIndex: number
-  pageCount: number
-  canPreviousPage: boolean
-  canNextPage: boolean
-  previousPage: () => void
-  nextPage: () => void
+  pageIndex: number;
+  pageCount: number;
+  canPreviousPage: boolean;
+  canNextPage: boolean;
+  previousPage: () => void;
+  nextPage: () => void;
 }
 
 interface TablePaginationProps {
-  stats: PaginationStats
-  pagination: PaginationControls
+  stats: PaginationStats;
+  pagination: PaginationControls;
 }
 
 export function TablePagination({ stats, pagination }: TablePaginationProps) {
-  const { totalFilteredRows, firstItemOnPage, lastItemOnPage } = stats
-  const {
-    pageIndex,
-    pageCount,
-    canPreviousPage,
-    canNextPage,
-    previousPage,
-    nextPage,
-  } = pagination
+  const { totalFilteredRows, firstItemOnPage, lastItemOnPage } = stats;
+  const { pageIndex, pageCount, canPreviousPage, canNextPage, previousPage, nextPage } = pagination;
 
   return (
     <div className="flex flex-col items-center justify-between gap-4 pt-4 sm:flex-row">
       <div className="text-sm tracking-tight text-muted-foreground">
-        {totalFilteredRows === 0
-          ? 'no repositories found'
-          : (
-            <>
-              showing <span className="font-medium text-foreground">{formatNumber(firstItemOnPage)}</span> to{' '}
-              <span className="font-medium text-foreground">{formatNumber(lastItemOnPage)}</span> of{' '}
-              <span className="font-medium text-foreground">{formatNumber(totalFilteredRows)}</span> repositories
-            </>
-          )}
+        {totalFilteredRows === 0 ? (
+          'no repositories found'
+        ) : (
+          <>
+            showing{' '}
+            <span className="font-medium text-foreground">{formatNumber(firstItemOnPage)}</span> to{' '}
+            <span className="font-medium text-foreground">{formatNumber(lastItemOnPage)}</span> of{' '}
+            <span className="font-medium text-foreground">{formatNumber(totalFilteredRows)}</span>{' '}
+            repositories
+          </>
+        )}
       </div>
 
       {pageCount > 1 && (
@@ -79,5 +74,5 @@ export function TablePagination({ stats, pagination }: TablePaginationProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

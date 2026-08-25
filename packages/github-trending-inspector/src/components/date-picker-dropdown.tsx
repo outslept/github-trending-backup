@@ -1,61 +1,61 @@
-import { useEffect, useRef, useState } from 'react'
-import { CalendarDays } from 'lucide-react'
-import { Calendar } from './ui/calendar'
-import { Input } from './ui/input'
-import { cn, isValidIsoDate } from '../lib/utils'
-import type { MetadataFile } from '../lib/types'
+import { useEffect, useRef, useState } from 'react';
+import { CalendarDays } from 'lucide-react';
+import { Calendar } from './ui/calendar';
+import { Input } from './ui/input';
+import { cn, isValidIsoDate } from '../lib/utils';
+import type { MetadataFile } from '../lib/types';
 
 interface DatePickerDropdownProps {
-  bounds: { startMonth?: Date; endMonth?: Date }
-  metadata?: MetadataFile
-  onNavigate: (iso: string) => void
+  bounds: { startMonth?: Date; endMonth?: Date };
+  metadata?: MetadataFile;
+  onNavigate: (iso: string) => void;
 }
 
 export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [dateInput, setDateInput] = useState('')
-  const [dateError, setDateError] = useState<string | null>(null)
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const [dateInput, setDateInput] = useState('');
+  const [dateError, setDateError] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const isAvailable = (d: Date) => {
-    const year = String(d.getFullYear())
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return metadata?.years[year]?.[month]?.includes(day) ?? false
-  }
+    const year = String(d.getFullYear());
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return metadata?.years[year]?.[month]?.includes(day) ?? false;
+  };
 
   const handleSelect = (date: Date | undefined) => {
-    setSelectedDate(date)
+    setSelectedDate(date);
     if (date) {
-      const iso = date.toLocaleDateString('sv-SE')
-      setDateInput(iso)
-      setIsOpen(false)
-      onNavigate(iso)
+      const iso = date.toLocaleDateString('sv-SE');
+      setDateInput(iso);
+      setIsOpen(false);
+      onNavigate(iso);
     }
-  }
+  };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const iso = dateInput.trim()
+      const iso = dateInput.trim();
       if (isValidIsoDate(iso)) {
-        setDateError(null)
-        onNavigate(iso)
+        setDateError(null);
+        onNavigate(iso);
       } else {
-        setDateError('Invalid date format. Use YYYY-MM-DD.')
+        setDateError('Invalid date format. Use YYYY-MM-DD.');
       }
     }
-  }
+  };
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
@@ -68,8 +68,8 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
           onFocus={() => setIsOpen(true)}
           placeholder="Enter date (YYYY-MM-DD)"
           className={cn(
-            "pl-10 h-11 w-full rounded-md",
-            dateError && "ring-destructive focus-visible:ring-destructive/20"
+            'pl-10 h-11 w-full rounded-md',
+            dateError && 'ring-destructive focus-visible:ring-destructive/20',
           )}
         />
       </div>
@@ -92,5 +92,5 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
         </div>
       )}
     </div>
-  )
+  );
 }

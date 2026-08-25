@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
-import { Search } from 'lucide-react'
+import { Link } from '@tanstack/react-router';
+import { Search } from 'lucide-react';
 
 import {
   Sidebar,
@@ -11,23 +11,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from './ui/sidebar'
-import { Input } from './ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { Button } from './ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+} from './ui/sidebar';
+import { Input } from './ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Button } from './ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
-import { SidebarDatePicker } from './sidebar-date-picker'
-import { TableOfContents } from './table-of-contents'
-import type { LanguageGroup } from '../lib/types'
+import { SidebarDatePicker } from './sidebar-date-picker';
+import { TableOfContents } from './table-of-contents';
+import type { LanguageGroup } from '../lib/types';
 
 interface AppSidebarProps {
-  date: string
-  filteredGroups: LanguageGroup[]
-  globalFilterInput: string
-  setGlobalFilterInput: (v: string) => void
-  navigateToDate: (iso: string) => void
-  activeId: string | null
+  date: string;
+  filteredGroups: LanguageGroup[];
+  globalFilterInput: string;
+  setGlobalFilterInput: (v: string) => void;
+  navigateToDate: (iso: string) => void;
+  activeId: string | null;
 }
 
 export function AppSidebar({
@@ -65,11 +65,17 @@ export function AppSidebar({
               <PopoverTrigger
                 render={
                   <Tooltip>
-                    <TooltipTrigger render={
-                      <Button variant="outline" size="icon" className="shrink-0 aria-expanded:bg-muted">
-                        <Search className="size-4" />
-                      </Button>
-                    } />
+                    <TooltipTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="shrink-0 aria-expanded:bg-muted"
+                        >
+                          <Search className="size-4" />
+                        </Button>
+                      }
+                    />
                     <TooltipContent side="right">Search repositories</TooltipContent>
                   </Tooltip>
                 }
@@ -98,10 +104,16 @@ export function AppSidebar({
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton render={<Link to="/" />} tooltip="Home" className="h-auto items-center py-2">
+            <SidebarMenuButton
+              render={<Link to="/" />}
+              tooltip="Home"
+              className="h-auto items-center py-2"
+            >
               <img src="/daily.png" alt="logo" className="size-12 object-contain" />
               <div className="ml-auto flex flex-col text-right text-[10px] leading-tight text-muted-foreground group-data-[collapsible=icon]:hidden">
-                <span className="text-foreground font-medium hover:text-primary transition-colors">Go to Home</span>
+                <span className="text-foreground font-medium hover:text-primary transition-colors">
+                  Go to Home
+                </span>
                 <span>not affiliated with github</span>
                 <span>use responsibly</span>
               </div>
@@ -110,5 +122,5 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

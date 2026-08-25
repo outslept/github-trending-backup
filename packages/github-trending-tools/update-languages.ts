@@ -9,8 +9,7 @@ const TRENDING_URL = 'https://github.com/trending';
 const OUTPUT_PATH = join(__dirname, 'src', 'github-languages.ts');
 
 const DEFAULT_HEADERS = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   Accept: 'text/html',
 };
 
@@ -36,9 +35,7 @@ async function fetchLanguages() {
   const html = await response.text();
   const root = parse(html);
 
-  const links = root.querySelectorAll(
-    '#languages-menuitems a[role="menuitemradio"]',
-  );
+  const links = root.querySelectorAll('#languages-menuitems a[role="menuitemradio"]');
 
   if (links.length === 0) {
     throw new Error('language menu not found');
@@ -61,8 +58,7 @@ async function fetchLanguages() {
 
     const text = link
       .querySelector('[data-menu-button-text]')
-      ?.textContent
-      .trim()
+      ?.textContent.trim()
       .replace(/\s+/g, ' ');
 
     if (!text) continue;
@@ -80,7 +76,7 @@ async function fetchLanguages() {
 
       console.warn(
         `warn: duplicate language "${name}" has different slugs: ` +
-        `"${existing.slug}" and "${slug}", keeping "${existing.slug}"`,
+          `"${existing.slug}" and "${slug}", keeping "${existing.slug}"`,
       );
 
       continue;
@@ -94,7 +90,7 @@ async function fetchLanguages() {
 
   console.log(
     `info: parsed ${languages.size} languages` +
-    (duplicates > 0 ? ` (${duplicates} duplicates skipped)` : ''),
+      (duplicates > 0 ? ` (${duplicates} duplicates skipped)` : ''),
   );
 
   return [...languages.values()];
@@ -102,8 +98,7 @@ async function fetchLanguages() {
 
 function generateSource(languages: Language[]) {
   const entries = languages.map(
-    ({ name, slug }) =>
-      `  ${JSON.stringify(name)}: ${JSON.stringify(slug)},`,
+    ({ name, slug }) => `  ${JSON.stringify(name)}: ${JSON.stringify(slug)},`,
   );
 
   return `export const LanguageSlugs = {
@@ -123,4 +118,4 @@ async function main() {
   console.log(`info: updated ${OUTPUT_PATH}`);
 }
 
-main()
+main();

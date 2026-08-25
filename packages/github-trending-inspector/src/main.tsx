@@ -1,17 +1,17 @@
-import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 
-import { TooltipProvider } from './components/ui/tooltip'
-import { routeTree } from './routeTree.gen'
-import './styles.css'
+import { TooltipProvider } from './components/ui/tooltip';
+import { routeTree } from './routeTree.gen';
+import './styles.css';
 
-import '@fontsource-variable/geist'
-import '@fontsource-variable/geist-mono'
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree });
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -26,11 +26,11 @@ const queryClient = new QueryClient({
       retry: 1,
     },
   },
-})
+});
 
-const rootElement = document.querySelector('#root')
+const rootElement = document.querySelector('#root');
 if (!rootElement) {
-  throw new Error('Root element not found')
+  throw new Error('Root element not found');
 }
 
 createRoot(rootElement).render(
@@ -41,5 +41,5 @@ createRoot(rootElement).render(
         <RouterProvider router={router} />
       </TooltipProvider>
     </QueryClientProvider>
-  </StrictMode>
-)
+  </StrictMode>,
+);

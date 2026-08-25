@@ -1,17 +1,17 @@
-import type { AriaAttributes } from 'react'
-import type { ColumnDef, Column } from '@tanstack/react-table'
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react'
+import type { AriaAttributes } from 'react';
+import type { ColumnDef, Column } from '@tanstack/react-table';
+import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
-import { cn, formatNumber } from '../lib/utils'
-import type { Repository } from '../lib/types'
-import { GITHUB_BASE_URL } from '../lib/trending-metadata'
+import { cn, formatNumber } from '../lib/utils';
+import type { Repository } from '../lib/types';
+import { GITHUB_BASE_URL } from '../lib/trending-metadata';
 
 function RankCell({ rank }: { rank: number }) {
   return (
     <span className="font-mono text-sm tabular-nums text-muted-foreground">
       #{formatNumber(rank)}
     </span>
-  )
+  );
 }
 
 function RepoCell({ repo }: { repo: string }) {
@@ -25,7 +25,7 @@ function RepoCell({ repo }: { repo: string }) {
       {repo}
       <ExternalLink className="size-3 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
     </a>
-  )
+  );
 }
 
 function DescriptionCell({ description }: { description: string }) {
@@ -33,7 +33,7 @@ function DescriptionCell({ description }: { description: string }) {
     <p className="hidden max-w-md text-sm text-muted-foreground lg:block">
       {description || 'no description available'}
     </p>
-  )
+  );
 }
 
 function NumberCell({ value }: { value: number | null }) {
@@ -41,24 +41,22 @@ function NumberCell({ value }: { value: number | null }) {
     <span className="block text-right font-mono text-sm tabular-nums text-muted-foreground">
       {formatNumber(value)}
     </span>
-  )
+  );
 }
 
 function TodayCell({ value }: { value: number | null }) {
-  const isPositive = value != null && value > 0
+  const isPositive = value != null && value > 0;
 
   return (
     <span
       className={cn(
         'block text-right font-mono text-sm tabular-nums',
-        isPositive
-          ? 'font-medium text-emerald-600 dark:text-emerald-400'
-          : 'text-muted-foreground'
+        isPositive ? 'font-medium text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground',
       )}
     >
       {isPositive ? `+${formatNumber(value)}` : formatNumber(value)}
     </span>
-  )
+  );
 }
 
 function SortableHeader({
@@ -66,30 +64,26 @@ function SortableHeader({
   label,
   align = 'left',
 }: {
-  column: Column<Repository>
-  label: string
-  align?: 'left' | 'right'
+  column: Column<Repository>;
+  label: string;
+  align?: 'left' | 'right';
 }) {
-  const sortDirection = column.getIsSorted()
+  const sortDirection = column.getIsSorted();
   const ariaSort =
-    sortDirection === 'asc'
-      ? 'ascending'
-      : sortDirection === 'desc'
-        ? 'descending'
-        : 'none'
+    sortDirection === 'asc' ? 'ascending' : sortDirection === 'desc' ? 'descending' : 'none';
 
   const handleSort = () => {
     switch (sortDirection) {
       case false:
-        column.toggleSorting(false)
-        break
+        column.toggleSorting(false);
+        break;
       case 'asc':
-        column.toggleSorting(true)
-        break
+        column.toggleSorting(true);
+        break;
       default:
-        column.clearSorting()
+        column.clearSorting();
     }
-  }
+  };
 
   return (
     <button
@@ -97,10 +91,7 @@ function SortableHeader({
       onClick={handleSort}
       aria-label={`sort by ${label}`}
       aria-sort={ariaSort as AriaAttributes['aria-sort']}
-      className={cn(
-        'group flex items-center gap-1',
-        align === 'right' && 'flex-row-reverse'
-      )}
+      className={cn('group flex items-center gap-1', align === 'right' && 'flex-row-reverse')}
     >
       <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground">
         {label}
@@ -111,15 +102,13 @@ function SortableHeader({
         {sortDirection === false && null}
       </span>
     </button>
-  )
+  );
 }
 
 function StaticHeader({ label }: { label: string }) {
   return (
-    <span className="hidden text-xs font-medium text-muted-foreground lg:inline">
-      {label}
-    </span>
-  )
+    <span className="hidden text-xs font-medium text-muted-foreground lg:inline">{label}</span>
+  );
 }
 
 export function buildRepoColumns(): ColumnDef<Repository>[] {
@@ -164,5 +153,5 @@ export function buildRepoColumns(): ColumnDef<Repository>[] {
       enableSorting: true,
       size: 120,
     },
-  ]
+  ];
 }
