@@ -30,7 +30,7 @@ jobs:
       - name: build-scraper
         run: pnpm --filter github-trending-tools build
       - name: scrape-trending
-        run: pnpm --filter github-trending-tools start
+        run: pnpm scrape:trending
       - name: commit-changes
         run: |
           git add .
