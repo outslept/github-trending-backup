@@ -16,7 +16,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "typecheck": "tsc --noEmit",
-    "scrape:trending": "node dist/index.js",
+    "scrape:trending": "node dist/index.mjs",
     "sync:languages": "tsx update-languages.ts",
     "publint": "pnpm dlx publint"
   },
