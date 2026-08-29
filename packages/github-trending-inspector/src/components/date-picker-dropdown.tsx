@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
+import { Popover, PopoverContent } from './ui/popover';
 import { cn, isValidIsoDate } from '../lib/utils';
+import { isDateAvailableInMetadata } from '../lib/trending-metadata';
 import type { MetadataFile } from '../lib/types';
 
 interface DatePickerDropdownProps {
@@ -16,24 +18,10 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
   const [dateInput, setDateInput] = useState('');
   const [dateError, setDateError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const isAvailable = (d: Date) => {
-    const year = String(d.getFullYear());
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return metadata?.years[year]?.[month]?.includes(day) ?? false;
-  };
+  const isAvailable = (d: Date) =>
+    !!metadata && isDateAvailableInMetadata(metadata, d.toLocaleDateString('sv-SE'));
 
   const handleSelect = (date: Date | undefined) => {
     setSelectedDate(date);
@@ -58,8 +46,8 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
-      <div className="relative">
+    <Popover open={isOpen} onOpenChange={setIsOpen} anchor={anchorRef}>
+      <div className="relative w-full" ref={anchorRef}>
         <CalendarDays className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none z-10" />
         <Input
           value={dateInput}
@@ -78,19 +66,17 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
         <p className="mt-1 font-mono text-xs text-destructive text-center">{dateError}</p>
       )}
 
-      {isOpen && (
-        <div className="absolute z-50 mt-2 p-2 bg-popover ring-1 ring-border rounded-md text-popover-foreground shadow-md">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={handleSelect}
-            disabled={(date) => !isAvailable(date)}
-            startMonth={bounds.startMonth}
-            endMonth={bounds.endMonth}
-            autoFocus
-          />
-        </div>
-      )}
-    </div>
+      <PopoverContent className="w-auto p-2" align="start">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleSelect}
+          disabled={(date) => !isAvailable(date)}
+          startMonth={bounds.startMonth}
+          endMonth={bounds.endMonth}
+          autoFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
