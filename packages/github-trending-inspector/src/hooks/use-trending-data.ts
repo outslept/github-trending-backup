@@ -1,18 +1,12 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import type { LanguageGroup, MetadataFile, TrendingMonthData } from '../lib/types';
-import { DATA_BASE_URL, METADATA_URL } from '../lib/trending-metadata';
+import type { LanguageGroup, TrendingMonthData } from '../lib/types';
+import { DATA_BASE_URL, fetchTrendingMetadata } from '../lib/trending-metadata';
 
 async function fetchMonthData(month: string): Promise<TrendingMonthData> {
   const [year] = month.split('-');
   const url = `${DATA_BASE_URL}/${year}/${month}.json`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load data for ${month}`);
-  return res.json();
-}
-
-async function fetchMetadata(): Promise<MetadataFile> {
-  const res = await fetch(METADATA_URL);
-  if (!res.ok) throw new Error('Failed to fetch metadata');
   return res.json();
 }
 
@@ -36,7 +30,7 @@ export function useTrendingByDate(date: string) {
 export function useMetadata() {
   return useSuspenseQuery({
     queryKey: ['metadata'],
-    queryFn: fetchMetadata,
+    queryFn: fetchTrendingMetadata,
     staleTime: 1000 * 60 * 60,
     retry: 0,
   });
