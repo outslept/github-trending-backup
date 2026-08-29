@@ -1,6 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import type { LanguageGroup, MetadataFile, TrendingMonthData } from './types.js';
 
 function findProjectRoot(startDir: string): string {
@@ -14,11 +13,10 @@ function findProjectRoot(startDir: string): string {
   return startDir;
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_ROOT = join(findProjectRoot(__dirname), 'data');
+const DATA_ROOT = join(findProjectRoot(import.meta.dirname), 'data');
 
 const monthPath = (month: string) => join(DATA_ROOT, month.slice(0, 4), `${month}.json`);
-const metadataPath = () => join(DATA_ROOT, 'metadata.json');
+const METADATA_PATH = join(DATA_ROOT, 'metadata.json');
 
 function readJson<T>(path: string, fallback: T): T {
   if (!existsSync(path)) return fallback;
@@ -43,8 +41,7 @@ export function saveMonthData(month: string, day: string, groups: LanguageGroup[
 }
 
 export function updateMetadata(month: string, day: string) {
-  const path = metadataPath();
-  const meta = readJson<MetadataFile>(path, { lastUpdated: '', years: {} });
+  const meta = readJson<MetadataFile>(METADATA_PATH, { lastUpdated: '', years: {} });
 
   const year = month.slice(0, 4);
   const monthKey = month.slice(5, 7);
@@ -58,5 +55,5 @@ export function updateMetadata(month: string, day: string) {
   }
 
   meta.lastUpdated = `${month}-${day}`;
-  writeJson(path, meta);
+  writeJson(METADATA_PATH, meta);
 }
