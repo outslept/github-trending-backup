@@ -1,24 +1,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
-
-interface PaginationStats {
-  totalFilteredRows: number;
-  firstItemOnPage: number;
-  lastItemOnPage: number;
-}
-
-interface PaginationControls {
-  pageIndex: number;
-  pageCount: number;
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  previousPage: () => void;
-  nextPage: () => void;
-}
+import type { useTable } from '../hooks/use-table';
 
 interface TablePaginationProps {
-  stats: PaginationStats;
-  pagination: PaginationControls;
+  stats: ReturnType<typeof useTable>['paginationStats'];
+  pagination: ReturnType<typeof useTable>['pagination'];
 }
 
 export function TablePagination({ stats, pagination }: TablePaginationProps) {
