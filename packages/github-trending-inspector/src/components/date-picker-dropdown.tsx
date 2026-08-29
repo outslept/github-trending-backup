@@ -46,7 +46,7 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
   };
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen} anchor={anchorRef}>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <div className="relative w-full" ref={anchorRef}>
         <CalendarDays className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none z-10" />
         <Input
