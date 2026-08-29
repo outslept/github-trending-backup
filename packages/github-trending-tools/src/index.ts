@@ -1,4 +1,3 @@
-import process from 'node:process';
 import { type GitHubLanguage } from './github-languages.js';
 import { scrapeTrendingForAll } from './scrape.js';
 import { saveMonthData, updateMetadata } from './storage.js';
@@ -25,22 +24,18 @@ const WATCHLIST: GitHubLanguage[] = [
   'Zig',
 ];
 
-async function main(): Promise<void> {
-  const iso = new Date().toISOString();
-  const month = iso.slice(0, 7);
-  const day = iso.slice(8, 10);
+const iso = new Date().toISOString();
+const month = iso.slice(0, 7);
+const day = iso.slice(8, 10);
 
-  const groups = await scrapeTrendingForAll(WATCHLIST);
+const groups = await scrapeTrendingForAll(WATCHLIST);
 
-  saveMonthData(month, day, groups);
-  updateMetadata(month, day);
+saveMonthData(month, day, groups);
+updateMetadata(month, day);
 
-  console.log(`info: saved ${groups.length}/${WATCHLIST.length} languages`);
+console.log(`info: saved ${groups.length}/${WATCHLIST.length} languages`);
 
-  if (groups.length < WATCHLIST.length) {
-    console.error(`error: ${WATCHLIST.length - groups.length} failed`);
-    process.exitCode = 1;
-  }
+if (groups.length < WATCHLIST.length) {
+  console.error(`error: ${WATCHLIST.length - groups.length} failed`);
+  process.exitCode = 1;
 }
-
-main();
