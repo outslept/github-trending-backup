@@ -1,12 +1,9 @@
 import { writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { parse } from 'node-html-parser';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const TRENDING_URL = 'https://github.com/trending';
-const OUTPUT_PATH = join(__dirname, 'src', 'github-languages.ts');
+const OUTPUT_PATH = join(import.meta.dirname, 'src', 'github-languages.ts');
 
 const DEFAULT_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -14,11 +11,6 @@ const DEFAULT_HEADERS = {
 };
 
 const REQUEST_TIMEOUT_MS = 30_000;
-
-interface Language {
-  name: string;
-  slug: string;
-}
 
 async function fetchLanguages() {
   console.log('info: fetching languages');
@@ -41,20 +33,16 @@ async function fetchLanguages() {
     throw new Error('language menu not found');
   }
 
-  const languages = new Map<string, Language>();
-  let duplicates = 0;
+  const languages = new Map<string, string>();
 
   for (const link of links) {
     const href = link.getAttribute('href');
 
     if (!href) continue;
 
-    const match = /^\/trending\/([^?/#]+)(?:\?.*)?$/.exec(href);
+    const match = /^\/trending\/([^/?#]+)/.exec(href);
 
     if (!match) continue;
-
-    const slug = match[1];
-    if (!slug) continue;
 
     const text = link
       .querySelector('[data-menu-button-text]')
@@ -65,40 +53,17 @@ async function fetchLanguages() {
 
     const name = text === 'Unknown languages' ? 'Unknown' : text;
 
-    const existing = languages.get(name);
-
-    if (existing) {
-      duplicates++;
-
-      if (existing.slug === slug) {
-        continue;
-      }
-
-      console.warn(
-        `warn: duplicate language "${name}" has different slugs: ` +
-          `"${existing.slug}" and "${slug}", keeping "${existing.slug}"`,
-      );
-
-      continue;
-    }
-
-    languages.set(name, {
-      name,
-      slug,
-    });
+    languages.set(name, match[1]);
   }
 
-  console.log(
-    `info: parsed ${languages.size} languages` +
-      (duplicates > 0 ? ` (${duplicates} duplicates skipped)` : ''),
-  );
+  console.log(`info: parsed ${languages.size} languages`);
 
-  return [...languages.values()];
+  return [...languages.entries()];
 }
 
-function generateSource(languages: Language[]) {
+function generateSource(languages: [string, string][]) {
   const entries = languages.map(
-    ({ name, slug }) => `  ${JSON.stringify(name)}: ${JSON.stringify(slug)},`,
+    ([name, slug]) => `  ${JSON.stringify(name)}: ${JSON.stringify(slug)},`,
   );
 
   return `export const LanguageSlugs = {
@@ -109,13 +74,9 @@ export type GitHubLanguage = keyof typeof LanguageSlugs;
 `;
 }
 
-async function main() {
-  const languages = await fetchLanguages();
-  const source = generateSource(languages);
+const languages = await fetchLanguages();
+const source = generateSource(languages);
 
-  writeFileSync(OUTPUT_PATH, source, 'utf8');
+writeFileSync(OUTPUT_PATH, source, 'utf8');
 
-  console.log(`info: updated ${OUTPUT_PATH}`);
-}
-
-main();
+console.log(`info: updated ${OUTPUT_PATH}`);
