@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 import { useMetadata } from '../hooks/use-trending-data';
-import { getDateBoundsFromMetadata } from '../lib/trending-metadata';
+import { getDateBoundsFromMetadata, isDateAvailableInMetadata } from '../lib/trending-metadata';
 import { cn, formatHumanDate } from '../lib/utils';
 
 interface SidebarDatePickerProps {
@@ -32,12 +32,8 @@ export function SidebarDatePicker({
   const { data: metadata } = useMetadata();
   const selectedDate = new Date(`${date}T00:00:00`);
 
-  const isAvailable = (d: Date) => {
-    const year = String(d.getFullYear());
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return metadata?.years[year]?.[month]?.includes(day) ?? false;
-  };
+  const isAvailable = (d: Date) =>
+    !!metadata && isDateAvailableInMetadata(metadata, d.toLocaleDateString('sv-SE'));
 
   const bounds = useMemo(() => getDateBoundsFromMetadata(metadata), [metadata]);
 
