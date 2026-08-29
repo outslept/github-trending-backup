@@ -99,7 +99,6 @@ function SortableHeader({
       <span className="flex items-center justify-center size-3">
         {sortDirection === 'asc' && <ChevronUp className="size-3 text-primary" />}
         {sortDirection === 'desc' && <ChevronDown className="size-3 text-primary" />}
-        {sortDirection === false && null}
       </span>
     </button>
   );
@@ -117,14 +116,11 @@ export function buildRepoColumns(): ColumnDef<Repository>[] {
       accessorKey: 'rank',
       header: ({ column }) => <SortableHeader column={column} label="rank" />,
       cell: ({ row }) => <RankCell rank={row.original.rank} />,
-      enableSorting: true,
-      size: 80,
     },
     {
       accessorKey: 'repo',
       header: ({ column }) => <SortableHeader column={column} label="repository" />,
       cell: ({ row }) => <RepoCell repo={row.original.repo} />,
-      enableSorting: true,
     },
     {
       accessorKey: 'desc',
@@ -136,22 +132,16 @@ export function buildRepoColumns(): ColumnDef<Repository>[] {
       accessorKey: 'stars',
       header: ({ column }) => <SortableHeader column={column} label="stars" align="right" />,
       cell: ({ row }) => <NumberCell value={row.original.stars} />,
-      enableSorting: true,
-      size: 100,
     },
     {
       accessorKey: 'forks',
       header: ({ column }) => <SortableHeader column={column} label="forks" align="right" />,
       cell: ({ row }) => <NumberCell value={row.original.forks} />,
-      enableSorting: true,
-      size: 100,
     },
     {
       accessorKey: 'today',
       header: ({ column }) => <SortableHeader column={column} label="today" align="right" />,
       cell: ({ row }) => <TodayCell value={row.original.today} />,
-      enableSorting: true,
-      size: 120,
     },
   ];
 }
