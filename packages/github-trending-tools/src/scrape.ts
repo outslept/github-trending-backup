@@ -2,7 +2,6 @@ import { parse, type HTMLElement } from 'node-html-parser';
 import { LanguageSlugs, type GitHubLanguage } from './github-languages.js';
 import type { LanguageGroup, Repository } from './types.js';
 
-const ROW_SELECTOR = 'article.Box-row, .Box-row';
 const DEFAULT_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   Accept: '*/*',
@@ -26,26 +25,18 @@ function parseNumber(value: string | null | undefined) {
   const number = Number(raw);
   if (!Number.isFinite(number)) return null;
 
-  let multiplier = 1;
-  if (match[2]) {
-    const suffix = match[2].toLowerCase();
-    if (suffix === 'k') multiplier = 1_000;
-    else if (suffix === 'm') multiplier = 1_000_000;
-    else if (suffix === 'b') multiplier = 1_000_000_000;
-    else return null;
-  }
+  const suffix = match[2]!.toLowerCase();
+  const multiplier = ({ k: 1e3, m: 1e6, b: 1e9 } as Record<string, number>)[suffix] ?? 1;
 
   return Math.round(number * multiplier);
 }
 
 function parseTodayStars(row: HTMLElement) {
-  const starText = row
+  const text = row
     .querySelectorAll('span')
-    .map((s) => s.textContent.trim())
-    .find((t) => /stars?\s+today/i.test(t));
+    .find((s) => /stars?\s+today/i.test(s.textContent))?.textContent;
 
-  if (!starText) return null;
-  const match = /([\d.,]+)\s+stars?\s+today/i.exec(starText);
+  const match = text && /([\d.,]+)\s+stars?\s+today/i.exec(text);
   return match ? parseNumber(match[1]) : null;
 }
 
@@ -58,7 +49,6 @@ function parseRepositoryRow(row: HTMLElement) {
   const forksEl = row.querySelector('a[href*="/forks"]');
 
   return {
-    rank: 0,
     repo: href.replace(/^\//, ''),
     desc: row.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ') ?? 'No description',
     stars: parseNumber(starsEl?.textContent.trim()),
@@ -69,7 +59,7 @@ function parseRepositoryRow(row: HTMLElement) {
 
 function extractRepositories(html: string) {
   const root = parse(html);
-  const rows = root.querySelectorAll(ROW_SELECTOR);
+  const rows = root.querySelectorAll('.Box-row');
 
   return rows.reduce<Repository[]>((acc, row) => {
     const parsed = parseRepositoryRow(row);
@@ -79,7 +69,7 @@ function extractRepositories(html: string) {
 }
 
 async function fetchWithRetry(url: string) {
-  for (let attempt = 1; attempt <= RETRY_LIMIT; attempt++) {
+  for (let attempt = 1; ; attempt++) {
     try {
       const response = await fetch(url, {
         headers: DEFAULT_HEADERS,
@@ -94,7 +84,6 @@ async function fetchWithRetry(url: string) {
       await delay(BACKOFF_MS);
     }
   }
-  throw new Error('unreachable');
 }
 
 async function scrapeTrending(language: GitHubLanguage) {
