@@ -1,5 +1,3 @@
-name: trending
-
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -10,7 +8,6 @@ permissions:
 
 concurrency:
   group: trending-scrape
-  cancel-in-progress: false
 
 jobs:
   scrape:
@@ -23,18 +20,16 @@ jobs:
           node-version: 22.20.0
           cache: pnpm
       - run: pnpm install --ignore-scripts
-      - name: configure-git-user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: build-scraper
         run: pnpm --filter github-trending-tools build
       - name: scrape-trending
         run: pnpm scrape:trending
       - name: commit-changes
         run: |
-          git add .
+          git config user.name "outslept"
+          git config user.email "135520429+outslept@users.noreply.github.com"
+          git add data/
           if ! git diff --cached --quiet; then
-            git commit -m "Update trending repositories and metadata"
+            git commit -m "chore(data): update trending repositories and metadata"
             git push
           fi
