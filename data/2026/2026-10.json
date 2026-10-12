@@ -3531,6 +3531,1823 @@
         ]
       }
     ],
+    "12": [
+      {
+        "language": "C",
+        "repos": [
+          {
+            "repo": "rexglue/rexglue-sdk",
+            "desc": "Xbox 360 Recompilation Runtime and Toolkit",
+            "stars": 1030,
+            "forks": 170,
+            "today": 6,
+            "rank": 1
+          },
+          {
+            "repo": "radareorg/radare2",
+            "desc": "UNIX-like reverse engineering framework and command-line toolset",
+            "stars": 24998,
+            "forks": 3345,
+            "today": 10,
+            "rank": 2
+          },
+          {
+            "repo": "duixcom/Duix-Avatar",
+            "desc": "🚀 Truly open-source AI avatar(digital human) toolkit for offline video generation and digital human cloning.",
+            "stars": 15853,
+            "forks": 2701,
+            "today": 52,
+            "rank": 3
+          },
+          {
+            "repo": "reactos/reactos",
+            "desc": "A free Windows-compatible Operating System",
+            "stars": 18182,
+            "forks": 2238,
+            "today": 9,
+            "rank": 4
+          },
+          {
+            "repo": "tarwin/tinyjsapp",
+            "desc": "Build native apps in JS. Backend, frontend. ~5Mb.",
+            "stars": 923,
+            "forks": 29,
+            "today": 142,
+            "rank": 5
+          },
+          {
+            "repo": "libuv/libuv",
+            "desc": "Cross-platform asynchronous I/O",
+            "stars": 27241,
+            "forks": 3947,
+            "today": 3,
+            "rank": 6
+          },
+          {
+            "repo": "acidanthera/OpenCorePkg",
+            "desc": "OpenCore bootloader",
+            "stars": 15524,
+            "forks": 2308,
+            "today": 8,
+            "rank": 7
+          },
+          {
+            "repo": "sp00nznet/ps3recomp",
+            "desc": "Static recompilation runtime libraries for PlayStation 3 titles.",
+            "stars": 382,
+            "forks": 41,
+            "today": 1,
+            "rank": 8
+          },
+          {
+            "repo": "sp00nznet/xboxrecomp",
+            "desc": "Turn any Xbox game binary into a native Windows executable. No emulation. No interpreter. Just raw, recompiled C.",
+            "stars": 176,
+            "forks": 45,
+            "today": 8,
+            "rank": 9
+          },
+          {
+            "repo": "openssl/openssl",
+            "desc": "General purpose TLS and crypto library",
+            "stars": 30927,
+            "forks": 11525,
+            "today": 67,
+            "rank": 10
+          }
+        ]
+      },
+      {
+        "language": "C++",
+        "repos": [
+          {
+            "repo": "boykopovar/AnyPS5",
+            "desc": "Tool for automatic PS5 executables porting to Linux and Windows",
+            "stars": 30603,
+            "forks": 2633,
+            "today": 3952,
+            "rank": 1
+          },
+          {
+            "repo": "tensorflow/tensorflow",
+            "desc": "An Open Source Machine Learning Framework for Everyone",
+            "stars": 200873,
+            "forks": 79177,
+            "today": 302,
+            "rank": 2
+          },
+          {
+            "repo": "microsoft/BitNet",
+            "desc": "Official inference framework for 1-bit LLMs",
+            "stars": 40712,
+            "forks": 3793,
+            "today": 195,
+            "rank": 3
+          },
+          {
+            "repo": "ClickHouse/ClickHouse",
+            "desc": "ClickHouse® is a real-time analytics database management system",
+            "stars": 50350,
+            "forks": 9084,
+            "today": 12,
+            "rank": 4
+          },
+          {
+            "repo": "telegramdesktop/tdesktop",
+            "desc": "Telegram Desktop messaging app",
+            "stars": 33205,
+            "forks": 7375,
+            "today": 27,
+            "rank": 5
+          },
+          {
+            "repo": "safijari/openpuck",
+            "desc": "Opensource firmware for NRF52840 Pro Micro that copycats the Steam Controller 2 Puck and adds an Xbox and Switch mode",
+            "stars": 1029,
+            "forks": 91,
+            "today": 15,
+            "rank": 6
+          },
+          {
+            "repo": "ran-j/PS2Recomp",
+            "desc": "Playstation 2 Static Recompiler & Runtime Tool to make native PC ports",
+            "stars": 3376,
+            "forks": 167,
+            "today": 11,
+            "rank": 7
+          },
+          {
+            "repo": "dyang886/Game-Cheats-Manager",
+            "desc": "Easily download and manage single-player game cheats for your convenience",
+            "stars": 15217,
+            "forks": 536,
+            "today": 41,
+            "rank": 8
+          },
+          {
+            "repo": "praydog/REFramework",
+            "desc": "Mod loader, scripting platform, and VR support for all RE Engine games",
+            "stars": 5621,
+            "forks": 664,
+            "today": 16,
+            "rank": 9
+          },
+          {
+            "repo": "78/xiaozhi-esp32",
+            "desc": "An MCP-based chatbot | 一个基于MCP的聊天机器人",
+            "stars": 30658,
+            "forks": 7191,
+            "today": 42,
+            "rank": 10
+          },
+          {
+            "repo": "mg-chao/snow-apps",
+            "desc": "Snow Apps repository, providing source code for Snow Shot and Snow Image Viewer.",
+            "stars": 5754,
+            "forks": 355,
+            "today": 28,
+            "rank": 11
+          },
+          {
+            "repo": "shadps4-emu/shadPS4",
+            "desc": "PlayStation 4 emulator for Windows, Linux, macOS and FreeBSD written in C++",
+            "stars": 33429,
+            "forks": 2707,
+            "today": 57,
+            "rank": 12
+          },
+          {
+            "repo": "optiscaler/OptiScaler",
+            "desc": "OptiScaler bridges upscaling/frame gen across GPUs. Supports DLSS2+/XeSS/FSR2+ inputs, replaces native upscalers, enables FSR-FG/XeFG on non-FG titles. Supports Nukem mod for DLSSG-to-FSR3 FG.",
+            "stars": 11707,
+            "forks": 529,
+            "today": 36,
+            "rank": 13
+          },
+          {
+            "repo": "Tencent/ncnn",
+            "desc": "ncnn is a high-performance neural network inference framework optimized for the mobile platform",
+            "stars": 23939,
+            "forks": 4523,
+            "today": 3,
+            "rank": 14
+          },
+          {
+            "repo": "leejet/stable-diffusion.cpp",
+            "desc": "Diffusion model(SD,Flux,Wan,Qwen Image,Z-Image,...) inference in pure C/C++",
+            "stars": 7641,
+            "forks": 868,
+            "today": 22,
+            "rank": 15
+          }
+        ]
+      },
+      {
+        "language": "CSS",
+        "repos": [
+          {
+            "repo": "thewhiteh4t/seeker",
+            "desc": "Accurately Locate Smartphones using Social Engineering",
+            "stars": 10121,
+            "forks": 2318,
+            "today": 7,
+            "rank": 1
+          },
+          {
+            "repo": "ConardLi/garden-skills",
+            "desc": "ConardLi's open-source Skills collection, featuring web design, knowledge retrieval, image generation, and more.",
+            "stars": 12828,
+            "forks": 1540,
+            "today": 18,
+            "rank": 2
+          },
+          {
+            "repo": "AumGupta/abyss-jellyfin",
+            "desc": "Minimal Dark Theme for Jellyfin [Customisable]",
+            "stars": 761,
+            "forks": 97,
+            "today": 3,
+            "rank": 3
+          },
+          {
+            "repo": "flick9000/winscript",
+            "desc": "Open-source tool to build your Windows script from scratch. It includes debloat, privacy, performance & app installing scripts.",
+            "stars": 2933,
+            "forks": 185,
+            "today": 4,
+            "rank": 4
+          },
+          {
+            "repo": "adobe/adobe.github.com",
+            "desc": "Adobe central hub for open source",
+            "stars": 1663,
+            "forks": 380,
+            "today": 2,
+            "rank": 5
+          },
+          {
+            "repo": "animate-css/animate.css",
+            "desc": "🍿 A cross-browser library of CSS animations. As easy to use as an easy thing.",
+            "stars": 82860,
+            "forks": 15868,
+            "today": 5,
+            "rank": 6
+          },
+          {
+            "repo": "refact0r/midnight-discord",
+            "desc": "a dark, customizable discord theme.",
+            "stars": 1392,
+            "forks": 521,
+            "today": 0,
+            "rank": 7
+          },
+          {
+            "repo": "Astromations/Hazy",
+            "desc": "A translucent spicetify theme",
+            "stars": 457,
+            "forks": 35,
+            "today": 0,
+            "rank": 8
+          }
+        ]
+      },
+      {
+        "language": "Elixir",
+        "repos": [
+          {
+            "repo": "ash-project/ash",
+            "desc": "A declarative, extensible framework for building Elixir applications.",
+            "stars": 2532,
+            "forks": 451,
+            "today": 6,
+            "rank": 1
+          },
+          {
+            "repo": "Shroud-email/shroud.email",
+            "desc": "Email protection service",
+            "stars": 41,
+            "forks": 4,
+            "today": 1,
+            "rank": 2
+          },
+          {
+            "repo": "operately/operately",
+            "desc": "The open source company operating system.",
+            "stars": 580,
+            "forks": 75,
+            "today": 1,
+            "rank": 3
+          },
+          {
+            "repo": "elixir-lang/elixir",
+            "desc": "Simple from zero to scale",
+            "stars": 26686,
+            "forks": 3666,
+            "today": 1,
+            "rank": 4
+          },
+          {
+            "repo": "openai/symphony",
+            "desc": "Symphony turns project work into isolated, autonomous implementation runs, allowing teams to manage work instead of supervising coding agents.",
+            "stars": 27636,
+            "forks": 2876,
+            "today": 12,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "language": "Go",
+        "repos": [
+          {
+            "repo": "alibaba/open-code-review",
+            "desc": "Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
+            "stars": 46260,
+            "forks": 3355,
+            "today": 294,
+            "rank": 1
+          },
+          {
+            "repo": "QuantumNous/new-api",
+            "desc": "A unified AI model hub for aggregation & distribution. It supports cross-converting various LLMs into OpenAI-compatible, Claude-compatible, or Gemini-compatible formats. A centralized gateway for personal and enterprise model management.",
+            "stars": 49738,
+            "forks": 11959,
+            "today": 71,
+            "rank": 2
+          },
+          {
+            "repo": "Autumn-27/ScopeSentry",
+            "desc": "ScopeSentry-Cyberspace mapping, subdomain enumeration, port scanning, sensitive information discovery, vulnerability scanning, distributed nodes",
+            "stars": 1802,
+            "forks": 346,
+            "today": 28,
+            "rank": 3
+          },
+          {
+            "repo": "BishopFox/sliver",
+            "desc": "Adversary Emulation Framework",
+            "stars": 12092,
+            "forks": 1620,
+            "today": 47,
+            "rank": 4
+          },
+          {
+            "repo": "majd/ipatool",
+            "desc": "Command-line tool that allows you to search for iOS, iPadOS, tvOS, watchOS, visionOS, and macOS apps on the App Store, and download .ipa or macOS .pkg app packages.",
+            "stars": 11629,
+            "forks": 974,
+            "today": 33,
+            "rank": 5
+          },
+          {
+            "repo": "Tencent/WeKnora",
+            "desc": "Open-source LLM knowledge platform: turn raw documents into a queryable RAG, an autonomous reasoning agent, and a self-maintaining Wiki.",
+            "stars": 33291,
+            "forks": 4438,
+            "today": 129,
+            "rank": 6
+          },
+          {
+            "repo": "larksuite/cli",
+            "desc": "The official Lark/飞书 CLI tool, maintained by the larksuite team — built for humans and AI Agents. Covers core business domains including Messenger, Docs, Base, Sheets, Calendar, Mail, Tasks, Meetings, and more, with 200+ commands and 20+ AI Agent Skills.",
+            "stars": 17630,
+            "forks": 1391,
+            "today": 16,
+            "rank": 7
+          },
+          {
+            "repo": "Project-HAMi/HAMi",
+            "desc": "Heterogeneous GPU Sharing on Kubernetes",
+            "stars": 4701,
+            "forks": 855,
+            "today": 36,
+            "rank": 8
+          },
+          {
+            "repo": "multica-ai/multica",
+            "desc": "Make humans and AI agents work as one team — open-source and self-hostable.",
+            "stars": 52521,
+            "forks": 6842,
+            "today": 70,
+            "rank": 9
+          },
+          {
+            "repo": "gtsteffaniak/filebrowser",
+            "desc": "📂 Web File Browser",
+            "stars": 8654,
+            "forks": 468,
+            "today": 15,
+            "rank": 10
+          },
+          {
+            "repo": "0xJacky/nginx-ui",
+            "desc": "Yet another WebUI for Nginx",
+            "stars": 11602,
+            "forks": 896,
+            "today": 6,
+            "rank": 11
+          },
+          {
+            "repo": "Wei-Shaw/sub2api",
+            "desc": "Sub2API 一站式开源中转服务，让 Claude、Openai 、Gemini、Grok订阅统一接入，支持拼车共享，更高效分摊成本，原生工具无缝使用。",
+            "stars": 43749,
+            "forks": 9385,
+            "today": 75,
+            "rank": 12
+          },
+          {
+            "repo": "lharries/whatsapp-mcp",
+            "desc": "WhatsApp MCP server",
+            "stars": 6540,
+            "forks": 1385,
+            "today": 59,
+            "rank": 13
+          },
+          {
+            "repo": "TencentCloud/CubeSandbox",
+            "desc": "Instant, Concurrent, Secure & Lightweight Sandbox for AI Agents.",
+            "stars": 12884,
+            "forks": 1189,
+            "today": 9,
+            "rank": 14
+          },
+          {
+            "repo": "fish2018/pansou",
+            "desc": "PanSou是一款高性能的网盘资源搜索API服务，支持TG频道和插件搜索。系统设计以性能和可扩展性为核心，支持多频道多插件并发搜索、结果智能排序和网盘类型分类。docker集成前后端，一键启动，开箱即用。仅供学习研究，请勿以各种形式用于盈利目的。 https://t.me/s/webhtv",
+            "stars": 14876,
+            "forks": 3613,
+            "today": 11,
+            "rank": 15
+          }
+        ]
+      },
+      {
+        "language": "Haskell",
+        "repos": [
+          {
+            "repo": "haskell/haskell-language-server",
+            "desc": "Official Haskell IDE support via the language server protocol (LSP)",
+            "stars": 2963,
+            "forks": 469,
+            "today": 1,
+            "rank": 1
+          },
+          {
+            "repo": "jgm/pandoc",
+            "desc": "Universal markup converter",
+            "stars": 46659,
+            "forks": 6352,
+            "today": 12,
+            "rank": 2
+          },
+          {
+            "repo": "flora-pm/flora-server",
+            "desc": "A modern package index for the Haskell ecosystem",
+            "stars": 158,
+            "forks": 50,
+            "today": 0,
+            "rank": 3
+          },
+          {
+            "repo": "koalaman/shellcheck",
+            "desc": "ShellCheck, a static analysis tool for shell scripts",
+            "stars": 40163,
+            "forks": 1958,
+            "today": 6,
+            "rank": 4
+          },
+          {
+            "repo": "mtolly/onyx",
+            "desc": "Toolkit for converting and building songs for Rock Band, Guitar Hero, Clone Hero, and other similar rhythm games",
+            "stars": 300,
+            "forks": 23,
+            "today": 1,
+            "rank": 5
+          },
+          {
+            "repo": "simplex-chat/simplex-chat",
+            "desc": "SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!",
+            "stars": 19544,
+            "forks": 1364,
+            "today": 7,
+            "rank": 6
+          }
+        ]
+      },
+      {
+        "language": "HTML",
+        "repos": [
+          {
+            "repo": "cathrynlavery/diagram-design",
+            "desc": "Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, and Pi. 44 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.",
+            "stars": 50730,
+            "forks": 3219,
+            "today": 1083,
+            "rank": 1
+          },
+          {
+            "repo": "f/prompts.chat",
+            "desc": "f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. Free and open source — self-host for your organization with complete privacy.",
+            "stars": 172651,
+            "forks": 22146,
+            "today": 232,
+            "rank": 2
+          },
+          {
+            "repo": "SamidyFR/Game-Decompilations",
+            "desc": "List of Game Decompilations i could gather from around the internet.",
+            "stars": 436,
+            "forks": 27,
+            "today": 24,
+            "rank": 3
+          },
+          {
+            "repo": "xbtlin/ai-berkshire",
+            "desc": "AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。| AI-era Berkshire: a value investing research framework built for Claude Code / Codex. 4 masters' methodologies + multi-agent adversarial analysis.",
+            "stars": 16708,
+            "forks": 2487,
+            "today": 15,
+            "rank": 4
+          },
+          {
+            "repo": "op7418/guizang-ppt-skill",
+            "desc": "AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layouts, image prompts, social covers, and a WebGL/low-power presentation runtime.",
+            "stars": 27627,
+            "forks": 1910,
+            "today": 53,
+            "rank": 5
+          },
+          {
+            "repo": "uiverse-io/galaxy",
+            "desc": "The largest Open-Source UI Library! Community-made and free to use. Made with either CSS or Tailwind.",
+            "stars": 13470,
+            "forks": 953,
+            "today": 17,
+            "rank": 6
+          },
+          {
+            "repo": "datawhalechina/Agent-Learning-Hub",
+            "desc": "AI Agent 学习路线与资料库收集",
+            "stars": 8601,
+            "forks": 867,
+            "today": 35,
+            "rank": 7
+          },
+          {
+            "repo": "QSCTech/zju-icicles",
+            "desc": "浙江大学课程攻略共享计划",
+            "stars": 41229,
+            "forks": 9590,
+            "today": 15,
+            "rank": 8
+          },
+          {
+            "repo": "spyboy-productions/r4ven",
+            "desc": "Track the GPS location of the user's smartphone or PC and capture a picture of the target, along with IP and device information.",
+            "stars": 1597,
+            "forks": 327,
+            "today": 17,
+            "rank": 9
+          },
+          {
+            "repo": "EricTechPro/super-board",
+            "desc": "Autonomous GitHub Project build → QA → review loop for Claude Code. One-line install.",
+            "stars": 189,
+            "forks": 58,
+            "today": 31,
+            "rank": 10
+          },
+          {
+            "repo": "alchaincyf/huashu-design",
+            "desc": "Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill · 高保真原型 / 幻灯片 / 动画 + 20 设计哲学 + 5 维评审 + MP4 导出 · Agent-agnostic",
+            "stars": 24840,
+            "forks": 2803,
+            "today": 56,
+            "rank": 11
+          },
+          {
+            "repo": "vpnfast/vpnfast.github.io",
+            "desc": "2026年科学上网最稳翻墙软件，几款中国好用的VPN推荐",
+            "stars": 1614,
+            "forks": 107,
+            "today": 5,
+            "rank": 12
+          },
+          {
+            "repo": "isjiamu/gzh-design-skill",
+            "desc": "把 Markdown 一键排成可直接粘进公众号编辑器的精致 HTML —— 6 套精选主题 + 主题生成器 + 双关卡校验。An AI-agent skill that turns Markdown into paste-ready WeChat article HTML.",
+            "stars": 3965,
+            "forks": 441,
+            "today": 8,
+            "rank": 13
+          }
+        ]
+      },
+      {
+        "language": "Java",
+        "repos": [
+          {
+            "repo": "NationalSecurityAgency/ghidra",
+            "desc": "Ghidra is a software reverse engineering (SRE) framework",
+            "stars": 83672,
+            "forks": 9308,
+            "today": 615,
+            "rank": 1
+          },
+          {
+            "repo": "apache/doris",
+            "desc": "Apache Doris is a real-time analytics and hybrid search database for AI agents.",
+            "stars": 16073,
+            "forks": 3975,
+            "today": 17,
+            "rank": 2
+          },
+          {
+            "repo": "YunaiV/ruoyi-vue-pro",
+            "desc": "🔥 官方推荐 🔥 RuoYi-Vue 全新 Pro 版本，优化重构所有功能。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Flowable 工作流、三方登录、支付、短信、商城、CRM、ERP、MES、IM、AI 大模型、IoT 物联网等功能。你的 ⭐️ Star ⭐️，是作者生发的动力！",
+            "stars": 39676,
+            "forks": 8560,
+            "today": 19,
+            "rank": 3
+          },
+          {
+            "repo": "agentscope-ai/agentscope-java",
+            "desc": "Build distributed, production-grade, long-running agents.",
+            "stars": 5927,
+            "forks": 1467,
+            "today": 9,
+            "rank": 4
+          },
+          {
+            "repo": "skylot/jadx",
+            "desc": "Dex to Java decompiler",
+            "stars": 50844,
+            "forks": 5797,
+            "today": 16,
+            "rank": 5
+          },
+          {
+            "repo": "DrKLO/Telegram",
+            "desc": "Telegram for Android source",
+            "stars": 30056,
+            "forks": 10218,
+            "today": 11,
+            "rank": 6
+          },
+          {
+            "repo": "zhukunpenglinyutong/jetbrains-cc-gui",
+            "desc": "Jetbrains Claude Code and Codex GUI Plugin",
+            "stars": 6925,
+            "forks": 673,
+            "today": 9,
+            "rank": 7
+          },
+          {
+            "repo": "jeecgboot/JeecgBoot",
+            "desc": "【低代码v2.0，一句话即可生成整个系统】企业级AI低代码平台，一键生成前后端代码甚至整个系统。 AI Skills 一句话画流程、设计表单、生成报表、大屏。内置 AI应用平台涵盖：AI聊天、知识库、流程编排、MCP插件等，兼容主流大模型。引领AI低代码「Skills 生成 → 在线配置 → 代码生成 → 手工合并->AI修改」开发模式，解决 Java 项目 90% 重复工作，提高效率又不失灵活。",
+            "stars": 48180,
+            "forks": 16212,
+            "today": 29,
+            "rank": 8
+          },
+          {
+            "repo": "iflytek/skillhub",
+            "desc": "Self-hosted, open-source agent skill registry for enterprises. Publish & version skill packages, govern with RBAC and audit logs, deploy on-premise with Docker or Kubernetes.",
+            "stars": 5175,
+            "forks": 841,
+            "today": 4,
+            "rank": 9
+          },
+          {
+            "repo": "emanuele-f/PCAPdroid",
+            "desc": "No-root network monitor, firewall and PCAP dumper for Android",
+            "stars": 4898,
+            "forks": 557,
+            "today": 5,
+            "rank": 10
+          },
+          {
+            "repo": "xuxueli/xxl-job",
+            "desc": "A distributed task scheduling framework.（分布式任务调度平台XXL-JOB）",
+            "stars": 30608,
+            "forks": 11496,
+            "today": 5,
+            "rank": 11
+          },
+          {
+            "repo": "MojoLauncher/MojoLauncher",
+            "desc": "A Minecraft: Java Edition launcher, based on PojavLauncher",
+            "stars": 1032,
+            "forks": 434,
+            "today": 3,
+            "rank": 12
+          },
+          {
+            "repo": "alibaba/spring-ai-alibaba",
+            "desc": "Agentic AI Framework for Java Developers",
+            "stars": 10998,
+            "forks": 2443,
+            "today": 6,
+            "rank": 13
+          },
+          {
+            "repo": "PojavLauncherTeam/PojavLauncher",
+            "desc": "A Minecraft: Java Edition Launcher for Android and iOS based on Boardwalk. Succeeded by https://github.com/AngelAuraMC/Amethyst-Android",
+            "stars": 9423,
+            "forks": 2384,
+            "today": 3,
+            "rank": 14
+          },
+          {
+            "repo": "iluwatar/java-design-patterns",
+            "desc": "Design patterns implemented in Java",
+            "stars": 94779,
+            "forks": 27363,
+            "today": 5,
+            "rank": 15
+          },
+          {
+            "repo": "krahets/hello-algo",
+            "desc": "《Hello 算法》：动画图解、一键运行的数据结构与算法教程。支持简中、繁中、English、日本語，提供 Python, Java, C++, C, C#, JS, Go, Swift, Rust, Ruby, Kotlin, TS, Dart 等代码实现",
+            "stars": 130557,
+            "forks": 15502,
+            "today": 38,
+            "rank": 16
+          },
+          {
+            "repo": "cabaletta/baritone",
+            "desc": "google maps for block game",
+            "stars": 9285,
+            "forks": 2064,
+            "today": 6,
+            "rank": 17
+          },
+          {
+            "repo": "spring-projects/spring-ai",
+            "desc": "An Application Framework for AI Engineering",
+            "stars": 9532,
+            "forks": 2960,
+            "today": 4,
+            "rank": 18
+          },
+          {
+            "repo": "termux/termux-app",
+            "desc": "Termux - a terminal emulator application for Android OS extendible by variety of packages.",
+            "stars": 62423,
+            "forks": 7860,
+            "today": 70,
+            "rank": 19
+          },
+          {
+            "repo": "apache/flink",
+            "desc": "Apache Flink",
+            "stars": 26400,
+            "forks": 14056,
+            "today": 5,
+            "rank": 20
+          }
+        ]
+      },
+      {
+        "language": "JavaScript",
+        "repos": [
+          {
+            "repo": "bilawalsidhu/gods-eye-view",
+            "desc": "A spy satellite simulator in your browser, except the data is real. Live open source spatial intelligence on a photorealistic 3D globe.",
+            "stars": 51987,
+            "forks": 10416,
+            "today": 886,
+            "rank": 1
+          },
+          {
+            "repo": "MiaAI-Lab/sparkDash",
+            "desc": "sparkDash ⚡ — Multi-DGX Spark Monitoring Dashboard",
+            "stars": 662,
+            "forks": 133,
+            "today": 21,
+            "rank": 2
+          },
+          {
+            "repo": "liyupi/ai-guide",
+            "desc": "程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemini / Claude / GLM）、最新 AI 资讯、Prompt 提示词大全、AI 知识百科（Agent Skills / RAG / MCP / A2A）、AI 编程教程（Harness Engineering）、AI 工具用法（Cursor / Claude Code / TRAE / Codex / Copilot）、AI 开发框架教程（Spring AI / LangChain）、AI 产品变现指南，帮你快速掌握 AI 技术，走在时代前沿。本项目为开源文档 aiguide，已升级为鱼皮 AI 导航网站",
+            "stars": 21007,
+            "forks": 2311,
+            "today": 38,
+            "rank": 3
+          },
+          {
+            "repo": "MagicMirrorOrg/MagicMirror",
+            "desc": "MagicMirror² is an open source modular smart mirror platform. With a growing list of installable modules, the MagicMirror² allows you to convert your hallway or bathroom mirror into your personal assistant.",
+            "stars": 24069,
+            "forks": 4576,
+            "today": 35,
+            "rank": 4
+          },
+          {
+            "repo": "greensock/GSAP",
+            "desc": "GSAP (GreenSock Animation Platform), a JavaScript animation library for the modern web",
+            "stars": 29084,
+            "forks": 2250,
+            "today": 46,
+            "rank": 5
+          },
+          {
+            "repo": "chaolucky18/xuexitongScript",
+            "desc": "学习通自动刷课脚本",
+            "stars": 2813,
+            "forks": 369,
+            "today": 25,
+            "rank": 6
+          }
+        ]
+      },
+      {
+        "language": "Kotlin",
+        "repos": [
+          {
+            "repo": "HuangZhuoRui/LocationSpoofer",
+            "desc": "虚拟定位软件，主要是定位，集成了 WiFi、蓝牙、基站等方案，主要有定点模拟和路线模拟。非全局方案，需要单独 hook 对应的软件(因为不想单独去适配各大手机厂商的系统)，",
+            "stars": 1533,
+            "forks": 279,
+            "today": 46,
+            "rank": 1
+          },
+          {
+            "repo": "signalapp/Signal-Android",
+            "desc": "A private messenger for Android.",
+            "stars": 29445,
+            "forks": 6899,
+            "today": 5,
+            "rank": 2
+          },
+          {
+            "repo": "ZalithLauncher/ZalithLauncher2",
+            "desc": "A Minecraft: Java Edition Launcher for Android",
+            "stars": 2006,
+            "forks": 361,
+            "today": 8,
+            "rank": 3
+          },
+          {
+            "repo": "deniscerri/ytdlnis",
+            "desc": "Full-featured audio/video downloader for Android using yt-dlp",
+            "stars": 10538,
+            "forks": 487,
+            "today": 31,
+            "rank": 4
+          },
+          {
+            "repo": "YuKongA/ghostlock-app",
+            "desc": "GhostLock One-Tap Execution App (CVE-2026-43499)",
+            "stars": 1821,
+            "forks": 469,
+            "today": 56,
+            "rank": 5
+          },
+          {
+            "repo": "tiann/KernelSU",
+            "desc": "A Kernel based root solution for Android",
+            "stars": 19081,
+            "forks": 4286,
+            "today": 40,
+            "rank": 6
+          },
+          {
+            "repo": "thunderbird/thunderbird-android",
+            "desc": "Thunderbird for Android – Open Source Email App for Android (fka K-9 Mail)",
+            "stars": 14095,
+            "forks": 2838,
+            "today": 12,
+            "rank": 7
+          },
+          {
+            "repo": "anilbeesetti/nextplayer",
+            "desc": "An Android native video player",
+            "stars": 4518,
+            "forks": 342,
+            "today": 10,
+            "rank": 8
+          },
+          {
+            "repo": "breezy-weather/breezy-weather",
+            "desc": "A feature-rich weather app with good visualizations and more than 50 sources.",
+            "stars": 11678,
+            "forks": 415,
+            "today": 31,
+            "rank": 9
+          },
+          {
+            "repo": "maxrave-dev/SimpMusic",
+            "desc": "A cross-platform music app using YouTube Music for backend",
+            "stars": 11926,
+            "forks": 642,
+            "today": 49,
+            "rank": 10
+          },
+          {
+            "repo": "BuSung-dev/Root-My-Galaxy",
+            "desc": "KSU installer for supported Samsung Galaxy firmware with CVE-2026-43499",
+            "stars": 1398,
+            "forks": 284,
+            "today": 9,
+            "rank": 11
+          },
+          {
+            "repo": "throneproj/ThroneForAndroid",
+            "desc": "Android GUI proxy utility (Empowered by sing-box)",
+            "stars": 560,
+            "forks": 21,
+            "today": 20,
+            "rank": 12
+          },
+          {
+            "repo": "SukiSU-Ultra/SukiSU-Ultra",
+            "desc": "Kernel-based Android Root Solution & KPM",
+            "stars": 6508,
+            "forks": 1350,
+            "today": 11,
+            "rank": 13
+          },
+          {
+            "repo": "wasi-master/wmkeyboard",
+            "desc": "A modern, privacy-first Android keyboard: offline intelligence, 350+ languages, themes, tools and an addon ecosystem.",
+            "stars": 524,
+            "forks": 26,
+            "today": 9,
+            "rank": 14
+          },
+          {
+            "repo": "JunkFood02/Seal",
+            "desc": "🦭 Video/Audio Downloader for Android, based on yt-dlp",
+            "stars": 29657,
+            "forks": 1467,
+            "today": 35,
+            "rank": 15
+          },
+          {
+            "repo": "2dust/v2rayNG",
+            "desc": "A V2Ray client for Android, support Xray core and v2fly core",
+            "stars": 63827,
+            "forks": 8264,
+            "today": 56,
+            "rank": 16
+          }
+        ]
+      },
+      {
+        "language": "Lua",
+        "repos": [
+          {
+            "repo": "iDvel/rime-ice",
+            "desc": "Rime 配置：雾凇拼音 | 长期维护的简体词库",
+            "stars": 19724,
+            "forks": 1198,
+            "today": 20,
+            "rank": 1
+          },
+          {
+            "repo": "amzxyz/rime-wanxiang",
+            "desc": "「万象拼音」：把算法留在幕后，把纯粹还给指尖，用更优质的数据，接管你的候选。",
+            "stars": 4840,
+            "forks": 177,
+            "today": 28,
+            "rank": 2
+          },
+          {
+            "repo": "id577/FS25_AdvancedDamageSystem",
+            "desc": "Advanced Damage System mod for Farming Simulator 25",
+            "stars": 290,
+            "forks": 18,
+            "today": 3,
+            "rank": 3
+          },
+          {
+            "repo": "UNDERdecoded/Gen2Recomped",
+            "desc": "Generation 2 Pokemon Recomp forked from Gen1Recomp and modified",
+            "stars": 370,
+            "forks": 22,
+            "today": 6,
+            "rank": 4
+          },
+          {
+            "repo": "beyond-all-reason/Beyond-All-Reason",
+            "desc": "Main game repository for Beyond All Reason.",
+            "stars": 4283,
+            "forks": 688,
+            "today": 3,
+            "rank": 5
+          },
+          {
+            "repo": "PathOfBuildingCommunity/PathOfBuilding",
+            "desc": "Offline build planner for Path of Exile.",
+            "stars": 5464,
+            "forks": 2412,
+            "today": 0,
+            "rank": 6
+          },
+          {
+            "repo": "xhcherry/GTA5-Stand-LuaAIO",
+            "desc": "GTA5 Mod Stand Lua All in One:快捷任务、crash、模组(人物|车辆|地图|模型)、娱乐等多种拓展功能玩法的lua脚本",
+            "stars": 770,
+            "forks": 378,
+            "today": 4,
+            "rank": 7
+          },
+          {
+            "repo": "windwp/nvim-autopairs",
+            "desc": "autopairs for neovim written in lua",
+            "stars": 4100,
+            "forks": 141,
+            "today": 0,
+            "rank": 8
+          },
+          {
+            "repo": "koreader/koreader",
+            "desc": "An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats, running on Cervantes, Kindle, Kobo, PocketBook and Android devices",
+            "stars": 30251,
+            "forks": 1960,
+            "today": 29,
+            "rank": 9
+          },
+          {
+            "repo": "bryanthaboi/gen1recomp",
+            "desc": "Gen1Recomp - A native Lua / LÖVE2D recreation of Gen 1, 2, and 3 Poke",
+            "stars": 3901,
+            "forks": 348,
+            "today": 17,
+            "rank": 10
+          },
+          {
+            "repo": "forest0xia/dota2bot-OpenHyperAI",
+            "desc": "A beta Dota2 Bot Script aims to provide better bot game experience",
+            "stars": 297,
+            "forks": 74,
+            "today": 0,
+            "rank": 11
+          },
+          {
+            "repo": "zbirenbaum/copilot.lua",
+            "desc": "Fully featured & enhanced replacement for copilot.vim complete with API for interacting with Github Copilot",
+            "stars": 4101,
+            "forks": 161,
+            "today": 1,
+            "rank": 12
+          },
+          {
+            "repo": "lewis6991/gitsigns.nvim",
+            "desc": "Git integration for buffers",
+            "stars": 7141,
+            "forks": 298,
+            "today": 3,
+            "rank": 13
+          },
+          {
+            "repo": "Courseplay/Courseplay_FS25",
+            "desc": "Courseplay for Farming Simulator 2025",
+            "stars": 927,
+            "forks": 87,
+            "today": 1,
+            "rank": 14
+          },
+          {
+            "repo": "FrSkyRC/ETHOS-Feedback-Community",
+            "desc": "Feedback & suggestions are welcomed here for ETHOS by FrSky",
+            "stars": 252,
+            "forks": 99,
+            "today": 0,
+            "rank": 15
+          },
+          {
+            "repo": "BurndiL/BalatroAP",
+            "desc": "A mod for the game Balatro that allows it to connect to an Archipelago server",
+            "stars": 46,
+            "forks": 17,
+            "today": 0,
+            "rank": 16
+          }
+        ]
+      },
+      {
+        "language": "OCaml",
+        "repos": [
+          {
+            "repo": "AeneasVerif/aeneas",
+            "desc": "A verification toolchain for Rust programs",
+            "stars": 1032,
+            "forks": 124,
+            "today": 1,
+            "rank": 1
+          },
+          {
+            "repo": "opengrep/opengrep",
+            "desc": "🔎 Static code analysis engine to find security issues in code.",
+            "stars": 3168,
+            "forks": 273,
+            "today": 1,
+            "rank": 2
+          },
+          {
+            "repo": "ocaml/ocaml",
+            "desc": "The core OCaml system: compilers, runtime system, base libraries",
+            "stars": 6602,
+            "forks": 1403,
+            "today": 0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "language": "Python",
+        "repos": [
+          {
+            "repo": "pytorch/pytorch",
+            "desc": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+            "stars": 104589,
+            "forks": 32165,
+            "today": 315,
+            "rank": 1
+          },
+          {
+            "repo": "Alishahryar1/free-claude-code",
+            "desc": "Use Claude Code, Codex, VSCode, Pi, and OpenCode (and 6 other harnesses) for free (1.3B+ free tokens) from your terminal, app, IDE, or phone, and now from the browser with native browser sessions (multi-harness + multi-model) like OpenClaw (voice supported + ToS friendly)",
+            "stars": 58133,
+            "forks": 9238,
+            "today": 506,
+            "rank": 2
+          },
+          {
+            "repo": "huggingface/transformers",
+            "desc": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training.",
+            "stars": 167529,
+            "forks": 34843,
+            "today": 501,
+            "rank": 3
+          },
+          {
+            "repo": "hugohe3/ppt-master",
+            "desc": "AI turns documents or topics into real, native PowerPoint decks—with native shapes, transitions and animations, data-backed charts and tables on demand, audio narration from speaker notes, and support for your own .pptx templates. · by Hugo He",
+            "stars": 60507,
+            "forks": 4775,
+            "today": 1104,
+            "rank": 4
+          },
+          {
+            "repo": "debpalash/VoiceStudio",
+            "desc": "VoiceStudio is the open-source, fully-local ElevenLabs alternative — voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages.",
+            "stars": 59022,
+            "forks": 6616,
+            "today": 1225,
+            "rank": 5
+          },
+          {
+            "repo": "HunxByts/GhostTrack",
+            "desc": "Useful tool to track location or mobile number",
+            "stars": 18253,
+            "forks": 2491,
+            "today": 165,
+            "rank": 6
+          },
+          {
+            "repo": "MadsLorentzen/ai-job-search",
+            "desc": "The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.",
+            "stars": 46192,
+            "forks": 15947,
+            "today": 504,
+            "rank": 7
+          },
+          {
+            "repo": "ComposioHQ/awesome-claude-skills",
+            "desc": "A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows",
+            "stars": 76895,
+            "forks": 9047,
+            "today": 68,
+            "rank": 8
+          },
+          {
+            "repo": "microsoft/TRELLIS.2",
+            "desc": "Native and Compact Structured Latents for 3D Generation",
+            "stars": 11860,
+            "forks": 1444,
+            "today": 95,
+            "rank": 9
+          },
+          {
+            "repo": "repowise-dev/repowise",
+            "desc": "Codebase intelligence for AI and humans: code health scores, auto-generated docs, git analytics, dead code detection, and architectural decisions via MCP.",
+            "stars": 7547,
+            "forks": 845,
+            "today": 67,
+            "rank": 10
+          },
+          {
+            "repo": "XiaoYouChR/Ghost-Downloader-3",
+            "desc": "The only downloader you need. 下载器的集大成者。",
+            "stars": 9732,
+            "forks": 641,
+            "today": 128,
+            "rank": 11
+          },
+          {
+            "repo": "datawhalechina/hello-agents",
+            "desc": "📚 《从零开始构建智能体》——从零开始的智能体原理与实践教程",
+            "stars": 82607,
+            "forks": 10243,
+            "today": 128,
+            "rank": 12
+          },
+          {
+            "repo": "Shubhamsaboo/awesome-llm-apps",
+            "desc": "100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.",
+            "stars": 141311,
+            "forks": 20784,
+            "today": 173,
+            "rank": 13
+          },
+          {
+            "repo": "anthropics/knowledge-work-plugins",
+            "desc": "Open source repository of plugins primarily intended for knowledge workers to use in Claude Cowork",
+            "stars": 29151,
+            "forks": 3308,
+            "today": 425,
+            "rank": 14
+          },
+          {
+            "repo": "sgl-project/sglang",
+            "desc": "SGLang is a high-performance serving framework for large language models and multimodal models.",
+            "stars": 37012,
+            "forks": 9472,
+            "today": 29,
+            "rank": 15
+          }
+        ]
+      },
+      {
+        "language": "Rust",
+        "repos": [
+          {
+            "repo": "storytold/artcraft",
+            "desc": "ArtCraft is an intentional crafting engine for artists, designers, and filmmakers",
+            "stars": 18608,
+            "forks": 3043,
+            "today": 2957,
+            "rank": 1
+          },
+          {
+            "repo": "farion1231/cc-switch",
+            "desc": "A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build & Hermes Agent. Only official website: ccswitch.io",
+            "stars": 142942,
+            "forks": 9515,
+            "today": 385,
+            "rank": 2
+          },
+          {
+            "repo": "martin-olivier/airgorah",
+            "desc": "A WiFi security auditing software",
+            "stars": 4102,
+            "forks": 720,
+            "today": 55,
+            "rank": 3
+          },
+          {
+            "repo": "BrandonKowalski/slot",
+            "desc": "A bespoke, Game Boy-centric CFW for the RG SP.",
+            "stars": 129,
+            "forks": 33,
+            "today": 15,
+            "rank": 4
+          },
+          {
+            "repo": "HakanSeven12/OpenCADStudio",
+            "desc": "A CAD application built with Rust — 2D/3D drawing, DWG/DXF support, and GPU-accelerated rendering",
+            "stars": 2824,
+            "forks": 313,
+            "today": 82,
+            "rank": 5
+          },
+          {
+            "repo": "denoland/celld",
+            "desc": "self-hosted, distributed Durable Objects",
+            "stars": 5449,
+            "forks": 295,
+            "today": 90,
+            "rank": 6
+          }
+        ]
+      },
+      {
+        "language": "Shell",
+        "repos": [
+          {
+            "repo": "Donchitos/Claude-Code-Game-Studios",
+            "desc": "Turn Claude Code into a full game dev studio — 49 AI agents, 72 workflow skills, and a complete coordination system mirroring real studio hierarchy.",
+            "stars": 26188,
+            "forks": 3709,
+            "today": 84,
+            "rank": 1
+          },
+          {
+            "repo": "mattpocock/skills",
+            "desc": "Skills for Real Engineers. Straight from my .agents directory.",
+            "stars": 286539,
+            "forks": 24042,
+            "today": 1825,
+            "rank": 2
+          },
+          {
+            "repo": "233boy/sing-box",
+            "desc": "最好用的 sing-box 一键安装脚本 & 管理脚本，自动创建 REALITY 协议；支持 TUIC，Trojan，Hysteria2 等所有常见的协议",
+            "stars": 4806,
+            "forks": 1780,
+            "today": 7,
+            "rank": 3
+          },
+          {
+            "repo": "0xNyk/council-of-high-intelligence",
+            "desc": "Structured multi-perspective deliberation for hard decisions. Run full councils, focused triads, or duo debates across Claude Code, Codex, Gemini CLI, and OpenCode.",
+            "stars": 4611,
+            "forks": 432,
+            "today": 17,
+            "rank": 4
+          },
+          {
+            "repo": "PaperMC/Folia",
+            "desc": "Fork of Paper which adds regionised multithreading to the dedicated server.",
+            "stars": 4441,
+            "forks": 627,
+            "today": 23,
+            "rank": 5
+          },
+          {
+            "repo": "omacom/omarchy",
+            "desc": "Beautiful, Modern & Opinionated Linux",
+            "stars": 44609,
+            "forks": 5386,
+            "today": 107,
+            "rank": 6
+          },
+          {
+            "repo": "kejilion/sh",
+            "desc": "KEJILION.SH 一款全功能的Linux管理脚本！An all-in-one Linux management script!",
+            "stars": 3407,
+            "forks": 1051,
+            "today": 101,
+            "rank": 7
+          },
+          {
+            "repo": "docker-mailserver/docker-mailserver",
+            "desc": "Production-ready fullstack but simple mail server (SMTP, IMAP, LDAP, Antispam, Antivirus, etc.) running inside a container.",
+            "stars": 19442,
+            "forks": 2095,
+            "today": 209,
+            "rank": 8
+          },
+          {
+            "repo": "EpicGames/unreal-engine-skills-for-claude-code-plugin",
+            "desc": "No description",
+            "stars": 511,
+            "forks": 65,
+            "today": 133,
+            "rank": 9
+          },
+          {
+            "repo": "omacom/omarchy-pkgs",
+            "desc": "No description",
+            "stars": 136,
+            "forks": 279,
+            "today": 2,
+            "rank": 10
+          },
+          {
+            "repo": "fscarmen/sing-box",
+            "desc": "Sing-box 全家桶 --- 一键多协议脚本。支持 Reality、Hysteria2 、TUIC 、Trojan 、Shadowsocks 、 AnyTLS 、ShadowTLS 、 Vmess 、 VLESS 、NaiveProxy，搭配 Argo 隧道等，多客户端订阅（Clash / V2rayN / Throne / ShadowRocket / SFA ），无须域名、功能强大、配置灵活。",
+            "stars": 5787,
+            "forks": 1145,
+            "today": 5,
+            "rank": 11
+          },
+          {
+            "repo": "InfinityLoop1308/PipePipe",
+            "desc": "An open-source Android app to let you browse YouTube and other services freely.",
+            "stars": 6942,
+            "forks": 248,
+            "today": 12,
+            "rank": 12
+          },
+          {
+            "repo": "nelvko/clash-for-linux-install",
+            "desc": "😼 优雅地使用基于 clash/mihomo 的代理环境",
+            "stars": 14978,
+            "forks": 1645,
+            "today": 12,
+            "rank": 13
+          },
+          {
+            "repo": "Mr-MIBonk/M.I.B._More-Incredible-Bash",
+            "desc": "M.I.B. - More Incredible Bash - The Army knife for Harman MIB 2.x aka MHI2(Q) units",
+            "stars": 1138,
+            "forks": 131,
+            "today": 5,
+            "rank": 14
+          }
+        ]
+      },
+      {
+        "language": "Svelte",
+        "repos": [
+          {
+            "repo": "open-webui/desktop",
+            "desc": "Open WebUI Desktop 🌐",
+            "stars": 2915,
+            "forks": 282,
+            "today": 8,
+            "rank": 1
+          },
+          {
+            "repo": "seanmorley15/AdventureLog",
+            "desc": "Self-hostable travel tracker and trip planner.",
+            "stars": 3797,
+            "forks": 256,
+            "today": 2,
+            "rank": 2
+          },
+          {
+            "repo": "satisfactorymodding/SatisfactoryModManager",
+            "desc": "A mod manager for easy installation of mods and modloader for Satisfactory",
+            "stars": 503,
+            "forks": 96,
+            "today": 0,
+            "rank": 3
+          },
+          {
+            "repo": "kagisearch/kite-public",
+            "desc": "Open source repository for Kite, news app by Kagi.",
+            "stars": 1085,
+            "forks": 273,
+            "today": 1,
+            "rank": 4
+          },
+          {
+            "repo": "mylofi/lofi.so",
+            "desc": "Home for Sync and Local-first",
+            "stars": 27,
+            "forks": 43,
+            "today": 0,
+            "rank": 5
+          },
+          {
+            "repo": "Bittu5134/LOTM-Reader",
+            "desc": "A community driven webnovel reader built with Svelte, with offline caching and a tons of optimizations. Built to be faster and cleaner than what was out there.",
+            "stars": 136,
+            "forks": 42,
+            "today": 0,
+            "rank": 6
+          },
+          {
+            "repo": "ozturkkl/framework-control",
+            "desc": "A local lightweight Linux/Windows service with a Svelte web UI for Framework devices (Laptop 12, 13, 16, and Desktop). It exposes a loopback HTTP API to monitor telemetry and tweak fans, power, and charging, including auto, manual, and curve fan control with hysteresis, rate limiting, a live RPM overlay, and calibration.",
+            "stars": 252,
+            "forks": 9,
+            "today": 1,
+            "rank": 7
+          }
+        ]
+      },
+      {
+        "language": "TypeScript",
+        "repos": [
+          {
+            "repo": "morluto/rea",
+            "desc": "Reverse engineer anything with agents, from app behavior down to native binaries.",
+            "stars": 113939,
+            "forks": 25518,
+            "today": 25599,
+            "rank": 1
+          },
+          {
+            "repo": "mksglu/context-mode",
+            "desc": "Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and enforces routing across 17 platforms via MCP + hooks.",
+            "stars": 26721,
+            "forks": 1918,
+            "today": 485,
+            "rank": 2
+          },
+          {
+            "repo": "langgenius/dify",
+            "desc": "Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.",
+            "stars": 158186,
+            "forks": 25007,
+            "today": 79,
+            "rank": 3
+          },
+          {
+            "repo": "openclaw/openclaw",
+            "desc": "The AI that really does things. Any OS. Any Platform. The lobster way. 🦞",
+            "stars": 391715,
+            "forks": 82367,
+            "today": 164,
+            "rank": 4
+          },
+          {
+            "repo": "CopilotKit/OpenIntelligentUI",
+            "desc": "Open-Source Generative UI Framework",
+            "stars": 2721,
+            "forks": 307,
+            "today": 278,
+            "rank": 5
+          },
+          {
+            "repo": "chthollyphile/folia-major",
+            "desc": "专注于绚丽的歌词动画效果的本地音乐/navidrome/第三方多平台在线音乐播放器",
+            "stars": 5095,
+            "forks": 438,
+            "today": 555,
+            "rank": 6
+          },
+          {
+            "repo": "agalwood/Motrix",
+            "desc": "A full-featured download manager.",
+            "stars": 56501,
+            "forks": 5064,
+            "today": 158,
+            "rank": 7
+          },
+          {
+            "repo": "getnao/nao",
+            "desc": "👾 nao is an open source analytics agent. (1) Create context with nao-core cli, (2) deploy nao chat interface for everyone",
+            "stars": 1909,
+            "forks": 283,
+            "today": 20,
+            "rank": 8
+          }
+        ]
+      },
+      {
+        "language": "Vue",
+        "repos": [
+          {
+            "repo": "vbenjs/vue-vben-admin",
+            "desc": "A modern vue admin panel built with Vue3, Shadcn UI, Vite, TypeScript, and Monorepo. It's fast!",
+            "stars": 33582,
+            "forks": 8972,
+            "today": 7,
+            "rank": 1
+          },
+          {
+            "repo": "wux1an/wxapkg",
+            "desc": "跨平台微信小程序反编译 GUI 工具，.wxapkg 文件扫描 + 解密 + 解包工具",
+            "stars": 4245,
+            "forks": 861,
+            "today": 3,
+            "rank": 2
+          },
+          {
+            "repo": "keleus/BewlyCat",
+            "desc": "BewlyCat——基于BewlyBewly开发的Bilibili拓展",
+            "stars": 4407,
+            "forks": 150,
+            "today": 8,
+            "rank": 3
+          },
+          {
+            "repo": "hefengxian/my-ielts",
+            "desc": "雅思词汇真经、雅思语法、听力 179、阅读 538 同义替换等。Everything during preparing for my IELTS exam.",
+            "stars": 3691,
+            "forks": 425,
+            "today": 27,
+            "rank": 4
+          },
+          {
+            "repo": "algerkong/AlgerMusicPlayer",
+            "desc": "一个第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制",
+            "stars": 16963,
+            "forks": 1378,
+            "today": 23,
+            "rank": 5
+          },
+          {
+            "repo": "docmirror/dev-sidecar",
+            "desc": "开发者边车，github打不开，github加速，git clone加速，git release下载加速，stackoverflow加速",
+            "stars": 24445,
+            "forks": 3003,
+            "today": 26,
+            "rank": 6
+          },
+          {
+            "repo": "daimiaopeng/coolapk-desktop",
+            "desc": "酷安跨平台桌面版",
+            "stars": 1514,
+            "forks": 57,
+            "today": 40,
+            "rank": 7
+          },
+          {
+            "repo": "julyx10/lap",
+            "desc": "An offline-first photo manager for large local libraries",
+            "stars": 3820,
+            "forks": 222,
+            "today": 19,
+            "rank": 8
+          },
+          {
+            "repo": "requarks/wiki",
+            "desc": "Wiki.js | Next Generation Open Source Wiki",
+            "stars": 29033,
+            "forks": 3321,
+            "today": 7,
+            "rank": 9
+          },
+          {
+            "repo": "MoeKoeMusic/MoeKoeMusic",
+            "desc": "一款开源简洁高颜值的酷狗第三方客户端 An open-source, concise, and aesthetically pleasing third-party client for KuGou that supports Windows / macOS / Linux / Web",
+            "stars": 6431,
+            "forks": 402,
+            "today": 5,
+            "rank": 10
+          },
+          {
+            "repo": "geekgeekrun/geekgeekrun",
+            "desc": "牛人快跑 - GeekGeekRun，求职找工作自动化工具，基于 Puppeteer、Electron。界面友好，简单易用！开源，免费！快速海投、自动开聊、已读不回提醒、职位信息抓取、不合适职位标记、僵尸职位清理；让你即刻变身成为一台冇得感情的求职机器🤖，找工作不内耗。宝宝不用动，妈妈全自动~祝你收获好Offer！",
+            "stars": 2709,
+            "forks": 206,
+            "today": 2,
+            "rank": 11
+          },
+          {
+            "repo": "wu529778790/panhub.shenzjd.com",
+            "desc": "PanHub 网盘聚合搜索 · Netdisk Search Aggregator。一个搜索框聚合夸克/阿里云盘/百度/115/迅雷等网盘资源，多源聚合去重、智能排序、插件熔断隔离。零数据库轻量部署，支持 Docker / Vercel / Cloudflare。Aggregate netdisk links into one search.",
+            "stars": 1731,
+            "forks": 669,
+            "today": 5,
+            "rank": 12
+          },
+          {
+            "repo": "Tools-cx-app/meta-magic_mount-rs",
+            "desc": "An implementation of a metamodule using Magic Mount, Based on MKSU, Template is from meta-overlay.",
+            "stars": 549,
+            "forks": 31,
+            "today": 2,
+            "rank": 13
+          },
+          {
+            "repo": "unovue/reka-ui",
+            "desc": "An open-source UI component library for building high-quality, accessible design systems and web apps for Vue. Previously Radix Vue",
+            "stars": 6865,
+            "forks": 566,
+            "today": 3,
+            "rank": 14
+          },
+          {
+            "repo": "qier222/YesPlayMusic",
+            "desc": "高颜值的第三方网易云播放器，支持 Windows / macOS / Linux",
+            "stars": 33366,
+            "forks": 4657,
+            "today": 16,
+            "rank": 15
+          },
+          {
+            "repo": "Gzh0821/pvzg_site",
+            "desc": "PvZ2 Gardendless Official Website | A rewritten Plants vs Zombies 2 PC port",
+            "stars": 1742,
+            "forks": 134,
+            "today": 3,
+            "rank": 16
+          },
+          {
+            "repo": "1sdv/TripStar",
+            "desc": "旅途星辰 (TripStar)是一个创新的 AI 文旅智能体应用，旨在解决用户在规划旅行时面临的各种问题，为提供一站式旅游攻略而生。",
+            "stars": 2473,
+            "forks": 288,
+            "today": 4,
+            "rank": 17
+          },
+          {
+            "repo": "gcpaas/DataRoom",
+            "desc": "🔥AI对话式生成大屏、页面，采用前后端一体化解决方案，几十种炫酷图表，支持20+数据来源接入，适用于大屏、低代码、BI场景，使用简单，代码完全开源。",
+            "stars": 866,
+            "forks": 212,
+            "today": 0,
+            "rank": 18
+          },
+          {
+            "repo": "zwave-js/zwave-js-ui",
+            "desc": "Full featured Z-Wave Control Panel UI and MQTT gateway. Built using Nodejs, and Vue/Vuetify",
+            "stars": 1243,
+            "forks": 250,
+            "today": 0,
+            "rank": 19
+          }
+        ]
+      },
+      {
+        "language": "Zig",
+        "repos": [
+          {
+            "repo": "ashhart/TensorFold",
+            "desc": "LLM Inference Engine for Metal, CUDA and Vulkan.",
+            "stars": 1262,
+            "forks": 221,
+            "today": 37,
+            "rank": 1
+          },
+          {
+            "repo": "ddalcu/mlx-serve",
+            "desc": "Native LLM inference server for Apple Silicon. OpenAI + Anthropic API compatible. No Python. Zig backend, Swift frontend macOS app with chat, music, voice, video generation.",
+            "stars": 1845,
+            "forks": 187,
+            "today": 16,
+            "rank": 2
+          },
+          {
+            "repo": "lightpanda-io/browser",
+            "desc": "Lightpanda: the headless browser designed for AI and automation",
+            "stars": 36298,
+            "forks": 1731,
+            "today": 67,
+            "rank": 3
+          },
+          {
+            "repo": "vercel-labs/native",
+            "desc": "Toolkit for building native desktop apps",
+            "stars": 7773,
+            "forks": 325,
+            "today": 4,
+            "rank": 4
+          },
+          {
+            "repo": "vercel-labs/fx",
+            "desc": "Unix like coding agent",
+            "stars": 3368,
+            "forks": 375,
+            "today": 6,
+            "rank": 5
+          },
+          {
+            "repo": "tigerbeetle/tigerbeetle",
+            "desc": "The financial transactions database designed for mission critical safety and performance.",
+            "stars": 17178,
+            "forks": 920,
+            "today": 10,
+            "rank": 6
+          },
+          {
+            "repo": "sleep3r/mtproto.zig",
+            "desc": "Keep the people you love connected — a tiny self-hosted Telegram proxy that hides in plain HTTPS",
+            "stars": 2047,
+            "forks": 78,
+            "today": 9,
+            "rank": 7
+          },
+          {
+            "repo": "zigtools/zls",
+            "desc": "A language server for Zig supporting developers with features like autocomplete and goto definition",
+            "stars": 5227,
+            "forks": 456,
+            "today": 2,
+            "rank": 8
+          },
+          {
+            "repo": "roc-lang/roc",
+            "desc": "A fast, friendly, functional language.",
+            "stars": 6105,
+            "forks": 425,
+            "today": 3,
+            "rank": 9
+          },
+          {
+            "repo": "zigimg/zigimg",
+            "desc": "Zig library for reading and writing different image formats",
+            "stars": 847,
+            "forks": 155,
+            "today": 0,
+            "rank": 10
+          },
+          {
+            "repo": "ghostty-org/ghostty",
+            "desc": "👻 Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.",
+            "stars": 62091,
+            "forks": 3626,
+            "today": 47,
+            "rank": 11
+          },
+          {
+            "repo": "Loongphy/codex-auth",
+            "desc": "A CLI tool to switch and manage Codex accounts",
+            "stars": 2798,
+            "forks": 162,
+            "today": 2,
+            "rank": 12
+          },
+          {
+            "repo": "riverwm/river",
+            "desc": "[mirror] A non-monolithic Wayland compositor",
+            "stars": 4316,
+            "forks": 170,
+            "today": 4,
+            "rank": 13
+          }
+        ]
+      }
+    ],
     "01": [
       {
         "language": "C",
