@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
@@ -18,7 +18,6 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
   const [dateInput, setDateInput] = useState('');
   const [dateError, setDateError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const anchorRef = useRef<HTMLDivElement>(null);
 
   const isAvailable = (d: Date) =>
     !!metadata && isDateAvailableInMetadata(metadata, d.toLocaleDateString('sv-SE'));
@@ -47,7 +46,7 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <div className="relative w-full" ref={anchorRef}>
+      <div className="relative w-full">
         <CalendarDays className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none z-10" />
         <Input
           value={dateInput}
@@ -61,11 +60,9 @@ export function DatePickerDropdown({ bounds, metadata, onNavigate }: DatePickerD
           )}
         />
       </div>
-
       {dateError && (
         <p className="mt-1 font-mono text-xs text-destructive text-center">{dateError}</p>
       )}
-
       <PopoverContent className="w-auto p-2" align="start">
         <Calendar
           mode="single"
