@@ -1,15 +1,19 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Suspense, useMemo } from 'react';
+import { Archive } from 'lucide-react';
 
 import { TopReposBlock, TopReposSkeleton } from '../components/top-repos-block';
 import { DatePickerDropdown } from '../components/date-picker-dropdown';
 import { RecentDates } from '../components/recent-dates';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
 
 import { useMetadata } from '../hooks/use-trending-data';
 import { useTrendingHistory } from '../hooks/use-trending-history';
-import { isValidIsoDate } from '../lib/utils';
-import { getDateBoundsFromMetadata } from '../lib/trending-metadata';
+import { formatNumber, isValidIsoDate } from '../lib/utils';
+import {
+  getAllAvailableDatesFromMetadata,
+  getDateBoundsFromMetadata,
+  lastAvailableDateFromMetadata,
+} from '../lib/trending-metadata';
 
 export const Route = createFileRoute('/')({
   component: IndexPage,
@@ -21,6 +25,11 @@ function IndexPage() {
   const { recentDates, addDate } = useTrendingHistory();
 
   const bounds = useMemo(() => getDateBoundsFromMetadata(metadata), [metadata]);
+  const totalDays = useMemo(
+    () => getAllAvailableDatesFromMetadata(metadata).length,
+    [metadata],
+  );
+  const latestDate = useMemo(() => lastAvailableDateFromMetadata(metadata), [metadata]);
 
   const navigateToDate = (iso: string) => {
     if (!isValidIsoDate(iso)) return;
@@ -29,45 +38,56 @@ function IndexPage() {
   };
 
   return (
-    <div className="relative flex min-h-svh flex-col bg-background px-4 py-6">
-      <main className="flex flex-1 flex-col items-center justify-start w-full max-w-md mx-auto gap-10 pt-10">
-        <header className="flex flex-col items-center gap-5 text-center">
-          <img src="/daily.png" alt="Daily trending" className="size-40 object-contain" />
-          <div className="space-y-2.5">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Github Trending Inspector
-            </h1>
-            <p className="max-w-md text-sm text-muted-foreground mx-auto leading-relaxed">
-              Archive of trending GitHub repositories. Enter a date, pick a day in the calendar, or
-              try your luck.
-            </p>
+    <div className="relative flex min-h-svh flex-col bg-background px-4 py-8 sm:py-14">
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8">
+        <header className="flex flex-col items-start gap-4">
+          <div className="flex w-full items-center justify-between gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-muted/40 px-2.5 py-1 text-xs text-muted-foreground">
+              <Archive className="size-3.5 text-foreground/80" />
+              <span className="font-mono tabular-nums text-foreground font-medium">
+                {formatNumber(totalDays)}
+              </span>
+              <span>archived snapshots</span>
+              {latestDate && (
+                <>
+                  <span className="text-border">•</span>
+                  <span className="font-mono text-[11px] tabular-nums">up to {latestDate}</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <img
+              src="/daily.png"
+              alt="GitHub Trending Inspector"
+              className="size-12 sm:size-14 shrink-0 object-contain"
+            />
+            <div className="space-y-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                GitHub Trending Inspector
+              </h1>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Time machine for open-source momentum. Jump to any date, browse the calendar, or
+                roll the dice.
+              </p>
+            </div>
           </div>
         </header>
 
-        <Tabs defaultValue="search" className="w-full">
-          <TabsList className="mb-8 mx-auto">
-            <TabsTrigger value="search">Search Archive</TabsTrigger>
-            <TabsTrigger value="top">Top Today</TabsTrigger>
-          </TabsList>
+        <section className="flex flex-col gap-2.5">
+          <DatePickerDropdown bounds={bounds} metadata={metadata} onNavigate={navigateToDate} />
+          <RecentDates dates={recentDates} onSelect={navigateToDate} />
+        </section>
 
-          <TabsContent value="search">
-            <div className="flex flex-col items-center gap-4 w-full">
-              <DatePickerDropdown bounds={bounds} metadata={metadata} onNavigate={navigateToDate} />
-              <div className="text-xs text-muted-foreground text-center space-y-1">
-                <p>Enter a date in YYYY-MM-DD format to inspect what was trending.</p>
-                <p>Use the calendar to browse only available days.</p>
-                <p>Or jump back to a date from your recent history below.</p>
-              </div>
-              <RecentDates dates={recentDates} onSelect={navigateToDate} />
-            </div>
-          </TabsContent>
+        <Suspense fallback={<TopReposSkeleton />}>
+          <TopReposBlock />
+        </Suspense>
 
-          <TabsContent value="top">
-            <Suspense fallback={<TopReposSkeleton />}>
-              <TopReposBlock />
-            </Suspense>
-          </TabsContent>
-        </Tabs>
+        <footer className="mt-auto flex items-center justify-between border-t border-border/40 pt-4 text-xs text-muted-foreground/70">
+          <span>Not affiliated with GitHub</span>
+          <span className="font-mono">YYYY-MM-DD</span>
+        </footer>
       </main>
     </div>
   );

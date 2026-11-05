@@ -26,7 +26,8 @@ export async function fetchLatestAvailableDate(): Promise<string> {
   }
 }
 
-export function lastAvailableDateFromMetadata(meta: MetadataFile): string | null {
+export function lastAvailableDateFromMetadata(meta?: MetadataFile): string | null {
+  if (!meta) return null;
   const years = meta.years;
   const yearsDesc = Object.keys(years).sort((a, b) => b.localeCompare(a));
 
@@ -43,6 +44,52 @@ export function lastAvailableDateFromMetadata(meta: MetadataFile): string | null
   }
 
   return null;
+}
+
+export function getAllAvailableDatesFromMetadata(meta?: MetadataFile): string[] {
+  if (!meta) return [];
+  const allDates: string[] = [];
+
+  for (const year of Object.keys(meta.years).sort()) {
+    const months = meta.years[year] ?? {};
+    for (const month of Object.keys(months).sort()) {
+      const days = months[month].slice().sort();
+      for (const day of days) {
+        allDates.push(`${year}-${month}-${day}`);
+      }
+    }
+  }
+
+  return allDates;
+}
+
+export function getAdjacentDatesFromMetadata(
+  meta: MetadataFile | undefined,
+  currentDate: string,
+): { prevDate: string | null; nextDate: string | null } {
+  if (!meta) return { prevDate: null, nextDate: null };
+  const allDates = getAllAvailableDatesFromMetadata(meta);
+  if (allDates.length === 0) return { prevDate: null, nextDate: null };
+
+  const idx = allDates.indexOf(currentDate);
+  if (idx !== -1) {
+    return {
+      prevDate: idx > 0 ? allDates[idx - 1] : null,
+      nextDate: idx < allDates.length - 1 ? allDates[idx + 1] : null,
+    };
+  }
+
+  // Fallback if currentDate is not in metadata
+  const prevDate = allDates.filter((d) => d < currentDate).pop() ?? null;
+  const nextDate = allDates.find((d) => d > currentDate) ?? null;
+  return { prevDate, nextDate };
+}
+
+export function getRandomDateFromMetadata(meta?: MetadataFile): string | null {
+  const dates = getAllAvailableDatesFromMetadata(meta);
+  if (dates.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * dates.length);
+  return dates[randomIndex];
 }
 
 export function getDateBoundsFromMetadata(meta: MetadataFile | undefined): {

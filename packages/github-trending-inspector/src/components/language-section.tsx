@@ -1,8 +1,8 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useMediaQuery } from '../hooks/use-media-query';
 import { useTable } from '../hooks/use-table';
 import type { LanguageGroup } from '../lib/types';
-import { cn, slugify } from '../lib/utils';
+import { slugify } from '../lib/utils';
 
 import { buildRepoColumns } from './table-columns';
 import { TableHeader } from './table-header';
@@ -34,6 +34,11 @@ export function LanguageSection({ group, globalFilter }: LanguageSectionProps) {
     handlePageChange,
   );
 
+  const totalStarsToday = useMemo(
+    () => group.repos.reduce((sum, r) => sum + (r.today ?? 0), 0),
+    [group.repos],
+  );
+
   const sectionId = slugify(group.language);
   const tableRows = table.getRowModel().rows;
 
@@ -41,14 +46,12 @@ export function LanguageSection({ group, globalFilter }: LanguageSectionProps) {
     <section
       ref={sectionRef}
       id={sectionId}
-      className={cn(
-        'mb-6 scroll-mt-6 rounded-md p-3 transition-all duration-300',
-        'bg-background border border-border',
-      )}
+      className="scroll-mt-6 overflow-hidden rounded-xl border border-border bg-card/30 shadow-2xs"
     >
       <TableHeader
         language={group.language}
         repoCount={group.repos.length}
+        totalStarsToday={totalStarsToday}
         isFiltered={globalFilter !== ''}
       />
 

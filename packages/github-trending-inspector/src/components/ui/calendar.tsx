@@ -7,6 +7,101 @@ import { cn } from '../../lib/utils';
 import { Button, buttonVariants } from './button';
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from 'lucide-react';
 
+function CalendarMonthGrid({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'table'>) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const indicatorRef = React.useRef<HTMLDivElement>(null);
+  const isInsideRef = React.useRef(false);
+  const activeBtnRef = React.useRef<HTMLButtonElement | null>(null);
+
+  const hideIndicator = React.useCallback(() => {
+    isInsideRef.current = false;
+    activeBtnRef.current = null;
+    const indicator = indicatorRef.current;
+    if (indicator) {
+      indicator.style.transition = 'opacity 140ms var(--ease-out)';
+      indicator.style.opacity = '0';
+    }
+  }, []);
+
+  const handlePointerOver = React.useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType !== 'mouse') return;
+
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        'button[data-day]:not(:disabled)',
+      );
+
+      if (!btn) {
+        if (isInsideRef.current) hideIndicator();
+        return;
+      }
+
+      if (btn === activeBtnRef.current) return;
+      activeBtnRef.current = btn;
+
+      const container = containerRef.current;
+      const indicator = indicatorRef.current;
+      if (!container || !indicator) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      const x = btnRect.left - containerRect.left;
+      const y = btnRect.top - containerRect.top;
+      const w = btnRect.width;
+      const h = btnRect.height;
+
+      if (!isInsideRef.current) {
+        indicator.style.transition = 'opacity 140ms var(--ease-out)';
+        indicator.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        indicator.style.width = `${w}px`;
+        indicator.style.height = `${h}px`;
+        void indicator.offsetHeight;
+        indicator.style.opacity = '1';
+        isInsideRef.current = true;
+      } else {
+        indicator.style.transition =
+          'transform 160ms var(--ease-out), width 160ms var(--ease-out), height 160ms var(--ease-out), opacity 140ms var(--ease-out)';
+        indicator.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        indicator.style.width = `${w}px`;
+        indicator.style.height = `${h}px`;
+        indicator.style.opacity = '1';
+      }
+    },
+    [hideIndicator],
+  );
+
+  const handlePointerLeave = React.useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType !== 'mouse') return;
+      hideIndicator();
+    },
+    [hideIndicator],
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      onPointerOver={handlePointerOver}
+      onPointerLeave={handlePointerLeave}
+      className="relative w-full"
+    >
+      <div
+        ref={indicatorRef}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-0 z-0 hidden rounded-(--cell-radius) opacity-0 will-change-[transform,width,height,opacity] bg-muted/85 dark:bg-muted/60 [@media(hover:hover)_and_(pointer:fine)]:block"
+      />
+      <table className={cn('relative z-10', className)} {...props}>
+        {children}
+      </table>
+    </div>
+  );
+}
+
 function Calendar({
   className,
   classNames,
@@ -26,7 +121,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        'group/calendar p-2 bg-background [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent',
+        'group/calendar p-2 bg-background [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7.5)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent',
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className,
@@ -75,10 +170,10 @@ function Calendar({
         month_grid: cn('w-full border-collapse', defaultClassNames.month_grid),
         weekdays: cn('flex', defaultClassNames.weekdays),
         weekday: cn(
-          'flex-1 rounded-(--cell-radius) text-[0.8rem] font-normal text-muted-foreground select-none',
+          'flex-1 rounded-(--cell-radius) text-[0.75rem] font-medium text-muted-foreground/70 select-none',
           defaultClassNames.weekday,
         ),
-        week: cn('mt-2 flex w-full', defaultClassNames.week),
+        week: cn('mt-1.5 flex w-full', defaultClassNames.week),
         week_number_header: cn('w-(--cell-size) select-none', defaultClassNames.week_number_header),
         week_number: cn(
           'text-[0.8rem] text-muted-foreground select-none',
@@ -101,14 +196,14 @@ function Calendar({
           defaultClassNames.range_end,
         ),
         today: cn(
-          'bg-muted rounded-(--cell-radius) text-foreground data-[selected=true]:rounded-none',
+          'rounded-(--cell-radius) text-foreground ring-1 ring-inset ring-foreground/20 data-[selected=true]:ring-0',
           defaultClassNames.today,
         ),
         outside: cn(
-          'text-muted-foreground aria-selected:text-muted-foreground',
+          'text-muted-foreground/50 aria-selected:text-muted-foreground',
           defaultClassNames.outside,
         ),
-        disabled: cn('text-muted-foreground opacity-50', defaultClassNames.disabled),
+        disabled: cn('text-muted-foreground/35 opacity-50', defaultClassNames.disabled),
         hidden: cn('invisible', defaultClassNames.hidden),
         ...classNames,
       }}
@@ -116,6 +211,7 @@ function Calendar({
         Root: ({ className, rootRef, ...props }) => {
           return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
         },
+        MonthGrid: CalendarMonthGrid,
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
             return <ChevronLeftIcon className={cn('size-4', className)} {...props} />;
@@ -160,6 +256,7 @@ function CalendarDayButton({
 
   return (
     <Button
+      ref={ref}
       variant="ghost"
       size="icon"
       data-day={day.date.toLocaleDateString(locale?.code)}
@@ -173,7 +270,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        'relative isolate z-10 flex flex-col gap-1 aspect-square size-auto w-full min-w-(--cell-size) leading-none font-normal border-0 group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70',
+        'relative isolate z-10 flex flex-col gap-1 aspect-square size-auto w-full min-w-(--cell-size) leading-none font-normal font-mono text-xs tabular-nums border-0 hover:bg-transparent dark:hover:bg-transparent group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[selected-single=true]:hover:bg-primary data-[selected-single=true]:hover:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70',
         defaultClassNames.day,
         className,
       )}

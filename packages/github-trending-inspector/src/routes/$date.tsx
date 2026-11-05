@@ -5,6 +5,7 @@ import { AppSidebar } from '../components/app-sidebar';
 import { DatePageSkeleton } from '../components/date-page-skeleton';
 import { DailyTrending } from '../components/daily-trending';
 import { ScrollToTop } from '../components/scroll-to-top';
+import { SidebarDatePicker } from '../components/sidebar-date-picker';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../components/ui/sidebar';
 
 import {
@@ -83,13 +84,21 @@ function DatePageContent({ date }: { date: string }) {
         activeId={activeId}
       />
       <SidebarInset>
-        <div className="fixed left-4 top-4 z-50 md:hidden">
+        <header className="sticky top-0 z-30 flex h-12 items-center justify-between gap-3 border-b border-border/60 bg-background/85 px-4 backdrop-blur-md md:hidden">
           <SidebarTrigger />
-        </div>
+          <SidebarDatePicker
+            date={date}
+            onDateChange={navigateToDate}
+            className="max-w-[220px]"
+          />
+          <span className="font-mono text-xs tabular-nums text-muted-foreground">
+            {filteredGroups.length} lang
+          </span>
+        </header>
 
-        <main className="container mx-auto flex-1 px-4 py-6 pb-24 md:pb-6">
+        <div className="container mx-auto flex-1 px-4 py-6 pb-20 md:pb-8 max-w-6xl">
           <DailyTrending groups={filteredGroups} globalFilter={globalFilter} />
-        </main>
+        </div>
       </SidebarInset>
       <ScrollToTop />
     </SidebarProvider>
