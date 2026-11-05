@@ -25,7 +25,7 @@ declare module '@tanstack/react-table' {
 
 function MobileCard({ repo }: { repo: Repository }) {
   const [avatarError, setAvatarError] = useState(false);
-  const [owner, name] = repo.split('/');
+  const [owner, name] = repo.repo.split('/');
   const avatarUrl = owner ? `${GITHUB_BASE_URL}/${owner}.png?size=40` : null;
   const hasToday = repo.today != null && repo.today > 0;
 
