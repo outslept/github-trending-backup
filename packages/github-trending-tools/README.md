@@ -5,22 +5,36 @@ Track what's hot. 700+ languages.
 ## How it works
 
 ```bash
-npm start
+pnpm start
 # scrapes 19 popular languages
-# generates markdown with tables
-# saves to fs
+# saves monthly JSON snapshots to data/YYYY/YYYY-MM.json
+# updates data/metadata.json
 # done
 ```
 
 ## Output sample
 
-```markdown
-## TypeScript
-
-| #   | Repository       | Description                         | Stars   | Forks  | Today |
-| --- | ---------------- | ----------------------------------- | ------- | ------ | ----- |
-| 1   | microsoft/vscode | Visual Studio Code                  | 162,127 | 28,513 | 89    |
-| 2   | angular/angular  | The modern web developer's platform | 95,234  | 25,012 | 45    |
+```json
+{
+  "month": "2025-02",
+  "days": {
+    "24": [
+      {
+        "language": "TypeScript",
+        "repos": [
+          {
+            "rank": 1,
+            "repo": "microsoft/vscode",
+            "desc": "Visual Studio Code",
+            "stars": 162127,
+            "forks": 28513,
+            "today": 89
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
 ## Languages included as a default
@@ -29,10 +43,10 @@ C • C++ • CSS • Elixir • Go • Haskell • HTML • Java • JavaScript
 
 ## Customization
 
-Want different languages? Edit the list:
+Want different languages? Edit `WATCHLIST` in [`src/index.ts`](./src/index.ts):
 
 ```typescript
-const languages: GitHubLanguage[] = [
+const WATCHLIST: readonly GitHubLanguage[] = [
   'JavaScript',
   'Python',
   'Rust',
@@ -40,7 +54,7 @@ const languages: GitHubLanguage[] = [
 ];
 ```
 
-700+ languages supported. Full list in [src/github-languages.ts](./src/github-languages.ts).
+700+ languages supported. Full list in [`src/github-languages.ts`](./src/github-languages.ts).
 
 ## Disclaimer
 
