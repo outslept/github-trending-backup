@@ -1,6 +1,0 @@
-{
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/api/trending/(.*)", "dest": "/api/trending/[...slug]" }
-  ]
-}
