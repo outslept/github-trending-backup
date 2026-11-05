@@ -1,3 +1,5 @@
+import type { GitHubLanguage } from './github-languages.js';
+
 export interface Repository {
   rank: number;
   repo: string;
@@ -8,7 +10,7 @@ export interface Repository {
 }
 
 export interface LanguageGroup {
-  language: string;
+  language: GitHubLanguage;
   repos: Repository[];
 }
 

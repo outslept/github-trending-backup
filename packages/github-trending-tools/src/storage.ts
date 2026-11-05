@@ -14,9 +14,11 @@ function findProjectRoot(startDir: string): string {
 }
 
 const DATA_ROOT = join(findProjectRoot(import.meta.dirname), 'data');
-
-const monthPath = (month: string) => join(DATA_ROOT, month.slice(0, 4), `${month}.json`);
 const METADATA_PATH = join(DATA_ROOT, 'metadata.json');
+
+function getMonthPath(month: string): string {
+  return join(DATA_ROOT, month.slice(0, 4), `${month}.json`);
+}
 
 function readJson<T>(path: string, fallback: T): T {
   if (!existsSync(path)) return fallback;
@@ -28,19 +30,19 @@ function readJson<T>(path: string, fallback: T): T {
   }
 }
 
-function writeJson(path: string, data: unknown) {
+function writeJson(path: string, data: unknown): void {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, JSON.stringify(data, null, 2) + '\n', 'utf8');
 }
 
-export function saveMonthData(month: string, day: string, groups: LanguageGroup[]) {
-  const path = monthPath(month);
+export function saveMonthData(month: string, day: string, groups: LanguageGroup[]): void {
+  const path = getMonthPath(month);
   const data = readJson<TrendingMonthData>(path, { month, days: {} });
   data.days[day] = groups;
   writeJson(path, data);
 }
 
-export function updateMetadata(month: string, day: string) {
+export function updateMetadata(month: string, day: string): void {
   const meta = readJson<MetadataFile>(METADATA_PATH, { lastUpdated: '', years: {} });
 
   const year = month.slice(0, 4);

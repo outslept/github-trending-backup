@@ -2,7 +2,7 @@ import { type GitHubLanguage } from './github-languages.js';
 import { scrapeTrendingForAll } from './scrape.js';
 import { saveMonthData, updateMetadata } from './storage.js';
 
-const WATCHLIST: GitHubLanguage[] = [
+const WATCHLIST: readonly GitHubLanguage[] = [
   'C',
   'C++',
   'CSS',

@@ -6,69 +6,92 @@ const DEFAULT_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
   Accept: '*/*',
 };
+
 const REQUEST_TIMEOUT_MS = 30_000;
 const RETRY_LIMIT = 5;
 const BACKOFF_MS = 5_000;
 const PAUSE_MS = 5_000;
 
-const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const NUMBER_RE = /^([\d.,]+)\s*([kmb]?)$/i;
+const STARS_TODAY_RE = /([\d.,]+)\s+stars?\s+today/i;
+const WHITESPACE_RE = /\s+/g;
 
-function parseNumber(value: string | null | undefined) {
+const MULTIPLIERS: Readonly<Record<string, number>> = {
+  k: 1e3,
+  m: 1e6,
+  b: 1e9,
+};
+
+function delay(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function parseNumber(value: string | null | undefined): number | null {
   if (!value) return null;
+
   const trimmed = value.trim();
   if (!trimmed || trimmed === '—' || trimmed === '-') return null;
 
-  const match = /^([\d.,]+)\s*([kmb]?)$/i.exec(trimmed);
+  const match = NUMBER_RE.exec(trimmed);
   if (!match) return null;
 
-  const raw = match[1]!.replace(/,/g, '');
+  const raw = match[1]!.replaceAll(',', '');
   const number = Number(raw);
   if (!Number.isFinite(number)) return null;
 
   const suffix = match[2]!.toLowerCase();
-  const multiplier = ({ k: 1e3, m: 1e6, b: 1e9 } as Record<string, number>)[suffix] ?? 1;
+  const multiplier = MULTIPLIERS[suffix] ?? 1;
 
   return Math.round(number * multiplier);
 }
 
-function parseTodayStars(row: HTMLElement) {
-  const text = row
-    .querySelectorAll('span')
-    .find((s) => /stars?\s+today/i.test(s.textContent))?.textContent;
+function parseTodayStars(row: HTMLElement): number | null {
+  const spans = row.querySelectorAll('span');
 
-  const match = text && /([\d.,]+)\s+stars?\s+today/i.exec(text);
-  return match ? parseNumber(match[1]) : null;
+  for (let i = 0; i < spans.length; i++) {
+    const match = STARS_TODAY_RE.exec(spans[i]!.textContent);
+    if (match) return parseNumber(match[1]);
+  }
+
+  return null;
 }
 
-function parseRepositoryRow(row: HTMLElement) {
+function parseRepositoryRow(row: HTMLElement, rank: number): Repository | null {
   const link = row.querySelector('h2 a');
   const href = link?.getAttribute('href');
   if (!href) return null;
+
+  const repo = href.startsWith('/') ? href.slice(1) : href;
+  const rawDesc = row.querySelector('p')?.textContent.trim();
+  const desc = rawDesc ? rawDesc.replace(WHITESPACE_RE, ' ') : 'No description';
 
   const starsEl = row.querySelector('a[href*="/stargazers"]');
   const forksEl = row.querySelector('a[href*="/forks"]');
 
   return {
-    repo: href.replace(/^\//, ''),
-    desc: row.querySelector('p')?.textContent.trim().replace(/\s+/g, ' ') ?? 'No description',
-    stars: parseNumber(starsEl?.textContent.trim()),
-    forks: parseNumber(forksEl?.textContent.trim()),
+    rank,
+    repo,
+    desc,
+    stars: parseNumber(starsEl?.textContent),
+    forks: parseNumber(forksEl?.textContent),
     today: parseTodayStars(row),
   };
 }
 
-function extractRepositories(html: string) {
+function extractRepositories(html: string): Repository[] {
   const root = parse(html);
   const rows = root.querySelectorAll('.Box-row');
+  const repos: Repository[] = [];
 
-  return rows.reduce<Repository[]>((acc, row) => {
-    const parsed = parseRepositoryRow(row);
-    if (parsed) acc.push({ ...parsed, rank: acc.length + 1 });
-    return acc;
-  }, []);
+  for (let i = 0; i < rows.length; i++) {
+    const parsed = parseRepositoryRow(rows[i]!, repos.length + 1);
+    if (parsed) repos.push(parsed);
+  }
+
+  return repos;
 }
 
-async function fetchWithRetry(url: string) {
+async function fetchWithRetry(url: string): Promise<string> {
   for (let attempt = 1; ; attempt++) {
     try {
       const response = await fetch(url, {
@@ -86,29 +109,35 @@ async function fetchWithRetry(url: string) {
   }
 }
 
-async function scrapeTrending(language: GitHubLanguage) {
-  try {
-    const url = `https://github.com/trending/${LanguageSlugs[language]}`;
-    const html = await fetchWithRetry(url);
-    const repositories = extractRepositories(html);
+async function scrapeTrending(language: GitHubLanguage): Promise<LanguageGroup> {
+  const url = `https://github.com/trending/${LanguageSlugs[language]}`;
+  const html = await fetchWithRetry(url);
+  const repos = extractRepositories(html);
 
-    if (repositories.length === 0) throw new Error('no rows found');
+  if (repos.length === 0) throw new Error('no rows found');
 
-    return { language, repos: repositories };
-  } finally {
-    await delay(PAUSE_MS);
-  }
+  return { language, repos };
 }
 
-export async function scrapeTrendingForAll(languages: GitHubLanguage[]) {
+export async function scrapeTrendingForAll(
+  languages: readonly GitHubLanguage[],
+): Promise<LanguageGroup[]> {
   const groups: LanguageGroup[] = [];
 
-  for (const lang of languages) {
+  for (let i = 0; i < languages.length; i++) {
+    const lang = languages[i]!;
+    console.log(`info: [${i + 1}/${languages.length}] scraping ${lang}`);
+
     try {
-      groups.push(await scrapeTrending(lang));
+      const group = await scrapeTrending(lang);
+      groups.push(group);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       console.error(`error: ${lang}: ${message}`);
+    }
+
+    if (i < languages.length - 1) {
+      await delay(PAUSE_MS);
     }
   }
 
